@@ -1,0 +1,10 @@
+{
+  "title": "API",
+  "description": "Références et endpoints (à compléter).",
+  "icon": "Anvil",
+  "pages": [
+    "index"
+  ],
+  "root": true
+}
+
