@@ -1,0 +1,110 @@
+---
+title: Create a plugin
+description: Explains basic setup for creating plugins
+authors:
+    - tunikakeks
+---
+
+<Callout type={"info"}>
+On this page, you can find a basic `Maven` and `Gradle` configuration for your plugin.
+</Callout>
+
+## Prerequirements
+
+To develop a plugin of your wish you'll need:
+- Java Development Kit 21 or higher
+- Basic knowledge of programming in Java
+- A PowerNukkitX server
+- An IDE (Intellij IDEA, Eclipse, VS Code)
+
+## IntelliJ IDEA
+
+### Preparing the Workspace
+First, create a new Java project. Select either Maven or Gradle as the build system, and make sure to use at least JDK 21.
+Check the `Add sample code` option and click Create.
+
+### Maven
+Open your project's `pom.xml` file and paste the following code inside the `<project>` tag:
+```xml filename="pom.xml"
+<repositories>
+    <repository>
+      <id>PowerNukkitX-releases</id>
+      <name>PowerNukkitX Repository</name>
+      <url>https://repo.powernukkitx.org/releases</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>org.powernukkitx</groupId>
+        <artifactId>server</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
+### Gradle
+Open your project's `build.gradle.kts` file and paste the following code into the relevant sections:
+```kts filename="build.gradle.kts"
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://jitpack.io")
+    }
+}
+
+dependencies {
+    implementation("com.github.PowerNukkitX:PowerNukkitX:master-SNAPSHOT")
+}
+```
+
+### Creating the `plugin.yml` File
+When using PowerNukkitX, you need a metadata file for your plugin.
+This file can be named `powernukkitx.yml` or `plugin.yml`.
+Create the file and paste the following content into it. Modify the values to fit your project:
+```yml filename="plugin.yml"
+name: ExamplePlugin
+main: org.powernukkitx.exampleplugin.Main
+# Remember: version and api must be strings, use quotes like "1.0.0"
+version: "1.0.0"
+api: "2.0.0"
+load: POSTWORLD
+author: PowerNukkitX Team
+# author and authors are treated as one combined list
+authors: ["Example", "Another"]
+description: Example plugin from PNX documentation
+website: https://docs.powernukkitx.org/
+```
+
+### Writing Your Own Code
+Now you can start writing your own code. Open the generated `Main.java` file in your project.
+Delete the existing `Main` class and replace it with the following code:
+```java filename="ExamplePlugin.java"
+public class ExamplePlugin extends PluginBase {
+    @Override
+    public void onLoad() {
+        this.getLogger().info(TextFormat.WHITE + "Example plugin loaded!");
+    }
+
+    @Override
+    public void onEnable() {
+        this.getLogger().info(TextFormat.DARK_GREEN + "Example plugin successfully enabled!");
+    }
+
+    @Override
+    public void onDisable() {
+        this.getLogger().info(TextFormat.DARK_RED + "Example plugin disabled!");
+    }
+}
+```
+
+Don’t forget the necessary imports:
+```java
+import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.utils.TextFormat;
+```
+
+**Congratulations! You can now run `mvn package` or `./gradlew assemble` to build your plugin, place the generated JAR into your PNX server’s `plugins` folder, and restart the server.**
+
+### Need Help?
+If you need assistance, check out the <a href="https://github.com/PowerNukkitX/ExamplePlugin-Maven">Example Plugin</a> or join our <a href="https://discord.powernukkitx.org">Discord server</a> for support.

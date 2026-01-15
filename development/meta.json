@@ -1,0 +1,11 @@
+{
+  "title": "Development",
+  "description": "Documentation for PowerNukkitX Plugin creation",
+  "icon": "Code",
+  "pages": [
+    "basics",
+    "forms"
+  ],
+  "root": true
+}
+

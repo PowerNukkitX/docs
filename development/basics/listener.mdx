@@ -1,0 +1,61 @@
+---
+title: Create Listener
+description: "You can create listeners in two ways: implementing the Listener interface in a new class and registering it in onEnable, or creating inline event handlers inside your PluginBase."
+authors:
+    - tunikakeks
+---
+
+ ### Registering with PluginBase
+
+ Add event handlers directly in your PluginBase subclass. Example:
+
+ ```java
+ public class ExamplePlugin extends PluginBase implements Listener {
+
+     @Override
+     public void onEnable() {
+         this.getServer().getPluginManager().registerEvents(this, this);
+     }
+
+     @EventHandler
+     public void onJoin(PlayerJoinEvent event) {
+         Player player = event.getPlayer();
+         player.sendMessage("Welcome, " + player.getName() + "!");
+     }
+ }
+ ```
+
+ <Callout type="info"> Inline event handlers are fine for small plugins. For larger projects, consider splitting listeners into dedicated classes for better organization. </Callout>
+
+ ### Registering with new listener class
+ ```java
+ package com.example.listener;
+
+ import cn.nukkit.event.EventHandler;
+ import cn.nukkit.event.Listener;
+ import cn.nukkit.event.player.PlayerJoinEvent;
+ import cn.nukkit.Player;
+
+ public class JoinListener implements Listener {
+
+     @EventHandler
+     public void onJoin(PlayerJoinEvent event) {
+         Player player = event.getPlayer();
+         player.sendMessage("Welcome, " + player.getName() + "!");
+     }
+ }
+ ```
+
+ You need to register your listener class when your plugin is enabled.
+
+ ```java
+ @Override
+ public void onEnable() {
+     this.getServer().getPluginManager().registerEvents(new JoinListener(), this);
+ }
+ ```
+ Don’t forget to import your listener class.
+
+ ## Need Help?
+
+ If you need assistance, check out the <a href="https://github.com/PowerNukkitX/ExamplePlugin-Maven">Example Plugin</a> or join our <a href="https://discord.powernukkitx.org">Discord server</a> for support.

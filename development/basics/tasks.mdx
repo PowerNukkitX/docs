@@ -1,0 +1,77 @@
+---
+title: Create tasks
+description: You can create tasks using scheduler system. Tasks allow you to run repeating or delayed code without blocking the main server thread.
+authors:
+    - tunikakeks
+---
+
+There are two primary ways to create tasks: using an anonymous runnable inside your plugin, or creating a dedicated Task class.
+
+---
+
+### Creating a Task Inline
+
+You can schedule simple tasks directly from your PluginBase class. Example – a repeating task every 20 ticks (1 second):
+
+```java
+public class ExamplePlugin extends PluginBase {
+
+    @Override
+    public void onEnable() {
+        this.getServer().getScheduler().scheduleRepeatingTask(this, () -> {
+            this.getLogger().info("Repeating task executed!");
+        }, 20); // 20 ticks = 1 second
+    }
+}
+````
+
+You can also schedule a delayed task:
+
+```java
+this.getServer().getScheduler().scheduleDelayedTask(this, () -> {
+    this.getLogger().info("Delayed task executed after 5 seconds!");
+}, 100); // 100 ticks = 5 seconds
+```
+
+<Callout type="info">
+Inline tasks are great for quick actions. For more complex logic, prefer creating a dedicated Task class.
+</Callout>
+
+---
+
+### Creating a Dedicated Task Class
+
+```java filename="ExampleTask.java"
+package com.example.task;
+
+import cn.nukkit.scheduler.Task;
+import cn.nukkit.plugin.Plugin;
+
+public class ExampleTask extends Task {
+
+    private final Plugin plugin;
+
+    public ExampleTask(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void onRun(int currentTick) {
+        plugin.getLogger().info("Task executed at tick: " + currentTick);
+    }
+}
+```
+
+Register your task inside onEnable:
+
+```java
+@Override
+public void onEnable() {
+    this.getServer().getScheduler().scheduleRepeatingTask(this, new ExampleTask(this), 20);
+}
+```
+
+---
+
+### Need Help?
+If you need assistance, check out the <a href="https://github.com/PowerNukkitX/ExamplePlugin-Maven">Example Plugin</a> or join our <a href="https://discord.powernukkitx.org">Discord server</a> for support.

@@ -1,0 +1,81 @@
+---
+title: Generic
+description: As some features are common to each form type, here is a quick summary of them all.
+authors:
+    - PleaseInsertNameHere
+---
+
+## Title
+Every form type has a title element. You can add the title either inside the constructor or using the method.
+```java
+// Using the constructor
+CustomForm custom = new CustomForm("title");
+ModalForm modal = new ModalForm("title");
+SimpleForm simple = new SimpleForm("title");
+
+// Using the method
+custom.title("other title");
+modal.title("other title");
+simple.title("other title");
+```
+
+## Listeners
+Each form can execute a consumer that handles the response when a form is submitted or closed.
+```java
+form.onSubmit((player, response) -> {
+    /*
+
+    Handle the form response here,
+    the object depends on the form you've created.
+    For details, check out the specific form documentation.
+
+    */
+})
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+
+## Sending forms
+
+```java
+form.send(player);
+```
+
+Optionally, you can pass on an ID for the form *(not recommended)*
+```java
+form.send(player, 123);
+```
+
+## Metadata
+Forms support passing on metadata which can be used, for example, to identify forms opened by a player, which in return can help to e.g. update them.
+
+### Adding metadata
+You can add anything as metadata - literally.
+```java
+// Example: Saving an entity
+Entity entity = ...;
+
+form.putMeta("form-type", "manage-entity")
+    .putMeta("entity", entity);
+```
+
+### Reading metadata
+To read the metadata again, you can use the `Form#getMeta(String)` method.
+```java
+Entity entity = form.getMeta("entity");
+```
+
+If you are unsure the form acutally contains the element, you can add a default value:
+```java
+Entity entity = form.getMeta("entity", backupEntity);
+```
+
+## Retrieving viewers
+If you are reusing a form and it can be sent to multiple people at once (e.g. a team selector), you can retrieve all the viewers of a form.
+```java
+ObjectArraySet<Player> viewers = form.viewers();
+```
+
+Alternatively, you can manually check if a player has opened the form:
+```java
+boolean isViewer = form.isViewer(player);
+```

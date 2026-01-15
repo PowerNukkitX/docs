@@ -1,0 +1,123 @@
+---
+title: SimpleForm
+description: "The SimpleForm is a modal form inside Minecraft featuring clickable buttons. Follow the steps below to find out how to use this form inside PNX.
+             It consists of a title, content and buttons."
+authors:
+    - PleaseInsertNameHere
+---
+
+## Title & Content
+There are various ways to set the title and content of a form.
+
+### Using the constructor
+```java
+// Setting the title and content within the constructor
+SimpleForm form = new SimpleForm("title", "content");
+```
+```java
+// Only setting the title within the constructor
+SimpleForm form = new SimpleForm("title");
+```
+
+### Using methods
+```java
+// Setting the title and content using methods
+SimpleForm form = new SimpleForm()
+                    .title("title")
+                    .content("content");
+```
+
+## Buttons
+Buttons can be added in various ways:
+- `SimpleForm#addButton(ElementButton)` | Adds a complete button element
+- `SimpleForm#addButton(ElementButton, Consumer<Player>)` | Adds a complete button element with a listener
+- `SimpleForm#addButton(String)` | Adds a button only with text
+- `SimpleForm#addButton(String, Consumer<Player>)` | Adds a button with a listener
+- `SimpleForm#addButton(String, ButtonImage)` | Adds a button with an image
+- `SimpleForm#addButton(String, ButtonImage, Consumer<Player>)` | Adds a button with an image and a listener
+
+### ButtonImage
+There are two types of images which can be created:
+1. `ButtonImage.Type.PATH`: Images loaded from the resource pack
+2. `ButtonImage.Type.URL`: Images loaded from an URL
+
+```java
+ButtonImage emeraldItem = ButtonImage.Type.PATH.of("textures/ui/emerald");
+```
+
+## Listeners
+
+### Invidivual buttons
+You can directly add a listener to a created button. If clicked by the player, the code will execute.
+```java
+form.addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"), player -> player.sendMessage("You clicked the Emerald!"))
+    .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"), player -> player.sendMessage("You clicked the Diamond!")); // You can also chain methods!
+```
+
+### Whole form
+You can listen to the whole form to detect if it has been submitted or closed.
+This can be useful if you - for example - add lots of buttons from an array and the consumer should do the same action for every button.
+```java
+form.onSubmit((player, response) -> {
+    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
+    ElementButton button = response.button(); // The clicked button (null if invalid)
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+
+### Using the event
+You can listen to the `PlayerFormRespondedEvent`.
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a SimpleForm called 'Ingots' was closed
+    if (form instanceof SimpleForm && form.title().equals("Ingots")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted an ingot.");
+    }
+}
+```
+
+## Sending forms
+Check out how to send a form <a href="./generic">here</a>.
+
+## Updating forms
+If you want to update a SimpleForm *while it is still opened to the player*, you can edit any created buttons by changing its text or image or by applying a new button:
+
+<Callout type="warning">
+    We do not recommend using this feature for larger forms as updating the form resets any inputs (e.g. scrolling) a player makes.
+</Callout>
+
+```java
+ElementButton button = new ElementButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot", player -> player.sendMessage("You clicked the Netherite Ingot!")));
+form.updateElement(0, button); // We want to replace the first button (index 0) with the new one
+form.sendUpdate(player); // Send the update to the player
+```
+
+## Example final code
+To sum up the site, here is a quick example of how your form could look like in the end:
+```java
+SimpleForm form = new SimpleForm("Ingots", "Please select an Ingot to continue.")
+            .addButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot"))
+            .addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"))
+            .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"))
+            .onSubmit((pl, response) -> {
+                pl.sendMessage("You have clicked the " + response.button().text());
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+
+// Remove the Netherite Ingot after 3 seconds open
+Server.getInstance().getScheduler().scheduleDelayedTask(() -> {
+    if (form.isViewer(player)) {
+        form.removeElement(0);
+        form.sendUpdate(player);
+    }
+}, 3 * 20);
+```

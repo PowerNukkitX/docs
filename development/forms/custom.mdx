@@ -1,0 +1,170 @@
+---
+title: CustomForm
+description: "The CustomForm is a modal form inside Minecraft featuring adjustable elements. Follow the steps below to find out how to use this form inside PNX.
+              It consists of a title and multiple elements."
+authors:
+    - PleaseInsertNameHere
+---
+
+## Title
+Check out how to modify the title <a href="./generic">here</a>.
+
+## Elements
+A custom form supports many different elements. The following paragraphs provides you information on how to make use of them!
+
+```java
+CustomForm form = ...;
+
+form.addElement(element); // Add your element
+```
+
+### Dropdown
+A dropdown lets the user choose an item from a list easily.
+```java
+List<String> options = ...;
+
+ElementDropdown dropdown = new ElementDropdown("Choose an option", options);
+```
+
+Optionally, add a default index:
+```java
+// Second element will be selected when opening the form
+ElementDropdown dropdown = new ElementDropdown("Choose an option", options, 1);
+```
+
+Every parameter can be applied using a method too.
+```java
+// Changing the element's text
+dropdown.text("Choose your favorite option");
+```
+
+### Input
+An input lets the user input any text.
+```java
+ElementInput input = new ElementInput("Change the status");
+ElementInput input = new ElementInput("Change the status", "PNX is great!"); // Optionally, add a placeholder
+ElementInput input = new ElementInput("Change the status", "PNX is great!", "I love PNX!"); // Optionally, add a default value
+```
+
+Every parameter can be applied using a method too.
+```java
+// Changing the element's placeholder
+input.placeholder("I love PNX!");
+```
+
+### Label
+Similar to the content of a <a href="./simple-form">SimpleForm</a> or a <a href="./modal-form">ModalForm</a>, a label can be used to add text. For instance, to describe another element.
+```java
+ElementLabel label = new ElementLabel("The status will be shown when you join the server.");
+```
+
+### Slider
+A slider can be used to let players decide a float value.
+```java
+float min = 0.0F;
+float max = 10.0F;
+int step = 1;
+float defaultValue = 2.0F;
+
+ElementSlider slider = new ElementSlider("Speed", min, max, step, defaultValue);
+```
+
+Every parameter can be applied using a method too.
+```java
+// Changing the element's default value
+input.defaultValue(1.0F);
+```
+
+### Step Slider
+A step slider functions similar to a dropdown, but the player can choose the option horizontally instead.
+```java
+List<String> steps = ...;
+
+ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps);
+```
+
+Optionally, add a default index:
+```java
+// Second element will be selected when opening the form
+ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps, 1);
+```
+
+Every parameter can be applied using a method too.
+```java
+// Adding an element (and optionally, setting it as default)
+stepSlider.addStep("Step 5", true);
+```
+
+### Toggle
+A toggle is used to determine a boolean value. For example, to enable or disable settings.
+```java
+ElementToggle toggle = new ElementToggle("Enable Double Jump?");
+```
+
+Optionally, add a default value:
+```java
+ElementToggle toggle = new ElementToggle("Enable Double Jump?", true);
+```
+
+## Listeners
+
+### Whole form
+You can listen to the whole form to detect if it has been submitted or closed.
+```java
+form.onSubmit((player, response) -> {
+    ElementResponse dropdown = response.getDropdownResponse(0);
+    String input = response.getInputResponse(1);
+    String label = response.getLabelResponse(2);
+    float slider = response.getSliderResponse(3);
+    ElementResponse stepSlider = response.getStepSliderResponse(4);
+    boolean toggle = response.getToggleResponse(5);
+
+    // Handle response here
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+
+### Using the event
+You can listen to the `PlayerFormRespondedEvent`.
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a CustomForm called 'Settings' was closed
+    if (form instanceof CustomForm && form.title().equals("Settings")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted the settings.");
+    }
+}
+```
+
+## Sending forms
+Check out how to send a form <a href="./generic">here</a>.
+
+## Example final code
+To sum up the site, here is a quick example of how your form could look like in the end:
+```java
+String displayName = player.getDisplayName(); // Used as an example
+
+CustomForm form = new CustomForm("Settings")
+            .addElement(new ElementInput("Change nickname", "Herobrine", displayName.isEmpty() ? "" : displayName))
+            .addElement(new ElementLabel("Leave empty to apply your real name again."))
+            .onSubmit((pl, response) -> {
+                String input = response.getInputResponse(0);
+                if (input.isEmpty()) {
+                    pl.setDisplayName(pl.getName());
+                    return;
+                }
+
+                // Input validation...
+
+                pl.setDisplayName(input);
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+```

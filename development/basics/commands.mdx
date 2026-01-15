@@ -1,0 +1,81 @@
+---
+title: Create commands
+description: You can create commands with 2 option, creating new command class and registering it to command map or creating onCommand function on your PluginBase and adding command to your plugin.yml.
+authors:
+    - tunikakeks
+---
+
+### Registering with onCommand
+
+Add an onCommand override to your PluginBase subclass. Example:
+
+```java
+public class ExamplePlugin extends PluginBase {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("greet")) {
+            if (args.length > 0) {
+                sender.sendMessage("Hello, " + args[0] + "!");
+            } else {
+                sender.sendMessage("Hello!");
+            }
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+```yaml filename="plugin.yml"
+name: ExamplePlugin
+main: com.example.ExamplePlugin
+version: 1.0.0
+commands:
+   greet:
+     description: Greet a player
+     usage: /greet [name]
+     permission: greet.permission
+```
+<Callout type="info">
+Use onCommand for small or quick commands. For richer behavior (permissions, tab completion, subcommands) prefer registering a dedicated Command class.
+</Callout>
+
+### Registering with new class
+```java filename="GreetCommand.java"
+package com.example.command;
+
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
+
+public class GreetCommand extends Command {
+
+    public GreetCommand() {
+        super("greet", "Greet a player", "/greet [name]");
+        this.setPermission("greet.permission");
+    }
+
+    @Override
+    public boolean execute(CommandSender sender, String label, String[] args) {
+        if (args.length > 0) {
+            sender.sendMessage("Hello, " + args[0] + "!");
+        } else {
+            sender.sendMessage("Hello!");
+        }
+        return true;
+    }
+}
+```
+
+You need to register your command class when your plugin is enabled.
+
+```java
+@Override
+public void onEnable() {
+    this.getServer().getCommandMap().register("greet", new GreetCommand());
+}
+```
+
+Don’t forget the import your command class.
+
+### Need Help?
+If you need assistance, check out the <a href="https://github.com/PowerNukkitX/ExamplePlugin-Maven">Example Plugin</a> or join our <a href="https://discord.powernukkitx.org">Discord server</a> for support.

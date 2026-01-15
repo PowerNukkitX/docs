@@ -1,0 +1,103 @@
+---
+title: ModalForm
+description: "The ModalForm is a modal form inside Minecraft featuring two clickable buttons commonly used for decision-making. Follow the steps below to find out how to use this form inside PNX.
+              It consists of a title, content & two buttons (yes and no)"
+authors:
+    - PleaseInsertNameHere
+---
+
+## Title & Content
+There are various ways to set the title and content of a form.
+
+### Using the constructor
+```java
+// Setting the title and content within the constructor
+ModalForm form = new ModalForm("title", "content");
+```
+```java
+// Only setting the title within the constructor
+ModalForm form = new ModalForm("title");
+```
+
+### Using methods
+```java
+// Setting the title and content using methods
+ModalForm form = new ModalForm()
+                    .title("title")
+                    .content("content");
+```
+
+## Changing the buttons
+You can easily change the button text and add a listener using two methods:
+```java
+form.yes("Yes!", player -> player.sendMessage("You said yes!"))
+    .no("No!", player -> player.sendMessage("You said no!"))
+```
+
+If you just want to adjust the text, you can make use of multiple methods.
+```java
+// Both buttons
+form.text("Yes!", "No!");
+
+// Only the 'yes'-button
+form.yesText("Yes!!");
+
+// Only the 'no'-button
+form.noText("No!!");
+```
+
+## Listeners
+
+### Added directly
+You can directly add a listener to the buttons. If clicked by the player, the code will execute.
+```java
+form.onYes(player -> player.sendMessage("You said yes!!"))
+    .onNo(player -> player.sendMessage("You said no!!"))
+```
+
+### Whole form
+You can listen to the whole form to detect if it has been submitted or closed.
+```java
+form.onSubmit((player, response) -> {
+    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
+    // buttonId returns 0 if 'yes' was clicked, 1 if 'no' was clicked
+    boolean yes = response.yes(); // Returns true if 'yes' was clicked
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+
+### Using the event
+You can listen to the `PlayerFormRespondedEvent`.
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a ModalForm called 'Ingots' was accepted
+    if (form.title().equals("Ingots") && response instanceof ModalResponse modalResponse) { // Using instanceof, we also make sure it wasn't closed
+        boolean yes = modalResponse.yes();
+
+        player.sendMessage(yes ? "You accepted the ingot." : "You rejected the ingot.");
+    }
+}
+```
+
+## Sending forms
+Check out how to send a form <a href="./generic">here</a>.
+
+## Example final code
+To sum up the site, here is a quick example of how your form could look like in the end:
+```java
+ModalForm form = new ModalForm("Ingots", "Do you want to buy 1x Netherite Ingot for $1000?")
+            .yes("Yes, I want to!", pl -> pl.sendMessage("You accepted the offer!"))
+            .no("No, I don't want to!", pl -> pl.sendMessage("You rejected the offer."))
+            .onSubmit((pl, response) -> {
+                boolean yes = response.yes();
+                pl.sendMessage("You have clicked " + (yes ? "yes" : "no"));
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+```

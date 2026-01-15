@@ -2,6 +2,7 @@
   "pages": [
     "(software)",
     "cli",
-    "api"
+    "api",
+    "development"
   ]
 }
