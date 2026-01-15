@@ -1,0 +1,10 @@
+{
+  "title": "CLI",
+  "description": "Documentation for PowerNukkitX Command Line Interface (CLI).",
+  "icon": "Terminal",
+  "pages": [
+    "index"
+  ],
+  "root": true
+}
+

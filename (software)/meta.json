@@ -1,0 +1,21 @@
+{
+  "title": "Software",
+  "description": "PowerNukkitX documentation covering the software overview, features, comparisons, and installation and configuration guides.",
+  "icon": "Server",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "comparisons",
+    "requirements",
+    "installation",
+    "---Configurations---",
+    "navigation",
+    "versioning",
+    "deploying",
+    "internationalization",
+    "search",
+    "---Integrations---",
+    "...integrations"
+  ]
+}
