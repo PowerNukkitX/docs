@@ -1,0 +1,104 @@
+---
+title: Troubleshooting
+description: "Solutions to common problems first-time users run into when installing and starting PowerNukkitX."
+icon: Wrench
+authors:
+  - PowerNukkitX
+---
+
+This page covers the most common issues encountered during first-time setup, especially around **Java versions** and **server startup**. If your problem isn't listed here, join our <a href="https://discord.powernukkitx.org">Discord server</a> for support.
+
+## Java Issues
+
+### Checking your Java version
+
+Before anything else, confirm which Java version is on your PATH:
+
+```bash
+java -version
+```
+
+You should see version `21` or higher. PowerNukkitX requires **Java 21 or newer** — see the [Requirements](/docs/requirements) page for details.
+
+<Callout type="warning">
+    If the command reports a version older than 21 (e.g. `17` or `18`), the server will fail to start. Install [OpenJDK 21](https://adoptium.net/) or newer and make sure it is the version your terminal picks up.
+</Callout>
+
+### `UnsupportedClassVersionError`
+
+If startup fails with a message similar to:
+
+```
+java.lang.UnsupportedClassVersionError: cn/nukkit/Nukkit has been compiled by a more
+recent version of the Java Runtime (class file version 65.0), this version of the Java
+Runtime only recognizes class file versions up to ...
+```
+
+your active Java is too old. Class file version `65.0` corresponds to Java 21. Install Java 21+ and verify with `java -version`.
+
+### Multiple Java versions installed
+
+Having several JDKs installed often means the wrong one is used. To control which Java runs the server:
+
+- **Set `JAVA_HOME`** to your Java 21+ installation and ensure its `bin` directory comes first on your `PATH`.
+- **Or launch the server with an explicit path** to the correct Java binary:
+
+```bash
+/path/to/jdk-21/bin/java -jar powernukkitx.jar
+```
+
+<Callout type="info">
+    On Linux you can switch the default with `sudo update-alternatives --config java`. On Windows, check the **System Environment Variables** and confirm `JAVA_HOME` points to a JDK 21+ folder.
+</Callout>
+
+### 32-bit Java
+
+PowerNukkitX requires a **64-bit** Java runtime. A 32-bit JVM cannot allocate enough memory and will fail or crash under load. `java -version` will note `Client VM` / `32-Bit` for a 32-bit install — download the 64-bit OpenJDK build instead.
+
+---
+
+## Server Startup Issues
+
+### Port already in use / `BindException`
+
+If you see `java.net.BindException: Address already in use`, another process is already using the server port (default `19132/UDP`).
+
+- Stop any other Minecraft Bedrock server that may be running.
+- Change the port in `pnx.yml` (`server-port: 19132`).
+
+### Out of memory on startup
+
+If the server crashes with `OutOfMemoryError` or exits immediately, it may not have enough heap. Start it with explicit memory flags:
+
+```bash
+java -Xms1G -Xmx2G -jar powernukkitx.jar
+```
+
+<Callout type="tip">
+    Set `-Xmx` to a value that leaves headroom for your operating system — see the [Requirements](/docs/requirements) page for recommended RAM.
+</Callout>
+
+### Missing files or permission errors on first run
+
+On the first launch PowerNukkitX generates worlds, configuration, and other files in its working directory.
+
+- Run the server from a **dedicated, writable folder** rather than a system or read-only location.
+- On Linux/macOS make sure the JAR and its folder are owned by your user and writable (`chmod`/`chown` as needed).
+
+### Server starts but you can't connect
+
+If the console shows the server started successfully but clients can't join:
+
+- Confirm the client and server are on **compatible versions**.
+- Open/forward UDP port `19132` on your firewall and router.
+- When connecting from the same machine, use `127.0.0.1` or `localhost`.
+
+---
+
+## Still stuck?
+
+If none of the above resolves your issue:
+
+- Re-read the [Requirements](/docs/requirements) and [Installation](/docs/installation) guides.
+- Search existing issues on our <a href="https://github.com/PowerNukkitX/PowerNukkitX/issues">GitHub repository</a>.
+- Ask for help on the <a href="https://discord.powernukkitx.org">PowerNukkitX Discord</a> — include your full startup log and the output of `java -version`.

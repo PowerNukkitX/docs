@@ -3,7 +3,8 @@
   "description": "Frequently Asked Questions",
   "icon": "CircleQuestionMark",
   "pages": [
-    "index"
+    "index",
+    "troubleshooting"
   ],
   "root": true
 }
