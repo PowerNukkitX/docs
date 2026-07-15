@@ -3,9 +3,12 @@
   "pages": [
     "index",
     "blocks",
+    "block-entities",
     "items",
     "entities",
     "enchantments",
-    "recipes"
+    "recipes",
+    "generators",
+    "structures"
   ]
 }

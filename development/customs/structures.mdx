@@ -1,0 +1,111 @@
+---
+title: "Structure API"
+description: "How to load, transform, and place custom Bedrock and Java Edition structures on the server."
+icon: Home
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX provides a powerful **Structure API** that lets you load, manipulate (rotate/mirror), and place structural templates programmatically. You can load both native Bedrock structures (`.mcstructure`) and Java Edition structures (`.nbt`).
+
+---
+
+## 1. Bedrock Structures (`.mcstructure`)
+
+Bedrock structure files (`.mcstructure`) are typically loaded from the server's `structures/` directory using the `StructureAPI` class:
+
+```java
+import org.powernukkitx.level.structure.Structure;
+import org.powernukkitx.level.structure.StructureAPI;
+import org.powernukkitx.level.Position;
+
+// Load a template named "structures/my_house.mcstructure"
+Structure house = StructureAPI.load("my_house");
+
+if (house != null) {
+    // Place at the position (defaults to including entities and creating a BlockManager)
+    Position target = new Position(100, 64, 100, player.getLevel());
+    house.place(target);
+}
+```
+
+### Save/Check API Methods
+
+*   **`StructureAPI.exists(String name)`**: Check if a structure file exists in the folder.
+*   **`StructureAPI.save(Structure structure, String name)`**: Save a structure template dynamically to a `.mcstructure` file.
+*   **`StructureAPI.delete(String name)`**: Delete a structure template.
+
+---
+
+## 2. Java Edition Structures (`.nbt`)
+
+You can load and place standard Java Edition `.nbt` structures (such as templates from Java mods or custom builds) using `JeStructure`. Since these are often shipped inside the plugin JAR, you can read them via an InputStream:
+
+```java
+import org.powernukkitx.level.structure.JeStructure;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.powernukkitx.level.Position;
+import org.cloudburstmc.nbt.NBTInputStream;
+import org.cloudburstmc.nbt.NbtMap;
+import org.cloudburstmc.nbt.NbtUtils;
+import java.io.InputStream;
+
+public void placeJavaStructure(Position position) {
+    try (InputStream stream = getClass().getClassLoader().getResourceAsStream("structures/village_house.nbt")) {
+        if (stream != null) {
+            try (NBTInputStream nbtReader = NbtUtils.createReader(stream)) {
+                // Parse the CompoundTag from the NBT input stream
+                CompoundTag tag = CompoundTag.fromNetwork((NbtMap) nbtReader.readTag());
+                
+                // Construct the JeStructure instance
+                JeStructure villageHouse = JeStructure.fromNbt(tag);
+                
+                // Place the structure
+                villageHouse.place(position);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+---
+
+## 3. Transforming Structures (Rotation and Mirroring)
+
+Both `Structure` and `JeStructure` inherit from `AbstractStructure`, allowing you to rotate and mirror them before placement:
+
+```java
+import org.cloudburstmc.protocol.bedrock.data.structure.Mirror;
+import org.cloudburstmc.protocol.bedrock.data.structure.Rotation;
+import org.powernukkitx.level.structure.AbstractStructure;
+
+// Rotate 90 degrees clockwise
+AbstractStructure rotated = structure.rotate(Rotation.ROTATE_90);
+
+// Mirror along the Z axis
+AbstractStructure mirrored = structure.mirror(Mirror.Z);
+
+// Place the transformed structure
+mirrored.place(targetPos);
+```
+
+---
+
+## 4. Advanced Placement (`BlockManager`)
+
+For large structures or during chunk generation, you can pass a custom `BlockManager` to optimize batch block changes and control whether entities are summoned:
+
+```java
+import org.powernukkitx.level.generator.object.BlockManager;
+
+BlockManager blockManager = new BlockManager(level);
+boolean includeEntities = true;
+
+structure.place(position, includeEntities, blockManager);
+
+// Apply subchunk updates to send changes to clients
+blockManager.applySubChunkUpdate();
+```

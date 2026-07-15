@@ -1,0 +1,237 @@
+---
+title: "Custom Generators"
+description: "How to define, register, and build custom world generators on PowerNukkitX."
+icon: Globe
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX allows you to register custom world generators to build unique terrain systems (such as flat plots, skyblock hubs, custom dimensions, or structures).
+
+---
+
+## 1. Defining a Custom Generator
+
+To create a custom world generator, extend `org.powernukkitx.level.generator.Generator`. 
+
+You must implement the constructor passing dimension and configuration options, and define the generation pipeline stages in `stages(GenerateStage.Builder)`:
+
+```java filename="MyFlatGenerator.java"
+package org.example.generator;
+
+import org.powernukkitx.level.DimensionData;
+import org.powernukkitx.level.DimensionEnum;
+import org.powernukkitx.level.generator.GenerateStage;
+import org.powernukkitx.level.generator.Generator;
+import org.powernukkitx.level.generator.stages.FinishedStage;
+import org.powernukkitx.level.generator.stages.LightPopulationStage;
+import org.powernukkitx.registry.Registries;
+import java.util.Map;
+
+public class MyFlatGenerator extends Generator {
+
+    public MyFlatGenerator(DimensionData dimensionData, Map<String, Object> options) {
+        // Enforce dimension data (e.g. Overworld) and configurations options
+        super(DimensionEnum.OVERWORLD.getDimensionData(), options);
+    }
+
+    @Override
+    public void stages(GenerateStage.Builder builder) {
+        // Configure the stage pipeline (e.g. initial generation stage, lighting, finalization)
+        builder.start(Registries.GENERATE_STAGE.get("MyCustomStage"))
+               .next(Registries.GENERATE_STAGE.get(LightPopulationStage.NAME))
+               .next(Registries.GENERATE_STAGE.get(FinishedStage.NAME));
+    }
+
+    @Override
+    public DimensionData getDimensionData() {
+        return DimensionEnum.OVERWORLD.getDimensionData();
+    }
+}
+```
+
+---
+
+## 2. Registering the Generator
+
+Register your custom generator inside your plugin's `onLoad()` phase:
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.GENERATOR.register("my_flat_generator", MyFlatGenerator.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+---
+
+## 3. Populating Custom Structures in World Generation
+
+To populate custom structures (e.g. houses, ruins, or floating balloons) during world generation, create a custom chunk `Populator` class and hook it into a custom `PopulatorStage`.
+
+### Step A: Define the Populator
+
+Extend `org.powernukkitx.level.generator.populator.Populator` and override `apply(ChunkGenerateContext context)`:
+
+```java filename="BalloonPopulator.java"
+package org.example.generator;
+
+import org.powernukkitx.level.Level;
+import org.powernukkitx.level.Position;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.level.generator.ChunkGenerateContext;
+import org.powernukkitx.level.generator.object.BlockManager;
+import org.powernukkitx.level.generator.populator.Populator;
+import org.powernukkitx.level.structure.Structure;
+import org.powernukkitx.level.structure.StructureAPI;
+import org.powernukkitx.utils.random.RandomSourceProvider;
+
+public class BalloonPopulator extends Populator {
+
+    public static final String NAME = "example:balloon";
+    private Structure balloonStructure;
+
+    @Override
+    public void apply(ChunkGenerateContext context) {
+        IChunk chunk = context.getChunk();
+        int chunkX = chunk.getX();
+        int chunkZ = chunk.getZ();
+        Level level = chunk.getLevel();
+        
+        // Seed the randomizer for this chunk
+        this.random.setSeed(level.getSeed() ^ Level.chunkHash(chunkX, chunkZ) | chunkZ);
+        
+        // Custom generation probability boundary checks
+        if (this.random.nextBoundedInt(100) >= 5) return; // 5% chance per chunk
+
+        int x = (chunkX << 4) + 7;
+        int z = (chunkZ << 4) + 7;
+        int highest = chunk.getLevel().getHighestBlockAt(x, z);
+        int y = highest + 30; // Spawn 30 blocks above the ground
+
+        if (balloonStructure == null) {
+            balloonStructure = StructureAPI.load("balloon_white");
+        }
+
+        if (balloonStructure != null) {
+            BlockManager manager = new BlockManager(level);
+            // Prepare structural coordinates and place
+            balloonStructure.preparePlace(new Position(x, y, z, level), manager);
+            manager.generateChunks();
+            queueObject(chunk, manager);
+        }
+    }
+
+    @Override
+    public String name() {
+        return NAME;
+    }
+}
+```
+
+### Step B: Define the Generation Stage
+
+Extend `org.powernukkitx.level.generator.stages.PopulatorStage` and return your populator's registered name:
+
+```java filename="BalloonPopulatorStage.java"
+package org.example.generator;
+
+import org.powernukkitx.level.generator.stages.PopulatorStage;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+
+public class BalloonPopulatorStage extends PopulatorStage {
+
+    public static final String NAME = "example:balloon_stage";
+
+    @Override
+    public ObjectArraySet<String> populators() {
+        // Return a set containing the registered names of populators to run in this stage
+        return new ObjectArraySet<>(new String[]{ BalloonPopulator.NAME });
+    }
+
+    @Override
+    public String name() {
+        return NAME;
+    }
+}
+```
+
+### Step C: Register Populator & Stage
+
+Register both classes inside your plugin's `onLoad()` phase:
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        // 1. Register the generator itself
+        Registries.GENERATOR.register("my_flat_generator", MyFlatGenerator.class);
+        
+        // 2. Register the custom populator
+        Registries.POPULATOR.register(BalloonPopulator.NAME, BalloonPopulator.class);
+        
+        // 3. Register the custom populator stage
+        Registries.GENERATE_STAGE.register(BalloonPopulatorStage.NAME, BalloonPopulatorStage.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+### Step D: Register the Stage in your Generator Pipeline
+
+Reference the custom stage key inside your generator's stage pipeline builder:
+
+```java
+@Override
+public void stages(GenerateStage.Builder builder) {
+    builder.start(Registries.GENERATE_STAGE.get(NormalTerrainStage.NAME))
+           .next(Registries.GENERATE_STAGE.get(BalloonPopulatorStage.NAME)) // Add stage
+           .next(Registries.GENERATE_STAGE.get(FinishedStage.NAME));
+}
+```
+
+---
+
+## 3.5. Injecting into Normal (Vanilla) World Generation
+
+If you want to inject custom structures (populators) into the default Minecraft Overworld generator without creating a custom generator or setting up new stages, you can append your populator's registered name directly to the static `NormalPopulatorStage.POPULATORS` list inside your plugin's initialization phase:
+
+```java
+import org.powernukkitx.level.generator.stages.normal.NormalPopulatorStage;
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        // 1. Register the custom populator in the registry
+        Registries.POPULATOR.register(BalloonPopulator.NAME, BalloonPopulator.class);
+        
+        // 2. Inject it directly into the vanilla Overworld populator stage list
+        NormalPopulatorStage.POPULATORS.add(BalloonPopulator.NAME);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+This ensures your custom structures generate naturally within default Overworld chunks alongside villages, dungeons, and temples.
+
+---
+
+## 4. Real-World Implementations
+
+For production-ready references, examine these custom world generators:
+*   **[FuturePlots Generator](https://github.com/Ovisdevelopment/FuturePlots)**: Uses a custom plot generation stage (`PlotStage`) to carve out roads, walls, and plot boundaries, handling chunk regeneration async.

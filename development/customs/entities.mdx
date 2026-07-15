@@ -81,10 +81,90 @@ public class MyPig extends Entity implements CustomEntity {
 
 ---
 
+## Rideable Entities (Mounts)
+
+PowerNukkitX supports defining entities that players or other mobs can ride (such as horses, custom vehicles, or dragons) using the Bedrock `minecraft:rideable` component. 
+
+To configure a rideable entity, specify the `RideableComponent` in your `CustomEntityDefinition` builder. You can define details like seat coordinates and camera offsets:
+
+```java filename="RideableBoar.java"
+package org.example.entity;
+
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.entity.custom.CustomEntity;
+import org.powernukkitx.entity.custom.CustomEntityDefinition;
+import org.powernukkitx.entity.components.RideableComponent;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.math.Vector3f;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+import java.util.List;
+import java.util.Set;
+
+public class RideableBoar extends Entity implements CustomEntity {
+    public static final String IDENTIFIER = "powernukkitx:rideable_boar";
+
+    public RideableBoar(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return "rideable_boar";
+    }
+
+    public static CustomEntityDefinition definition() {
+        // Define seat positions relative to the entity pivot point (X, Y, Z coordinates)
+        List<RideableComponent.Seat> seats = List.of(
+            new RideableComponent.Seat(
+                1,                      // Minimum rider count
+                1,                      // Maximum rider count
+                new Vector3f(0f, 1.2f, -0.2f), // Physical coordinate offset of the seat
+                null,                   // Lock rider rotation (null to allow rotation)
+                null,                   // Rotate rider by degrees (null for default)
+                3.0f,                   // Third-person camera distance/radius multiplier
+                null                    // Camera smoothing
+            )
+        );
+
+        // Build the rideable component
+        RideableComponent rideable = new RideableComponent(
+            0,                          // Controlling seat index
+            true,                       // Crouching players skip mounting interaction
+            RideableComponent.DismountMode.DEFAULT,
+            Set.of("player"),           // Entity families allowed to ride
+            "action.interact.ride",     // Localization text string shown to Bedrock players
+            0f,                         // Passenger max width boundary (0 for unlimited)
+            false,                      // Pull in nearby entities automatically
+            true,                       // Riders can interact with chests/world while riding
+            1,                          // Seat count
+            seats                       // Seat configurations
+        );
+
+        return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
+                .eid(IDENTIFIER)
+                .hasSpawnEgg(true)
+                .isSummonable(true)
+                .originalName("Rideable Boar")
+                .health(30)
+                .collisionBox(0.9f, 0.9f)
+                .rideable(rideable) // Bind the rideable component
+                .build();
+    }
+}
+```
+
+---
+
 ## Spawning Custom Entities
 
 Once registered, custom entities can be spawned:
-- Via the `/summon powernukkitx:boar` command (if `.isSummonable(true)`).
+- Via the `/summon` command (if `.isSummonable(true)` was set in the definition).
 - Via the spawn egg in the Creative inventory (if `.hasSpawnEgg(true)`).
 - Programmatically via the API.
 
@@ -95,20 +175,21 @@ import org.powernukkitx.Player;
 import org.powernukkitx.command.Command;
 import org.powernukkitx.command.CommandSender;
 import org.powernukkitx.entity.Entity;
+import org.powernukkitx.nbt.tag.CompoundTag;
 
 @Override
 public boolean execute(CommandSender sender, String label, String[] args) {
     if (sender instanceof Player player) {
-        // Construct the default NBT tags for the entity
+        // Construct default NBT tags for coordinates
         CompoundTag nbt = Entity.getDefaultNBT(player.getPosition());
         
-        // Instantiate the entity
-        MyPig boar = new MyPig(player.getChunk(), nbt);
+        // Create the entity
+        RideableBoar boar = new RideableBoar(player.getChunk(), nbt);
         
-        // Spawn the entity for all viewers
+        // Spawn for everyone
         boar.spawnToAll();
         
-        player.sendMessage("Spawned a feral boar!");
+        player.sendMessage("Spawned a rideable boar!");
         return true;
     }
     return false;

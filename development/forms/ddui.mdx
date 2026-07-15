@@ -1,0 +1,136 @@
+---
+title: "Data-Driven UI (DDUI)"
+description: "How to use experimental Data-Driven UI (DDUI) screens with reactive state bindings."
+icon: LayoutTemplate
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX supports **Data-Driven UI (DDUI)**, which allows you to build highly interactive, dynamic, and reactive user interfaces that bind directly to player screen data stores.
+
+> [!WARNING]
+> DDUI is an **experimental Minecraft feature**. It might change, break, or be removed in future Bedrock client updates. Use this API with caution.
+
+---
+
+## Core Concepts
+
+Unlike traditional forms (which must be closed and re-sent to show updated values), DDUI screens remain open while updating properties reactively:
+
+*   **`DataDrivenScreen`**: The abstract base class representing a client-side UI screen.
+*   **`Observable<T>`**: A reactive wrapper class around values (`String`, `Long`, `Boolean`). When `Observable#setValue()` is called on the server, it automatically fires `ClientboundDataStorePacket` updates, updating the client screen dynamically without reloading the UI.
+*   **Subscriptions (`Observable#subscribe(...)`)**: Register listeners that trigger when the client changes a value (e.g. typing in a textbox, sliding a bar). You can run validations or compute secondary variables inside these listeners.
+
+---
+
+## Real-World Example (from `/debug ddui`)
+
+The following code is adapted directly from PowerNukkitX's built-in `/debug ddui` command implementation, showing text truncation validation, reactive slider computed states, and a reset trigger:
+
+```java filename="DDUIExample.java"
+package org.example.ui;
+
+import org.powernukkitx.Player;
+import org.powernukkitx.Server;
+import org.powernukkitx.ddui.CustomForm;
+import org.powernukkitx.ddui.Observable;
+import org.powernukkitx.ddui.element.options.SliderElementOptions;
+import org.powernukkitx.ddui.element.options.TextFieldOptions;
+import org.powernukkitx.plugin.InternalPlugin;
+
+import java.util.concurrent.CompletableFuture;
+
+public class DDUIExample {
+
+    public static void showExample(Player player, Server server) {
+        // 1. Define reactive observables
+        Observable<String> name = new Observable<>("");
+        Observable<String> bio = new Observable<>("");
+        Observable<Long> age = new Observable<>(18L);
+        Observable<String> ageGroup = new Observable<>("Adult");
+        Observable<Long> difficulty = new Observable<>(3L);
+
+        // 2. Build the Form elements and bind them to the observables
+        CustomForm form = new CustomForm("My Interactive Form")
+                .label("Personal Information")
+                .textField("Name", name, TextFieldOptions.builder()
+                        .description("Max 10 characters")
+                        .build())
+                .textField("Biography", bio, TextFieldOptions.builder()
+                        .description("This is your biography. Write anything you want here.")
+                        .build())
+                .slider("Age", 1L, 100L, age)
+                .textField("Age Group", ageGroup, TextFieldOptions.builder()
+                        .description("Automatically set based on age")
+                        .disabled(true) // Read-only on the client side
+                        .build())
+                .slider("Difficulty", 1L, 5L, difficulty, SliderElementOptions.builder()
+                        .description("1 = Peaceful - 5 = Hardcore")
+                        .build())
+                
+                // Add a reset button that changes all values asynchronously
+                .button("Reset", clickedPlayer -> CompletableFuture.runAsync(() -> {
+                    name.setValue("");
+                    bio.setValue("");
+                    age.setValue(18L);
+                    difficulty.setValue(3L);
+                }))
+                
+                // Add a confirmation button
+                .button("Confirm", clickedPlayer -> {
+                    clickedPlayer.sendMessage("Confirmed successfully!");
+                    clickedPlayer.sendMessage("Name: " + name.getValue());
+                    clickedPlayer.sendMessage("Biography: " + bio.getValue());
+                    clickedPlayer.sendMessage("Age: " + age.getValue() + " (" + ageGroup.getValue() + ")");
+                    clickedPlayer.sendMessage("Difficulty: " + difficulty.getValue());
+
+                    // Close the screen for the player
+                    form.close(clickedPlayer);
+                })
+                .closeButton();
+
+        // 3. Set up reactive validation listeners
+        
+        // Truncate name input to a maximum of 10 characters reactively
+        name.subscribe(value -> {
+            String normalized = value.length() > 10 ? value.substring(0, 10) : value;
+            server.getScheduler().scheduleTask(InternalPlugin.INSTANCE, () -> {
+                if (!normalized.equals(value)) {
+                    name.setValue(normalized);
+                }
+            });
+            return null;
+        });
+
+        // Compute and update the read-only 'Age Group' field dynamically based on age slider
+        age.subscribe(value -> {
+            CompletableFuture.runAsync(() -> {
+                if (value <= 12) {
+                    ageGroup.setValue("Kid");
+                } else if (value <= 17) {
+                    ageGroup.setValue("Teen");
+                } else if (value <= 64) {
+                    ageGroup.setValue("Adult");
+                } else {
+                    ageGroup.setValue("Senior");
+                }
+            });
+            return null;
+        });
+
+        // 4. Present the screen to the player
+        form.show(player);
+    }
+}
+```
+
+---
+
+## Form Operations and State Updates
+
+When the player modifies an input component (e.g. dragging a slider):
+1. The Bedrock client sends a packet informing the server of the state change.
+2. The server updates the value in the corresponding `Observable`.
+3. The `Observable` notifies all registered subscribers.
+4. Any subscriber call that triggers `setValue()` (like changing `ageGroup` inside the `age` subscription) automatically fires an update packet back to the client, refreshing the screen inputs instantly in-place.
