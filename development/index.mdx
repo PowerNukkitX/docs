@@ -1,0 +1,40 @@
+---
+title: "Developer Documentation"
+description: "Learn how to build plugins, custom components, and interact with the PowerNukkitX API."
+icon: Code
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Book, Blocks, LayoutTemplate } from "lucide-react";
+
+Welcome to the PowerNukkitX developer documentation. Here you will find guides, code examples, and configuration templates to help you build plugins, register custom server-side content, and design user interfaces for Minecraft Bedrock Edition players.
+
+PowerNukkitX is built on **Java 21** and provides a modern, fast, and feature-rich API for developers.
+
+## Documentation Sections
+
+Explore the developer guides by selecting a category below:
+
+<Cards>
+    <Card icon={<Book className="text-primary" />} title="Basics" href="/docs/development/basics">
+        Learn how to set up your Maven/Gradle build system, register commands, handle events with Listeners, and schedule Tasks.
+    </Card>
+
+    <Card icon={<Blocks className="text-primary" />} title="Custom Components" href="/docs/development/customs">
+        Register custom server-side blocks, items, armor, entities, enchantments, and crafting recipes using the PNX registries.
+    </Card>
+
+    <Card icon={<LayoutTemplate className="text-primary" />} title="UI & Forms" href="/docs/development/forms">
+        Design interactive player interfaces using Simple, Modal, and Custom forms with input widgets.
+    </Card>
+</Cards>
+
+---
+
+## Example Plugin Reference
+
+For a complete, working reference implementation of a plugin using these features, check out our official:
+*   [ExamplePlugin-Maven Repository](https://github.com/PowerNukkitX/ExamplePlugin-Maven) - Covers commands, listeners, tasks, custom blocks, slabs, items, armor, entities, custom enchantments, and crafting recipes.

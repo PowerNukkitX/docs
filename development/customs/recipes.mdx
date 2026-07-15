@@ -1,0 +1,107 @@
+---
+title: "Custom Recipes"
+description: "How to define and register shaped, shapeless, and furnace crafting recipes in PowerNukkitX."
+icon: BookOpen
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX allows you to register custom recipes, enabling players to craft custom blocks and items in-game.
+
+## Registering Recipes
+
+Like items and blocks, you should register your recipes during `onLoad()`. Once all recipes are registered, you must rebuild the recipe packet to synchronize them with any connected clients.
+
+```java
+import org.powernukkitx.registry.Registries;
+
+public static void registerAllRecipes() {
+    registerShapeless();
+    registerShaped();
+    registerFurnace();
+    
+    // CRITICAL: Rebuild the recipe package sent to players on login
+    Registries.RECIPE.rebuildPacket();
+}
+```
+
+---
+
+## 1. Shapeless Recipes
+
+Shapeless recipes require certain items to be placed in the crafting grid, but their placement arrangement does not matter.
+
+```java
+import org.powernukkitx.item.Item;
+import org.powernukkitx.recipe.ShapelessRecipe;
+import org.powernukkitx.registry.Registries;
+import java.util.List;
+
+private static void registerShapeless() {
+    Item result = Item.get(Item.DIAMOND);
+    Item coal = Item.get(Item.COAL);
+
+    // Inputs: Three pieces of coal (specify items with count = 1 in the list)
+    List<Item> input = List.of(coal, coal, coal);
+
+    ShapelessRecipe recipe = new ShapelessRecipe(result, input);
+    Registries.RECIPE.register(recipe);
+}
+```
+
+---
+
+## 2. Shaped Recipes
+
+Shaped recipes require items to be placed in a specific pattern on the crafting grid.
+
+```java
+import org.powernukkitx.item.Item;
+import org.powernukkitx.recipe.ShapedRecipe;
+import org.powernukkitx.registry.Registries;
+import java.util.List;
+import java.util.Map;
+
+private static void registerShaped() {
+    // Define item mappings (characters representing items)
+    Map<Character, Item> itemMapping = Map.of(
+            'a', Item.get(Item.AMETHYST_SHARD),
+            'b', Item.get(Item.STICK)
+    );
+
+    // Define the crafting shape pattern (up to 3x3)
+    String[] shape = new String[] {
+            "aaa", // Top row: 3 Amethyst Shards
+            " b ", // Middle row: 1 Stick in center
+            " b "  // Bottom row: 1 Stick in center
+    };
+
+    Item result = Item.get("powernukkitx:amethyst_pickaxe");
+
+    // Create and register shaped recipe
+    ShapedRecipe recipe = new ShapedRecipe(result, shape, itemMapping, List.of());
+    Registries.RECIPE.register(recipe);
+}
+```
+
+---
+
+## 3. Furnace Recipes
+
+Furnace recipes represent items smelted in a furnace, blast furnace, or smoker.
+
+```java
+import org.powernukkitx.item.Item;
+import org.powernukkitx.recipe.FurnaceRecipe;
+import org.powernukkitx.registry.Registries;
+
+private static void registerFurnace() {
+    Item result = Item.get(Item.DIAMOND);
+    Item inputCoal = Item.get(Item.COAL);
+
+    // Input coal yields a diamond when smelted
+    FurnaceRecipe recipe = new FurnaceRecipe(result, inputCoal);
+    Registries.RECIPE.register(recipe);
+}
+```

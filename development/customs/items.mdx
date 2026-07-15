@@ -1,0 +1,179 @@
+---
+title: "Custom Items"
+description: "How to define and register custom items, tools, weapons, and armor."
+icon: Sword
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX supports custom items. You can create standard items, tools, weapons, or wearable armor. To render them in-game, you must bundle their textures inside a resource pack.
+
+## Registering a Custom Item
+
+Custom items must be registered inside your plugin's `onLoad()` method:
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.ITEM.registerCustomItem(this, MyItem.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+---
+
+## 1. Simple Custom Item
+
+For simple items that have no special durability, damage, or defense parameters, extend the standard `org.powernukkitx.item.Item` class and implement `org.powernukkitx.item.customitem.CustomItem`.
+
+> [!NOTE]
+> The legacy class `ItemCustom` has been deprecated. You should extend `Item` and implement `CustomItem` directly.
+
+```java filename="MyItem.java"
+import org.powernukkitx.item.Item;
+import org.powernukkitx.item.customitem.CustomItem;
+import org.powernukkitx.item.customitem.CustomItemDefinition;
+import org.powernukkitx.item.customitem.data.CreativeCategory;
+
+public class MyItem extends Item implements CustomItem {
+    public MyItem() {
+        super("powernukkitx:test_item"); // Unique ID namespace:name
+    }
+
+    @Override
+    public CustomItemDefinition getDefinition() {
+        return CustomItemDefinition
+                .simpleBuilder(this)
+                .creativeCategory(CreativeCategory.ITEMS)
+                .texture("test_item") // Must match item_texture.json entry
+                .name("My Custom Item")
+                .allowOffHand(true)
+                .handEquipped(false)
+                .foil(false) // Set true to show the enchanted glow/glint effect
+                .build();
+    }
+}
+```
+
+---
+
+## 2. Custom Tool or Weapon
+
+For tools (e.g. pickaxes, axes, shovels) and weapons (swords), you should extend `org.powernukkitx.item.customitem.ItemCustomTool`. 
+Use the `.toolBuilder(this)` method in the definition and override the tool properties methods.
+
+```java filename="MyPickaxe.java"
+import org.powernukkitx.item.ItemTool;
+import org.powernukkitx.item.customitem.CustomItemDefinition;
+import org.powernukkitx.item.customitem.ItemCustomTool;
+import org.powernukkitx.item.customitem.data.CreativeCategory;
+
+public class MyPickaxe extends ItemCustomTool {
+    public MyPickaxe() {
+        super("powernukkitx:amethyst_pickaxe");
+    }
+
+    @Override
+    public CustomItemDefinition getDefinition() {
+        return CustomItemDefinition
+                .toolBuilder(this)
+                .speed(10) // Digging/mining speed modifier
+                .creativeCategory(CreativeCategory.EQUIPMENT)
+                .texture("amethyst_pickaxe")
+                .name("Amethyst Pickaxe")
+                .allowOffHand(true)
+                .handEquipped(true)
+                .foil(true) // Display enchantment glint
+                .build();
+    }
+
+    @Override
+    public int getMaxDurability() {
+        return ItemTool.DURABILITY_DIAMOND; // Reuse standard tool durability
+    }
+
+    @Override
+    public boolean isPickaxe() {
+        return true; // Mark as a pickaxe so it works with block breaking speed mechanics
+    }
+
+    @Override
+    public int getAttackDamage() {
+        return 5; // Melee attack damage
+    }
+
+    @Override
+    public int getEnchantAbility() {
+        return 15; // Enchanting level modifier
+    }
+
+    @Override
+    public int getTier() {
+        return ItemCustomTool.TIER_DIAMOND; // Tool tier (WOODEN, STONE, IRON, DIAMOND, NETHERITE)
+    }
+}
+```
+
+---
+
+## 3. Custom Armor
+
+For wearable armor items (helmets, chestplates, leggings, boots), extend `org.powernukkitx.item.customitem.ItemCustomArmor`. 
+Use `.armorBuilder(this)` in the definition and override armor methods.
+
+```java filename="MyArmor.java"
+import org.powernukkitx.item.ItemArmor;
+import org.powernukkitx.item.customitem.CustomItemDefinition;
+import org.powernukkitx.item.customitem.ItemCustomArmor;
+import org.powernukkitx.item.customitem.data.CreativeCategory;
+
+public class MyArmor extends ItemCustomArmor {
+    public MyArmor() {
+        super("powernukkitx:pnx_armor");
+    }
+
+    @Override
+    public CustomItemDefinition getDefinition() {
+        return CustomItemDefinition
+                .armorBuilder(this)
+                .name("PNX Armor")
+                .creativeCategory(CreativeCategory.EQUIPMENT)
+                .texture("pnx_armor")
+                .allowOffHand(true)
+                .handEquipped(true)
+                .build();
+    }
+
+    @Override
+    public boolean isChestplate() {
+        return true; // Marks the item as a chestplate armor type
+    }
+
+    @Override
+    public int getTier() {
+        return ItemArmor.WEARABLE_TIER_DIAMOND; // Reuse standard armor tiers
+    }
+
+    @Override
+    public int getMaxDurability() {
+        return 500;
+    }
+
+    @Override
+    public int getEnchantAbility() {
+        return 10;
+    }
+
+    @Override
+    public int getArmorPoints() {
+        return 8; // Armor defense points (half-shields on player bar)
+    }
+}
+```

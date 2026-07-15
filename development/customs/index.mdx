@@ -1,0 +1,44 @@
+---
+title: "Overview"
+description: "Overview of custom registry components on PowerNukkitX."
+icon: Shapes
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Hammer, Sword, Skull, Sparkles, BookOpen } from "lucide-react";
+
+PowerNukkitX introduces a custom registry architecture that allows developers to register custom blocks, items, entities, enchantments, and crafting recipes. These registries allow custom content to be served dynamically to Minecraft Bedrock Edition clients using server-side configurations and resource packs.
+
+## Critical Registration Timing
+
+> [!IMPORTANT]
+> You **must** register custom blocks, items, entities, and enchantments inside your plugin's `onLoad()` method rather than `onEnable()`. 
+> 
+> The server loads the world files and parses entity, block, and item NBT tags *after* loading the plugins but *before* enabling them. If you register components in `onEnable()`, the server will fail to recognize them during world load, leading to data corruption or loading errors.
+
+Select a guide below to learn how to create and register custom components:
+
+<Cards>
+    <Card icon={<Hammer className="text-primary" />} title="Custom Blocks" href="/docs/development/customs/blocks">
+        Define custom block properties, geometries, states, and permutations.
+    </Card>
+
+    <Card icon={<Sword className="text-primary" />} title="Custom Items" href="/docs/development/customs/items">
+        Create custom weapons, tools, armor, and simple items with custom durability and stats.
+    </Card>
+
+    <Card icon={<Skull className="text-primary" />} title="Custom Entities" href="/docs/development/customs/entities">
+        Define custom mobs or non-player entities with specific collision boxes and behaviors.
+    </Card>
+
+    <Card icon={<Sparkles className="text-primary" />} title="Custom Enchantments" href="/docs/development/customs/enchantments">
+        Create new enchantments with custom max levels and effects.
+    </Card>
+
+    <Card icon={<BookOpen className="text-primary" />} title="Custom Recipes" href="/docs/development/customs/recipes">
+        Register shaped, shapeless, and furnace crafting recipes for your items.
+    </Card>
+</Cards>

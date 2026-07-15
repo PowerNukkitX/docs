@@ -1,0 +1,158 @@
+---
+title: "Annotation Processor"
+description: "How to use the PowerNukkitX Annotation Processor (PNX-APT) to automate registrations and generate descriptors."
+icon: Cpu
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX features a compile-time annotation processor (**PNX-APT**) that automatically generates descriptors (`powernukkitx.yml`) and registers command handlers, event listeners, and scheduled tasks. This eliminates boilerplate code and manual configuration writing.
+
+## How it works
+
+When compiling your plugin, the processor parses specific annotations and:
+1. Generates a `powernukkitx.yml` file in the output JAR.
+2. Generates a helper bootstrap class named `PNXPluginBootstrap` containing the necessary code to register your command handlers, event listeners, and tasks.
+3. Automatically executes the bootstrap code when your plugin is enabled.
+
+---
+
+## 1. Plugin Metadata (`@PluginMeta`)
+
+The `@PluginMeta` annotation defines your plugin's core metadata. You must apply this annotation to your single main plugin class (extending `PluginBase`):
+
+```java filename="MyPlugin.java"
+package org.example;
+
+import org.powernukkitx.plugin.PluginBase;
+import org.powernukkitx.plugin.annotation.PluginMeta;
+import org.powernukkitx.plugin.PluginLoadOrder;
+
+@PluginMeta(
+    name = "MyPlugin",
+    version = "1.0.0",
+    api = {"3.0.0-SNAPSHOT"},
+    authors = {"AuthorName"},
+    description = "An automated plugin using annotations!",
+    website = "https://example.com",
+    order = PluginLoadOrder.POSTWORLD
+)
+public class MyPlugin extends PluginBase {
+    // No need to write a plugin.yml or powernukkitx.yml manually!
+}
+```
+
+### Parameters
+
+*   `name` (String): The plugin's name.
+*   `version` (String): The plugin's version string.
+*   `api` (String[]): List of compatible PowerNukkitX API versions (e.g., `{"3.0.0-SNAPSHOT"}`).
+*   `authors` (String[], optional): List of authors.
+*   `description` (String, optional): Description of the plugin.
+*   `website` (String, optional): Website URL.
+*   `prefix` (String, optional): Custom logger prefix.
+*   `depend` (String[], optional): Hard dependencies loaded before this plugin.
+*   `softDepend` (String[], optional): Soft dependencies loaded before this plugin if present.
+*   `loadBefore` (String[], optional): Plugins loaded after this plugin.
+*   `order` (PluginLoadOrder, optional): Load timing (POSTWORLD or STARTUP). Defaults to POSTWORLD.
+
+---
+
+## 2. Event Listeners (`@EventListener`)
+
+Instead of calling `getServer().getPluginManager().registerEvents(...)` in your `onEnable()`, annotate your listener class with `@EventListener`:
+
+```java filename="MyListener.java"
+package org.example;
+
+import org.powernukkitx.event.EventHandler;
+import org.powernukkitx.event.Listener;
+import org.powernukkitx.event.player.PlayerJoinEvent;
+import org.powernukkitx.plugin.annotation.EventListener;
+
+@EventListener
+public class MyListener implements Listener {
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        event.getPlayer().sendMessage("Welcome to the server!");
+    }
+}
+```
+
+---
+
+## 3. Scheduled Tasks (`@ScheduleTask`)
+
+Annotate any `Runnable` class (or subclass of `Task`) or `public static` method to run it automatically on a timer.
+
+### Options
+
+*   `delay` (int): Delay in ticks before starting the task (default `0`).
+*   `period` (int): Period in ticks between repeats (default `0`, meaning runs once).
+*   `async` (boolean): Whether to run the task asynchronously (default `false`).
+
+### On a Class (Runnable)
+
+```java filename="MyTask.java"
+package org.example;
+
+import org.powernukkitx.plugin.annotation.ScheduleTask;
+
+@ScheduleTask(delay = 100, period = 200, async = false)
+public class MyTask implements Runnable {
+    @Override
+    public void run() {
+        System.out.println("Repeating task executed every 10 seconds!");
+    }
+}
+```
+
+### On a Method
+
+```java filename="StaticTasks.java"
+package org.example;
+
+import org.powernukkitx.plugin.annotation.ScheduleTask;
+
+public class StaticTasks {
+    @ScheduleTask(delay = 20, async = true)
+    public static void runOnceAsync() {
+        System.out.println("Executed once asynchronously after 1 second!");
+    }
+}
+```
+
+---
+
+## 4. Commands (`@CommandDefinition`)
+
+Annotate your command class to register it in the server's command map automatically. You can specify the routing engine mode using `commandMode` (defaults to `CommandMode.COMMAND_TREE`):
+
+```java filename="MyCommand.java"
+package org.example;
+
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandSender;
+import org.powernukkitx.plugin.annotation.CommandDefinition;
+import org.powernukkitx.plugin.annotation.CommandDefinition.CommandMode;
+
+@CommandDefinition(
+    name = "mycommand",
+    description = "An annotation-registered command",
+    usage = "/mycommand",
+    aliases = {"mycmd"},
+    permission = "myplugin.command.use",
+    commandMode = CommandMode.COMMAND_TREE
+)
+public class MyCommand extends Command {
+    // If using COMMAND_TREE, override buildCommandTree(RouteTree tree)
+    // If using RAW, override execute(CommandSender sender, String label, String[] args)
+}
+```
+
+### Modes
+
+*   **`CommandMode.COMMAND_TREE` (default)**: Enables the new fluent routing tree. You must build your paths by overriding `protected void buildCommandTree(RouteTree tree)`.
+*   **`CommandMode.PARAM_TREE`**: Enables the subcommand parameter API.
+*   **`CommandMode.RAW`**: Disables automatic routing validation; you parse arguments manually inside the `execute` method.

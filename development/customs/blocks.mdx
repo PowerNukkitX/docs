@@ -1,0 +1,221 @@
+---
+title: "Custom Blocks"
+description: "How to define and register custom blocks with custom properties, models, and permutations."
+icon: Hammer
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX allows you to create custom blocks. To display custom blocks correctly, clients must load a resource pack containing block textures and geometries.
+
+## Registering a Custom Block
+
+Custom blocks must be registered inside your plugin's `onLoad()` method:
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.BLOCK.registerCustomBlock(this, MyBlock.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+---
+
+## Basic Custom Block
+
+A basic custom block extends `org.powernukkitx.block.Block` and implements `org.powernukkitx.block.customblock.CustomBlock`. You must define block properties and return a definition via `getDefinition()`:
+
+```java filename="MyBlock.java"
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockProperties;
+import org.powernukkitx.block.BlockState;
+import org.powernukkitx.block.customblock.CustomBlock;
+import org.powernukkitx.block.customblock.CustomBlockDefinition;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class MyBlock extends Block implements CustomBlock {
+    // Define a unique identifier (namespace:name)
+    public static final BlockProperties PROPERTIES = new BlockProperties("powernukkitx:redstoneluckyblock");
+
+    public MyBlock() {
+        super(PROPERTIES.getDefaultState());
+    }
+
+    public MyBlock(@Nullable BlockState blockState) {
+        super(blockState);
+    }
+
+    @Override
+    public @NotNull BlockProperties getProperties() {
+        return PROPERTIES;
+    }
+
+    @Override
+    public CustomBlockDefinition getDefinition() {
+        return CustomBlockDefinition
+                .builder(this)
+                .texture("redstoneluckyblock") // Must match terrain_texture.json entry
+                .breakTime(3) // Mining/break time
+                .build();
+    }
+
+    // You can override physics/behavior settings here:
+    @Override
+    public double getFrictionFactor() { return 0.6; }
+
+    @Override
+    public double getHardness() { return 5.0; }
+
+    @Override
+    public int getLightLevel() { return 15; }
+}
+```
+
+---
+
+## Advanced Custom Block (Properties & Permutations)
+
+For complex blocks like slabs, stairs, or pillars, you can define custom properties and use permutations (which alter the geometry or collision box based on block states using Molang queries).
+
+The following example implements a custom slab block using states and permutations:
+
+```java filename="MySlab.java"
+import org.powernukkitx.Player;
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockProperties;
+import org.powernukkitx.block.BlockState;
+import org.powernukkitx.block.BlockTransparent;
+import org.powernukkitx.block.customblock.CustomBlock;
+import org.powernukkitx.block.customblock.CustomBlockDefinition;
+import org.powernukkitx.block.customblock.data.*;
+import org.powernukkitx.block.property.type.BooleanPropertyType;
+import org.powernukkitx.item.Item;
+import org.powernukkitx.math.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class MySlab extends BlockTransparent implements CustomBlock {
+    // Define custom boolean block properties
+    public static final BooleanPropertyType BRIDGE_TOP_SLOT_BIT = BooleanPropertyType.of("bridge:top_slot_bit", false);
+    public static final BooleanPropertyType BRIDGE_IS_FULL_BIT = BooleanPropertyType.of("bridge:is_full_bit", false);
+    
+    // Register the properties in BlockProperties
+    public static final BlockProperties PROPERTIES = new BlockProperties(
+            "powernukkitx:blue_mahoe_slab", 
+            BRIDGE_TOP_SLOT_BIT, 
+            BRIDGE_IS_FULL_BIT
+    );
+
+    public MySlab() {
+        super(PROPERTIES.getDefaultState());
+    }
+
+    public MySlab(@Nullable BlockState blockState) {
+        super(blockState);
+    }
+
+    @NotNull
+    @Override
+    public BlockProperties getProperties() {
+        return PROPERTIES;
+    }
+
+    @Override
+    public CustomBlockDefinition getDefinition() {
+        return CustomBlockDefinition
+                .builder(this)
+                .texture("blue_mahoe_planks")
+                // Define default base geometry
+                .geometry(new Geometry("geometry.custom_slab")
+                        .boneVisibility("lower", true)
+                        .boneVisibility("upper", false))
+                // Define permutations using Molang query checks on block states
+                .permutations(
+                        // 1. Lower Slab Permutation
+                        new Permutation(Component.builder()
+                                .collisionBox(new CollisionBox(-8, 0, -8, 16, 8, 16))
+                                .selectionBox(new SelectionBox(-8, 0, -8, 16, 8, 16))
+                                .geometry(new Geometry("geometry.custom_slab")
+                                        .boneVisibility("lower", true)
+                                        .boneVisibility("upper", false))
+                                .build(),
+                                "q.block_state('bridge:top_slot_bit') == false && q.block_state('bridge:is_full_bit') == false"),
+                        
+                        // 2. Upper Slab Permutation
+                        new Permutation(Component.builder()
+                                .collisionBox(new CollisionBox(-8, 8, -8, 16, 16, 16))
+                                .selectionBox(new SelectionBox(-8, 8, -8, 16, 16, 16))
+                                .geometry(new Geometry("geometry.custom_slab")
+                                        .boneVisibility("lower", false)
+                                        .boneVisibility("upper", true))
+                                .build(),
+                                "q.block_state('bridge:top_slot_bit') == true && q.block_state('bridge:is_full_bit') == false"),
+                        
+                        // 3. Full Slab Block Permutation
+                        new Permutation(Component.builder()
+                                .collisionBox(new CollisionBox(-8, 0, -8, 16, 16, 16))
+                                .selectionBox(new SelectionBox(-8, 0, -8, 16, 16, 16))
+                                .geometry(new Geometry("geometry.custom_slab")
+                                        .boneVisibility("lower", true)
+                                        .boneVisibility("upper", true))
+                                .build(),
+                                "q.block_state('bridge:is_full_bit') == true")
+                )
+                .build();
+    }
+
+    // Overriding place() method allows you to change block states when placing or stacking slabs:
+    @Override
+    public boolean place(@NotNull Item item, @NotNull Block block, @NotNull Block target, @NotNull BlockFace face, double fx, double fy, double fz, @Nullable Player player) {
+        setPropertyValue(BRIDGE_IS_FULL_BIT, false);
+        if (face == BlockFace.DOWN) {
+            if (target instanceof MySlab) {
+                if (target.getPropertyValue(BRIDGE_TOP_SLOT_BIT) && !target.getPropertyValue(BRIDGE_IS_FULL_BIT)) {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                    setPropertyValue(BRIDGE_IS_FULL_BIT, true);
+                    this.getLevel().setBlock(target, this, true);
+                    return false;
+                } else {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, true);
+                    this.getLevel().setBlock(this, this, true);
+                    return true;
+                }
+            } else {
+                setPropertyValue(BRIDGE_TOP_SLOT_BIT, true);
+                this.getLevel().setBlock(this, this, true);
+                return true;
+            }
+        } else if (face == BlockFace.UP) {
+            if (target instanceof MySlab) {
+                if (!target.getPropertyValue(BRIDGE_TOP_SLOT_BIT) && !target.getPropertyValue(BRIDGE_IS_FULL_BIT)) {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                    setPropertyValue(BRIDGE_IS_FULL_BIT, true);
+                    this.getLevel().setBlock(target, this, true);
+                    return false;
+                } else {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                    this.getLevel().setBlock(this, this, true);
+                    return true;
+                }
+            } else {
+                setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                this.getLevel().setBlock(this, this, true);
+            }
+        } else {
+            setPropertyValue(BRIDGE_TOP_SLOT_BIT, fy > 0.5);
+            this.getLevel().setBlock(this, this, true);
+            return true;
+        }
+        return true;
+    }
+}
+```

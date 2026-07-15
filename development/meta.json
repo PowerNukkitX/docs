@@ -3,7 +3,9 @@
   "description": "Documentation for PowerNukkitX Plugin creation",
   "icon": "Code",
   "pages": [
+    "index",
     "basics",
+    "customs",
     "forms"
   ],
   "root": true

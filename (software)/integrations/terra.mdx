@@ -1,0 +1,77 @@
+---
+title: "Terra Generator"
+description: "How to configure and use the Terra terrain generator to create custom worlds on PowerNukkitX."
+icon: Globe
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Terra is an advanced, highly customizable terrain generator. It uses custom configuration packs to generate realistic and beautiful biomes and landscapes in Minecraft Bedrock.
+
+## Setting Up Terra
+
+PowerNukkitX features built-in support for the Terra generator.
+
+### 1. Enable Terra in pnx.yml
+
+> [!WARNING]
+> Remember to **shut down the server** before modifying `pnx.yml` to prevent the server from overwriting your edits with cached configurations on shutdown.
+
+Open `pnx.yml` in your server root directory, find the `miscSettings` section, and set `enableTerra` to `true`:
+
+```yaml filename="pnx.yml"
+miscSettings:
+  enableTerra: true
+```
+
+### 2. Restart the Server
+Restart the server. PowerNukkitX will initialize the Terra directory structure and create a `./terra` directory in your server root.
+
+---
+
+## Installing Terra Packs
+
+Terra controls world generation through config packs. You can download and install community-made packs:
+
+1. Locate a pack (e.g. from the [Terra Community Packs list](https://terra.polydev.org/config/community-packs.html)).
+2. Place the pack's folder or ZIP file inside the `./terra/packs/` directory of your server.
+3. Find the pack ID. Open the pack's `pack.yml` file and locate the `id` field (e.g., `REIMAGEND`).
+
+---
+
+## Configuring a World to Use Terra
+
+To generate a world using your installed Terra pack, configure a custom generator configuration in `worlds/`:
+
+1. Create a folder inside the `worlds` directory for your new world (e.g., `worlds/end`).
+2. Create a configuration file named `config.json` inside that world folder:
+   ```json filename="worlds/end/config.json"
+   {
+       "format": "leveldb",
+       "enable": true,
+       "generators": {
+           "2": {
+               "name": "terra",
+               "seed": 0,
+               "enableAntiXray": false,
+               "antiXrayMode": "LOW",
+               "preDeobfuscate": true,
+               "dimensionData": {
+                   "dimensionName": "minecraft:end",
+                   "dimensionId": 2,
+                   "minHeight": 0,
+                   "maxHeight": 255,
+                   "height": 256,
+                   "chunkSectionCount": 16
+               },
+               "preset": {
+                   "pack": "REIMAGEND"
+               }
+           }
+       }
+   }
+   ```
+   > [!TIP]
+   > Replace `"REIMAGEND"` in the `preset.pack` parameter with the exact ID of your desired pack.
+3. Start the server. Teleport to your new world in-game using `/world tp end Dim2` to view the custom generated terrain.

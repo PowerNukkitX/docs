@@ -1,0 +1,43 @@
+---
+title: "Spark Profiler"
+description: "How to set up and use the Spark performance profiler on PowerNukkitX."
+icon: Activity
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Spark is an advanced performance profiler for Minecraft clients, servers, and proxies. It helps administrators monitor CPU and memory usage and diagnose performance drops or lag spikes.
+
+## Setting Up Spark
+
+PowerNukkitX supports downloading and setting up Spark automatically via a configuration flag in `pnx.yml`.
+
+### 1. Enable Spark in pnx.yml
+
+> [!WARNING]
+> Remember to **shut down the server** before modifying `pnx.yml` to prevent the server from overwriting your edits with cached configurations on shutdown.
+
+Open the configuration file `pnx.yml` in your server directory, find the `miscSettings` section, and set `installSpark` to `true`:
+
+```yaml filename="pnx.yml"
+miscSettings:
+  installSpark: true
+```
+
+### 2. Restart the Server
+Restart your PowerNukkitX server. During startup, the server will detect this flag, download the compatible Spark jar file into your `plugins` directory, and load it.
+
+Once the plugin is enabled, Spark starts automatically and begins listening to and monitoring all server threads in the background.
+
+---
+
+## How to Use Spark
+
+Once the plugin is loaded, you can run Spark commands in the console or in-game (if you are an Operator):
+
+- **`/spark profiler start`**: Starts a performance profiling session. Let it run for a few minutes while players are active to collect representative data.
+- **`/spark profiler stop`**: Stops the profiling session and prints a unique URL containing a detailed call tree viewer, CPU, and memory graphs.
+- **`/spark health`**: Displays current tick rate (TPS), memory allocation, and CPU usage.
+
+For a complete list of commands and usage details, refer to the [Official Spark Documentation](https://spark.lucko.me/docs).

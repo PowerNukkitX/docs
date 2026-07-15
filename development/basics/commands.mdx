@@ -40,12 +40,15 @@ commands:
 Use onCommand for small or quick commands. For richer behavior (permissions, tab completion, subcommands) prefer registering a dedicated Command class.
 </Callout>
 
-### Registering with new class
-```java filename="GreetCommand.java"
-package com.example.command;
+### Registering with a Dedicated Command Class
 
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
+Creating a dedicated command class is the recommended approach for clean code organization. Extend `org.powernukkitx.command.Command` (or `org.powernukkitx.command.PluginCommand`):
+
+```java filename="GreetCommand.java"
+package org.example.command;
+
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandSender;
 
 public class GreetCommand extends Command {
 
@@ -66,16 +69,103 @@ public class GreetCommand extends Command {
 }
 ```
 
-You need to register your command class when your plugin is enabled.
+Register the command class during your plugin's initialization:
 
 ```java
 @Override
 public void onEnable() {
-    this.getServer().getCommandMap().register("greet", new GreetCommand());
+    this.getServer().getCommandMap().register("myplugin", new GreetCommand());
 }
 ```
 
-Don’t forget the import your command class.
+---
+
+### Command Tree Fluent Routing API
+
+PowerNukkitX introduces a modern, fluent **Command Tree API** for command registration and argument parsing. By enabling the command tree, you build a routing hierarchy of literals (subcommands) and arguments. The server automatically handles tab-completion, permission checking, sender type validation, and syntax errors.
+
+#### 1. Enable the Command Tree
+In your command's constructor, call `enableCommandTree()` and override the `buildCommandTree(RouteTree tree)` method:
+
+```java filename="MyCommand.java"
+package org.example.command;
+
+import org.powernukkitx.Player;
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandContext;
+import org.powernukkitx.command.CommandResult;
+import org.powernukkitx.command.SenderType;
+import org.powernukkitx.command.route.RouteTree;
+import org.powernukkitx.command.route.node.RouteNode;
+import org.powernukkitx.command.tree.node.PlayersNode;
+import org.powernukkitx.command.tree.node.MessageStringNode;
+import java.util.List;
+
+public class MyCommand extends Command {
+
+    public MyCommand() {
+        super("mycommand", "An advanced CommandTree command");
+        
+        // Enable the CommandTree Routing API
+        this.enableCommandTree();
+    }
+
+    @Override
+    protected void buildCommandTree(RouteTree tree) {
+        // Registering a literal subcommand: /mycommand info
+        tree.getRoot().then(
+            RouteNode.literal("info")
+                .exec(context -> {
+                    context.getSender().sendMessage("This command uses PowerNukkitX CommandTree!");
+                    return CommandResult.success();
+                })
+        );
+
+        // Registering a subcommand with arguments: /mycommand send <player> <message>
+        tree.getRoot().then(
+            RouteNode.literal("send")
+                .then(
+                    RouteNode.argument("player", new PlayersNode())
+                        .then(
+                            RouteNode.argument("message", new MessageStringNode())
+                                .exec(context -> {
+                                    // Extract arguments by name
+                                    List<Player> targetPlayers = context.getArg("player");
+                                    String msg = context.getArg("message");
+                                    
+                                    for (Player p : targetPlayers) {
+                                        p.sendMessage("Message: " + msg);
+                                    }
+                                    
+                                    context.getSender().sendMessage("Message sent successfully!");
+                                    return CommandResult.success();
+                                })
+                        )
+                )
+        );
+    }
+}
+```
+
+#### 2. Building Routes (`RouteNode` options)
+
+The `RouteNode` class provides a builder-like pattern to construct routing nodes:
+
+*   **`RouteNode.literal(String name)`**: Matches a fixed keyword/subcommand name in the argument chain (e.g. `/mycommand ban`).
+*   **`RouteNode.argument(String name, IParamNode<?> paramNode)`**: Matches a typed input argument (e.g. `PlayersNode()`, `IntNode()`, `BlockNode()`). The argument can be retrieved by its name from `CommandContext`.
+*   **`.then(RouteNode child)`**: Chains a sub-node/argument after the current node.
+*   **`.exec(Function<CommandContext, CommandResult> executor)`**: Marks the node as executable. If player input ends at this node, this block executes.
+*   **`.senderType(SenderType senderType)`**: Restricts execution to specific senders (`SenderType.PLAYER`, `SenderType.CONSOLE`, or `SenderType.ANY`).
+*   **`.permission(String permission)`**: Restricts execution to players with the specified permission.
+*   **`.optional(boolean optional)`**: Marks the node parameter as optional.
+*   **`.suggest(List<String> customList)`**: Overrides client tab-complete suggestions with a custom list.
+
+#### 3. Execution Results (`CommandResult`)
+
+Your route executors must return a `CommandResult`:
+*   **`CommandResult.success()`**: Indicates successful execution.
+*   **`CommandResult.fail()`**: Indicates command failure.
+*   **`CommandResult.fail("Error message")`**: Fails the command and automatically sends the specified error message to the command sender.
 
 ### Need Help?
 If you need assistance, check out the <a href="https://github.com/PowerNukkitX/ExamplePlugin-Maven">Example Plugin</a> or join our <a href="https://discord.powernukkitx.org">Discord server</a> for support.

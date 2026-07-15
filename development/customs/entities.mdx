@@ -1,0 +1,116 @@
+---
+title: "Custom Entities"
+description: "How to define, register, and spawn custom entities and mobs in PowerNukkitX."
+icon: Skull
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX supports registering custom entities. Like blocks and items, custom entities require clients to download a resource pack containing their textures, models/geometries, and client-side entity definitions.
+
+## Registering a Custom Entity
+
+Entities are registered in your plugin's `onLoad()` method. After registering, you must rebuild the entity tag registry:
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.ENTITY.registerCustomEntity(this, MyPig.class);
+        // Rebuild the NBT tags so the server registers the custom entity type
+        Registries.ENTITY.rebuildTag();
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+---
+
+## Defining the Entity
+
+Custom entities extend `org.powernukkitx.entity.Entity` and implement `org.powernukkitx.entity.custom.CustomEntity`. You must define `getIdentifier()`, `getOriginalName()`, and return a static `CustomEntityDefinition` method:
+
+```java filename="MyPig.java"
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.entity.custom.CustomEntity;
+import org.powernukkitx.entity.custom.CustomEntityDefinition;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+
+public class MyPig extends Entity implements CustomEntity {
+    public static final String IDENTIFIER = "powernukkitx:boar";
+
+    public MyPig(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return "boar";
+    }
+
+    // This method returns the client-facing definition properties of the entity
+    public static CustomEntityDefinition definition() {
+        return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
+                .eid(IDENTIFIER)
+                .hasSpawnEgg(true) // Generates a creative inventory spawn egg
+                .isSummonable(true) // Allows spawning via /summon command
+                .originalName("Feral Boar")
+                .health(20) // Maximum health points
+                .attack(3) // Melee attack damage
+                .movement(0.2f) // Speed modifier
+                .typeFamily("mob", "pig") // Entity classification family
+                .collisionBox(0.9f, 0.9f) // Width and height collision boundaries
+                .knockbackResistance(0.2f)
+                .isPersistent(true) // Keeps the mob loaded at distance
+                .build();
+    }
+}
+```
+
+---
+
+## Spawning Custom Entities
+
+Once registered, custom entities can be spawned:
+- Via the `/summon powernukkitx:boar` command (if `.isSummonable(true)`).
+- Via the spawn egg in the Creative inventory (if `.hasSpawnEgg(true)`).
+- Programmatically via the API.
+
+Here is an example command executor spawning the custom entity at a player's location:
+
+```java
+import org.powernukkitx.Player;
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandSender;
+import org.powernukkitx.entity.Entity;
+
+@Override
+public boolean execute(CommandSender sender, String label, String[] args) {
+    if (sender instanceof Player player) {
+        // Construct the default NBT tags for the entity
+        CompoundTag nbt = Entity.getDefaultNBT(player.getPosition());
+        
+        // Instantiate the entity
+        MyPig boar = new MyPig(player.getChunk(), nbt);
+        
+        // Spawn the entity for all viewers
+        boar.spawnToAll();
+        
+        player.sendMessage("Spawned a feral boar!");
+        return true;
+    }
+    return false;
+}
+```

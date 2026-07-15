@@ -1,0 +1,73 @@
+---
+title: "Custom Enchantments"
+description: "How to define and register custom enchantments in PowerNukkitX."
+icon: Sparkles
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX allows you to create custom enchantments. You can define their behavior, rarity, type, and maximum level to modify gameplay mechanics.
+
+## Registering a Custom Enchantment
+
+Custom enchantments must be registered during the plugin's `onLoad()` phase:
+
+```java
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onLoad() {
+    try {
+        Enchantment.register(new MyEnchantment());
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+---
+
+## Defining the Enchantment
+
+Custom enchantments extend `org.powernukkitx.item.enchantment.Enchantment`. Pass an identifier, display name, rarity, and enchantment type to the super constructor:
+
+```java filename="MyEnchantment.java"
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.item.enchantment.EnchantmentType;
+import org.powernukkitx.utils.Identifier;
+
+public class MyEnchantment extends Enchantment {
+    public MyEnchantment() {
+        super(
+            new Identifier("powernukkitx:lucky_strike"), // Unique identifier namespace:name
+            "Lucky Strike",                              // Display name
+            Rarity.RARE,                                 // Rarity (COMMON, UNCOMMON, RARE, VERY_RARE)
+            EnchantmentType.WEAPON                       // Applicable items (ARMOR, WEAPON, DIGGER, ALL, etc.)
+        );
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3; // Maximum level of the enchantment
+    }
+
+    @Override
+    public int getMinEnchantability(int level) {
+        return 1 + level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level) {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    // You can override additional handlers such as:
+    // - getDamageBonus(int level, Entity target) for custom weapon damage modifiers.
+    // - getDamageProtection(int level, DamageSource source) for custom protection modifiers.
+}
+```
+
+> [!IMPORTANT]
+> Always check for the presence of your custom enchantment in event listeners (e.g. `EntityDamageByEntityEvent` or `BlockBreakEvent`) to implement the custom enchantment's effects.
