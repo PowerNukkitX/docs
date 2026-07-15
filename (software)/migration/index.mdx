@@ -1,0 +1,29 @@
+---
+title: "Overview"
+description: "Learn how to migrate your existing Minecraft Bedrock server to PowerNukkitX."
+icon: Shield
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Hammer, CircleAlert, Server } from "lucide-react";
+
+If you are currently running a server using another Minecraft Bedrock software, you can migrate your configuration, world data, and resource packs to PowerNukkitX. 
+
+Depending on your source software, select the appropriate guide below:
+
+<Cards>
+    <Card icon={<Hammer className="text-primary" />} title="From Nukkit / PowerNukkit" href="/docs/migration/nukkit">
+        Migrate from legacy Java server software. Includes details on our built-in configuration converter.
+    </Card>
+
+    <Card icon={<Server className="text-primary" />} title="From Bedrock Dedicated Server (BDS)" href="/docs/migration/bds">
+        Migrate from Mojang's official C++ server. Learn how to convert configurations and move LevelDB worlds.
+    </Card>
+
+    <Card icon={<CircleAlert className="text-primary" />} title="From PocketMine-MP" href="/docs/migration/pocketmine">
+        Migrate from PHP-based PocketMine-MP. Understand plugin incompatibilities and config translation mapping.
+    </Card>
+</Cards>

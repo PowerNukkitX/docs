@@ -1,0 +1,90 @@
+---
+title: "macOS Installation"
+description: "Detailed step-by-step guide to installing and running PowerNukkitX on macOS."
+icon: Apple
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+This guide covers installing and running a PowerNukkitX server on macOS (Intel or Apple Silicon).
+
+## Prerequisites: Java 21+
+
+PowerNukkitX requires **Java 21 or newer**. We recommend using the [Homebrew package manager](https://brew.sh/) to manage Java on macOS.
+
+### 1. Install Java via Homebrew
+Open the Terminal application and execute:
+```bash
+brew install openjdk@21
+```
+
+After installation completes, link the JDK so that macOS can locate it:
+```bash
+sudo ln -sfn /opt/homebrew/opt/openjdk@21/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+```
+*(If you are on an older Intel Mac, replace `/opt/homebrew` with `/usr/local`).*
+
+### 2. Verify Installation
+Verify that Java 21 is active on your current terminal path:
+```bash
+java -version
+```
+You should see output matching version `21`.
+
+---
+
+## Setting Up the Server
+
+### 1. Create a Server Folder
+Create a folder to hold your server configuration and game worlds:
+```bash
+mkdir ~/pnx-server
+cd ~/pnx-server
+```
+
+### 2. Download the Server JAR
+Download the latest `powernukkitx.jar` from the [Official PowerNukkitX GitHub Releases Page](https://github.com/PowerNukkitX/PowerNukkitX/releases) and move it into your `~/pnx-server` folder.
+
+### 3. Create the Startup Script
+PowerNukkitX requires specific Java reflection access flags to startup. Creating a shell script makes launching the server easier:
+
+1. Create a script file in your terminal:
+   ```bash
+   nano start.sh
+   ```
+2. Paste the following lines into the file:
+   ```bash
+   #!/bin/bash
+   java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+   ```
+3. Save and close the file (`Ctrl + O`, `Enter`, then `Ctrl + X`).
+4. Grant execute permissions to the script:
+   ```bash
+   chmod +x start.sh
+   ```
+
+---
+
+## Launching the Server
+
+To start the server, execute the startup script in your Terminal:
+```bash
+./start.sh
+```
+
+- **First-run Wizard:** If you are running the server for the first time, complete the setup wizard in the console:
+  - Type `y` to accept the license agreement.
+  - Choose your language (e.g. `eng` for English).
+  - Configure the MOTD (server name) and port.
+- Type `stop` in the console and press Enter to shutdown the server gracefully.
+
+---
+
+## Troubleshooting macOS Setup
+
+### "Developer cannot be verified" or Gatekeeper warnings
+macOS security may block Java or the launcher. If a prompt prevents execution:
+1. Open **System Settings** on your Mac.
+2. Navigate to **Privacy & Security**.
+3. Scroll down to the security section and click **Allow Anyway** next to the blocked Java or terminal process notification.

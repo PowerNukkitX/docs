@@ -1,0 +1,49 @@
+---
+title: "Permissions & Security"
+description: "How to manage player permissions and server security on PowerNukkitX."
+icon: Shield
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Managing permissions is essential for securing your PowerNukkitX server and controlling what commands and actions players can perform.
+
+## Operator (OP) System
+
+The simplest way to grant permissions is by making a player an **Operator (OP)**. Operators bypass all permission checks and have access to all server commands.
+
+### Managing Operators
+- **To grant OP status:** Run the command in the server console or in-game (if you are already OP):
+  ```bash
+  /op <player_name>
+  ```
+- **To revoke OP status:** Run the command:
+  ```bash
+  /deop <player_name>
+  ```
+- **ops.txt:** PowerNukkitX maintains a list of operators in the `ops.txt` file in the server root. You can edit this file manually while the server is stopped (one player name per line).
+
+---
+
+## Permission Nodes
+
+Commands and plugins on PowerNukkitX use **permission nodes** (hierarchical strings) to check for access. For example:
+- `nukkit.command.help` - Access to the `/help` command.
+- `nukkit.command.gamemode` - Access to the `/gamemode` command.
+
+By default:
+- Regular players have access to basic commands (e.g. `/tell`, `/list`, `/help`).
+- Operators have access to all commands.
+
+---
+
+## Permission Managers (Recommended)
+
+For public or multi-group servers, the built-in OP system is usually insufficient. It is highly recommended to install a permission management plugin:
+
+- **LuckPerms:** LuckPerms is the industry-standard permission management plugin, which has been ported to the Nukkit/PowerNukkitX platform.
+- With LuckPerms, you can:
+  - Create custom groups (e.g., `admin`, `moderator`, `player`).
+  - Assign specific permission nodes to groups or individual players.
+  - Set up prefixes/suffixes and inheritance.

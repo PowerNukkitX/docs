@@ -3,4 +3,26 @@ title: FAQ
 description: Frequently Asked Questions about PNX
 ---
 
-# Soon
+Here are answers to the most common questions regarding PowerNukkitX.
+
+### Can I run Java edition plugins on PowerNukkitX?
+No. PowerNukkitX is designed for Minecraft Bedrock Edition. Spigot, Paper, and Purpur plugins are written for Minecraft Java Edition. Their internal APIs and network protocols are entirely different and incompatible.
+
+### Does PowerNukkitX support vanilla resource packs and behavior packs?
+PowerNukkitX supports resource packs. You can place your zipped resource pack inside the `resource_packs/` folder on the server. Behavior packs are not supported because PowerNukkitX implements all server-side logic (mobs, blocks, items) in Java.
+
+### What Java version is required?
+PowerNukkitX requires **Java 21 or newer** (64-bit). Older versions of Java (Java 8, 11, 17, 20) are incompatible and will cause class version errors.
+
+### Why do I get a reflection access warning on startup?
+Java 9+ restricts reflection access by default. PowerNukkitX relies on reflection to dynamically register custom items and blocks and load plugins. This is why you must run the server with the following flags or use the provided startup scripts:
+```bash
+java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+```
+
+### How does PowerNukkitX differ from NukkitX and PowerNukkit?
+PowerNukkitX is a modern, active fork of the original Nukkit/PowerNukkit software. It features:
+- Core support for custom blocks, custom items, and custom entities.
+- Vanilla-like mob AI.
+- Advanced terrain generator (Terra).
+- Consolidation of configuration settings into `pnx.yml` (replacing `server.properties` and `nukkit.yml`).

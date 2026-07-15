@@ -1,0 +1,67 @@
+---
+title: "Nukkit / PowerNukkit"
+description: "Detailed guide on migrating from Nukkit or legacy PowerNukkit to PowerNukkitX."
+icon: Hammer
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Upgrading from Nukkit or older versions of PowerNukkit to PowerNukkitX (PNX) is highly automated, thanks to a built-in configuration converter.
+
+## Step-by-Step Migration
+
+### 1. Create a Complete Backup
+Before performing any upgrades, make a copy of your entire server directory and save it in a safe location.
+
+### 2. Update Files
+1. Download the latest `powernukkitx.jar` from the [Releases Page](https://github.com/PowerNukkitX/PowerNukkitX/releases).
+2. Download the appropriate startup script (`start.bat` or `start.sh`) from [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts) and place it in the server folder.
+3. Replace the old jar file with `powernukkitx.jar`. Do **not** delete your old `nukkit.yml` or `server.properties` files yet.
+
+### 3. Run the Server
+Execute your new startup script. 
+
+When PowerNukkitX starts, it will detect the presence of `nukkit.yml` and `server.properties` and automatically trigger the migration:
+- It creates a backup of these files in a new `backup/` folder in your directory.
+- It parses all configuration parameters from both files.
+- It writes these settings to the new `pnx.yml` structure (managed by `ConfigUpdaterLegacy`).
+- It deletes the old `nukkit.yml` and `server.properties` files.
+- It resumes starting the server.
+
+---
+
+## Configuration Mapping Details
+
+PowerNukkitX migrates your parameters into `pnx.yml`. Below is the general destination in the new structure:
+
+| Legacy Setting | Legacy File | pnx.yml Category | pnx.yml Key |
+| :--- | :--- | :--- | :--- |
+| `server-ip` | `server.properties` | `baseSettings` | `ip` |
+| `server-port` | `server.properties` | `baseSettings` | `port` |
+| `max-players` | `server.properties` | `baseSettings` | `maxPlayers` |
+| `level-name` | `server.properties` | `baseSettings` | `defaultLevelName` |
+| `white-list` | `server.properties` | `baseSettings` | `allowList` |
+| `xbox-auth` | `server.properties` | `baseSettings` | `xboxAuth` |
+| `gamemode` | `server.properties` | `gameplaySettings` | `gamemode` |
+| `difficulty` | `server.properties` | `gameplaySettings` | `difficulty` |
+| `view-distance` | `server.properties` | `gameplaySettings` | `viewDistance` |
+| `language` | `nukkit.yml` (base) | `baseSettings` | `language` |
+| `autosave` | `nukkit.yml` (base) | `baseSettings` | `autosaveDelay` |
+| `save-player-data` | `nukkit.yml` (player) | `playerSettings` | `savePlayerData` |
+
+---
+
+## World Data
+
+Nukkit and PowerNukkitX use the same region-based world format. Your existing worlds in the `worlds/` directory will load natively in PowerNukkitX without any conversions.
+
+---
+
+## Plugin Compatibility
+
+Nukkit/PowerNukkit plugins run on a legacy API. While PowerNukkitX maintains compatibility with many basic plugins, advanced plugins (especially those interacting with blocks, items, or entity registries) will fail.
+- **Why?** PowerNukkitX implements a modernized, dynamic custom registry system for blocks, items, and entities to support Bedrock Edition features.
+- **Action Required:**
+  1. Check for updated or official PowerNukkitX releases of your plugins on the PowerNukkitX plugin portal.
+  2. If updates are unavailable, you may need to recompile or modify the plugins to use the new API namespaces.

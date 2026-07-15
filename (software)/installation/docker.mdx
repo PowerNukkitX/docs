@@ -1,0 +1,91 @@
+---
+title: "Docker Installation"
+description: "How to run PowerNukkitX using Docker and Docker Compose."
+icon: Container
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Running PowerNukkitX in a Docker container is a clean and convenient way to host your server. The official Docker image is available on Docker Hub as [`powernukkitx/server`](https://hub.docker.com/r/powernukkitx/server).
+
+## Quick Start
+
+To start a PowerNukkitX container listening on the default Bedrock port (`19132/udp`), run the following command:
+
+```bash
+docker run -d \
+  --name pnx-server \
+  -p 19132:19132/udp \
+  -v /path/to/your/data:/data \
+  powernukkitx/server
+```
+
+> [!IMPORTANT]
+> Replace `/path/to/your/data` with an absolute path on your host machine. This directory will store your server settings, worlds, plugins, and logs, ensuring that your server data is persisted when the container restarts or updates.
+
+---
+
+## Volume Mounts
+
+The container exposes two volumes:
+- **`/data`** (Recommended): Stores all configuration files (`pnx.yml`), `worlds/`, `plugins/`, `resource_packs/`, and `logs/`.
+- **`/home/minecraft`** (Optional): Stores user-specific JLine cache files.
+
+---
+
+## Docker Compose
+
+Using Docker Compose simplifies managing your server configuration. Create a `docker-compose.yml` file in a directory of your choice:
+
+```yaml filename="docker-compose.yml"
+services:
+  pnx-server:
+    image: powernukkitx/server:latest
+    container_name: pnx-server
+    ports:
+      - "19132:19132/udp"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+```
+
+Start the server in the background:
+```bash
+docker compose up -d
+```
+
+---
+
+## Console Access
+
+Because PowerNukkitX runs in the background, you cannot type commands directly. To access the interactive server console to run commands (like `/op` or `/stop`):
+
+```bash
+docker attach pnx-server
+```
+
+To detach from the console without stopping the container, press `Ctrl + P` followed by `Ctrl + Q`.
+
+---
+
+## Custom JVM Options & Arguments
+
+The Dockerfile defines `java` as the entrypoint. By default, it runs with the following optimized arguments:
+- Garabage Collector: `-XX:+UseZGC`, `-XX:+ZGenerational`, `-XX:+UseStringDeduplication`
+- JVM Reflection Flags: `--add-opens` flags for reflection access.
+- Startup flags: `--skip-setup`, `--accept-license`, `--language eng` (these automatically bypass the setup wizard and accept the license for non-interactive execution).
+
+If you want to customize the startup arguments (for example, to change the maximum Java heap size to 4GB), you must override the container's default command by specifying the full class path and class name:
+
+```bash
+docker run -d \
+  --name pnx-server \
+  -p 19132:19132/udp \
+  -v /path/to/your/data:/data \
+  powernukkitx/server \
+  -Xmx4G -Xms1G \
+  -cp /app/powernukkitx.jar:./libs/* \
+  org.powernukkitx.PowerNukkitX \
+  --skip-setup --accept-license --language eng
+```

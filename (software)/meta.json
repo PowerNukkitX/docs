@@ -9,13 +9,10 @@
     "comparisons",
     "requirements",
     "installation",
-    "migrate",
+    "migration",
+    "permissions",
     "---Configurations---",
-    "navigation",
-    "versioning",
-    "deploying",
-    "internationalization",
-    "search",
+    "configuration",
     "---Integrations---",
     "...integrations"
   ]

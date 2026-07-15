@@ -1,0 +1,79 @@
+---
+title: "Windows Installation"
+description: "Detailed step-by-step guide to installing and running PowerNukkitX on Windows."
+icon: Monitor
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+This guide covers installing and running a PowerNukkitX server on Windows 10 or Windows 11.
+
+## Prerequisites: Java 21+
+
+PowerNukkitX requires **Java 21 or newer** (64-bit). Older versions of Java will prevent the server from starting and produce errors like `UnsupportedClassVersionError`.
+
+### 1. Download Java 21
+- Download the Windows MSI installer for **Eclipse Temurin JDK 21** from the [Adoptium Releases Page](https://adoptium.net/temurin/releases/?version=21&os=windows).
+- Run the `.msi` file and follow the setup wizard. Make sure to check the option to **"Set JAVA_HOME environment variable"** and **"Associate .jar files"** during installation.
+
+### 2. Verify Installation
+Open a new Command Prompt (`cmd`) or PowerShell window and run:
+```cmd
+java -version
+```
+You should see output indicating version `21` (e.g., `openjdk version "21.x.x"`).
+
+---
+
+## Setting Up the Server
+
+### 1. Create a Dedicated Folder
+Create a folder on your system where your server files will reside (e.g., `C:\PNX-Server`).
+> [!CAUTION]
+> Avoid creating your server folder inside protected system directories like `C:\Program Files` or `C:\Windows`, as Windows security permissions may prevent PowerNukkitX from generating files (worlds, configurations, logs).
+
+### 2. Download the Server JAR
+Download the latest `powernukkitx.jar` from the [Official PowerNukkitX GitHub Releases Page](https://github.com/PowerNukkitX/PowerNukkitX/releases) and place it into your server folder.
+
+### 3. Create the Startup Script
+PowerNukkitX requires specific Java reflection access parameters (`--add-opens`) to load its registry and plugins correctly. You should create a startup script instead of launching the jar file directly:
+
+1. Inside your `PNX-Server` folder, right-click, select **New > Text Document**, and name it `start.txt`.
+2. Open `start.txt` in Notepad and paste the following content:
+   ```batch
+   @echo off
+   java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+   pause
+   ```
+3. Save the file and close Notepad.
+4. Rename the file from `start.txt` to `start.bat`. Make sure file name extensions are visible in File Explorer (View > Show > File name extensions) so that you change the actual extension, not just the name.
+
+---
+
+## Launching the Server
+
+1. Double-click `start.bat` to run the script.
+2. **First-run Wizard:** A command window will open. If it is your first time starting the server, follow the console setup prompts to:
+   - Accept the license by typing `y`.
+   - Select the server language (e.g., `eng` for English).
+   - Enter your server's MOTD (name) and listening port (default is `19132`).
+3. Once completed, the server will generate the `pnx.yml` file, create the default `world` folder, and load the Bedrock network listener.
+4. To stop the server safely, type `stop` in the console and press Enter.
+
+---
+
+## Troubleshooting Windows Setup
+
+### Command 'java' is not recognized
+Your system cannot locate Java. Ensure Java 21 is installed. If it is installed but you still see this error, you need to configure your environment variables:
+1. Search for **"Edit the system environment variables"** in the Windows Start Menu.
+2. Click **Environment Variables...**.
+3. Under *System variables*, check if `JAVA_HOME` exists and points to your JDK 21 folder (e.g., `C:\Program Files\Eclipse Adoptium\jdk-21.x.x\`).
+4. Find the `Path` variable in *System variables*, select it, click **Edit...**, and make sure it includes `%JAVA_HOME%\bin` (or the direct path to adoption bin folder).
+5. Restart your Command Prompt or PC for changes to apply.
+
+### Port binding error (`BindException`)
+If you see `java.net.BindException: Address already in use`, it means another application (or another instance of the server) is running on port `19132`.
+- Check if you have another Command Prompt window running the server and close it.
+- Alternatively, edit `pnx.yml` to change `port` to a different number (e.g. `19133`).

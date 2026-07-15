@@ -1,0 +1,57 @@
+---
+title: "Bedrock Dedicated Server (BDS)"
+description: "Detailed guide on migrating from Mojang's official Bedrock Dedicated Server (BDS) to PowerNukkitX."
+icon: Server
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+If you are migrating from Mojang's official Bedrock Dedicated Server (BDS), you can retain your worlds and resource packs, but you must manually configure server settings and replace BDS-specific add-ons.
+
+## Step-by-Step Migration
+
+### 1. Set Up PowerNukkitX
+Install a fresh PowerNukkitX server. Follow the [Installation](/docs/installation) guide for your operating system. Once installed, run it once to generate configurations and then stop it.
+
+### 2. Migrate Worlds
+BDS stores worlds in the `worlds/` directory.
+1. Locate your world folder inside the BDS `worlds/` directory (e.g., `worlds/MyBedrockWorld`).
+2. Copy this folder into the PowerNukkitX `worlds/` directory.
+3. Open `pnx.yml` in your PowerNukkitX server directory and find the `baseSettings` category. Set the `defaultLevelName` to match the exact folder name of your world:
+   ```yaml
+   baseSettings:
+     defaultLevelName: "MyBedrockWorld"
+   ```
+
+### 3. Translate Configuration
+You must manually copy settings from the BDS `server.properties` file to `pnx.yml`:
+
+| BDS Setting | pnx.yml Category | pnx.yml Key | Description |
+| :--- | :--- | :--- | :--- |
+| `server-port` | `baseSettings` | `port` | Server UDP Port. |
+| `max-players` | `baseSettings` | `maxPlayers` | Max player slots. |
+| `online-mode` | `baseSettings` | `xboxAuth` | If `true`, requires Xbox authentication. |
+| `allow-list` | `baseSettings` | `allowList` | Enable/disable server whitelist. |
+| `gamemode` | `gameplaySettings` | `gamemode` | 0: Survival, 1: Creative, 2: Adventure. |
+| `difficulty` | `gameplaySettings` | `difficulty` | 0: Peaceful, 1: Easy, 2: Normal, 3: Hard. |
+| `view-distance` | `gameplaySettings` | `viewDistance` | Maximum chunk rendering distance. |
+
+### 4. Migrate Resource Packs
+If your BDS server uses resource packs:
+1. Locate the `.mcpack` or `.zip` files in BDS `resource_packs/`.
+2. Copy them to the PowerNukkitX `resource_packs/` directory.
+3. PowerNukkitX will automatically load and offer them to clients when they connect.
+
+---
+
+## Key Differences & Limitations
+
+### Behavior Packs
+- **BDS:** Supports client-side behavior packs containing custom entity logic, component scripts, and animations.
+- **PowerNukkitX:** Does **not** support behavior packs. All custom entity, block, and gameplay logic must be handled server-side in Java using PowerNukkitX's robust API or custom plugins. 
+
+### Player Data & Inventories
+BDS stores player inventories and locations within the LevelDB world database under player key entries. PowerNukkitX can read standard vanilla player profiles from LevelDB. However, to ensure inventory consistency:
+- Back up the `worlds/` directory prior to testing client joins.
+- Set `savePlayerData` to `true` in `pnx.yml` (`playerSettings`).

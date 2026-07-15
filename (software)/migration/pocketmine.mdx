@@ -1,0 +1,51 @@
+---
+title: "PocketMine-MP"
+description: "Detailed guide on migrating from PocketMine-MP (PHP) to PowerNukkitX (Java)."
+icon: CircleAlert
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Migrating from PocketMine-MP to PowerNukkitX involves transitioning from a PHP-based server architecture to a Java-based one. While world data can be ported, plugins and configuration structures are completely different.
+
+## Step-by-Step Migration
+
+### 1. Set Up PowerNukkitX
+Install a fresh PowerNukkitX server. Follow the [Installation](/docs/installation) guide for your operating system. Start the server once to generate configurations and then stop it.
+
+### 2. Migrate Worlds
+PocketMine-MP uses a Region or LevelDB world format.
+1. Locate your world folders inside the PocketMine-MP `worlds/` directory.
+2. Copy the world folders to the PowerNukkitX `worlds/` directory.
+3. Open `pnx.yml` in your PowerNukkitX directory, navigate to `baseSettings`, and update the `defaultLevelName` to match the directory name of your main world:
+   ```yaml
+   baseSettings:
+     defaultLevelName: "MyWorld"
+   ```
+
+### 3. Translate Configuration
+PocketMine-MP options in `pocketmine.yml` and `server.properties` must be manually translated to `pnx.yml`:
+
+| PocketMine-MP Setting | pnx.yml Category | pnx.yml Key | Description |
+| :--- | :--- | :--- | :--- |
+| `server-port` (`server.properties`) | `baseSettings` | `port` | Server UDP Port. |
+| `max-players` (`server.properties`) | `baseSettings` | `maxPlayers` | Max player slots. |
+| `xbox-auth` (`pocketmine.yml`) | `baseSettings` | `xboxAuth` | Requires Xbox authentication. |
+| `view-distance` (`server.properties`) | `gameplaySettings` | `viewDistance` | Max chunks rendered by client. |
+| `difficulty` (`server.properties`) | `gameplaySettings` | `difficulty` | 0: Peaceful, 1: Easy, 2: Normal, 3: Hard. |
+| `gamemode` (`server.properties`) | `gameplaySettings` | `gamemode` | 0: Survival, 1: Creative, 2: Adventure. |
+| `white-list` (`server.properties`) | `baseSettings` | `allowList` | Enable/disable server whitelist. |
+
+---
+
+## Critical Incompatibilities
+
+### PHP Plugins vs Java Plugins
+PocketMine-MP plugins are written in PHP and are **entirely incompatible** with PowerNukkitX. 
+- You cannot copy `.phar` files or PHP source code into the `plugins/` folder of PowerNukkitX.
+- **Action:** You must find Java equivalent plugins on the Nukkit/PowerNukkitX repositories or use PowerNukkitX's plugin development framework to rebuild required features.
+
+### Permissions
+PocketMine-MP utilizes a YAML-based permissions file (`permissions.yml`). PowerNukkitX uses a standard Java permission architecture.
+- For advanced group permissions, we recommend installing the **LuckPerms** plugin on PowerNukkitX to recreate your group hierarchies and node assignments. Refer to the [Permissions & Security](/docs/permissions) page for details.

@@ -1,0 +1,142 @@
+---
+title: "Linux Installation"
+description: "Detailed step-by-step guide to installing, configuring, and running PowerNukkitX on Linux as a background service."
+icon: Terminal
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+This guide covers installing and running a PowerNukkitX server on Linux. It includes manual setup and instructions to run the server as a background service via `systemd`.
+
+## Prerequisites: Java 21+
+
+PowerNukkitX requires **Java 21 or newer** (64-bit).
+
+### Ubuntu / Debian
+Install OpenJDK 21 via APT:
+```bash
+sudo apt update
+sudo apt install -y openjdk-21-jre-headless wget
+```
+
+### CentOS / RHEL / Rocky Linux
+Install OpenJDK 21 via DNF:
+```bash
+sudo dnf install -y java-21-openjdk-headless wget
+```
+
+Verify your installation:
+```bash
+java -version
+```
+
+---
+
+## Setting Up the Server
+
+For security reasons, it is highly recommended to run the Minecraft server under a dedicated, non-privileged system user rather than using `root`.
+
+### 1. Create a Dedicated User and Group
+Create a system user named `minecraft`:
+```bash
+sudo useradd --system --user-group --home-dir /opt/pnx-server --create-home minecraft
+```
+
+### 2. Download PowerNukkitX
+Switch to the minecraft user and download the files:
+```bash
+# Switch to the dedicated user
+sudo -u minecraft -s
+cd /opt/pnx-server
+
+# Download the jar file
+wget https://github.com/PowerNukkitX/PowerNukkitX/releases/download/snapshot/powernukkitx.jar
+```
+
+### 3. Create the Startup Script
+Create a `start.sh` script to launch the server with the necessary JVM reflection access flags:
+```bash
+cat << 'EOF' > start.sh
+#!/bin/bash
+java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+EOF
+
+# Make the script executable
+chmod +x start.sh
+```
+
+### 4. Run the Initial Setup Wizard
+Execute the server once to accept the license agreement and generate the initial configurations:
+```bash
+./start.sh
+```
+Follow the interactive prompts:
+- Accept the license (`y`).
+- Select your language (`eng`).
+- Enter the MOTD and port.
+
+Once the console logs `[INFO] Startup finished in...`, type `stop` to exit the server.
+```bash
+stop
+```
+After stopping the server, return to your regular root/sudo user terminal:
+```bash
+exit
+```
+
+---
+
+## Configuring a systemd Service (Recommended)
+
+To keep your PowerNukkitX server running in the background, start on system boot, and restart automatically if it crashes, you should configure a systemd service.
+
+### 1. Create the Service File
+Create a new service configuration file:
+```bash
+sudo nano /etc/systemd/system/pnx.service
+```
+
+Paste the following configurations:
+```ini
+[Unit]
+Description=PowerNukkitX Minecraft Bedrock Server
+After=network.target
+
+[Service]
+User=minecraft
+Group=minecraft
+WorkingDirectory=/opt/pnx-server
+ExecStart=/bin/bash /opt/pnx-server/start.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### 2. Enable and Start the Service
+Reload systemd to read the new service file, enable the service to launch on boot, and start the server:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable pnx.service
+sudo systemctl start pnx.service
+```
+
+### 3. Checking Service Status
+To verify if the server is running properly:
+```bash
+sudo systemctl status pnx.service
+```
+
+To view the real-time console log stream from the server:
+```bash
+journalctl -u pnx.service -f
+```
+*(Press `Ctrl + C` to exit the log viewer).*
+
+To stop or restart the service:
+```bash
+sudo systemctl stop pnx.service
+sudo systemctl restart pnx.service
+```

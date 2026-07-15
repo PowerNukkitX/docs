@@ -1,22 +1,31 @@
 ---
-title: "Installation"
-description: "How to install PowerNukkitX on your server."
-icon: Server
+title: "Overview"
+description: "Select the installation guide for your operating system or deployment environment."
+icon: AppWindow
 authors:
-  - AzaleeX
+  - tunikakeks
   - PowerNukkitX
 ---
 
-import {Card, Cards} from "fumadocs-ui/components/card";
-import {CpuIcon, Folder, PuzzleIcon, SettingsIcon, ShieldIcon} from "lucide-react";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Monitor, Apple, Terminal, Container } from "lucide-react";
 
-There are several ways to install a new PowerNukkitX server. Whether you prefer a manual or automated installation, our detailed guides will walk you through each step.
+To run a PowerNukkitX server, you must install Java 21+ and execute the server software. Choose the step-by-step guide below that matches your platform:
+
 <Cards>
-    <Card icon={<CpuIcon className="text-primary" />} title="PowerNukkitX CLI" href="/docs/guides/installation">
-        Use the <span className="text-primary underline">PowerNukkitX CLI tool</span> to quickly set up and manage your server with simple commands.
+    <Card icon={<Monitor className="text-primary" />} title="Windows Installation" href="/docs/installation/windows">
+        Set up and run PowerNukkitX on Windows 10 or 11 with detailed PATH and batch file setup.
     </Card>
 
-    <Card icon={<Folder className="text-primary" />} title="Install PowerNukkitX Manual" href="/docs/guides/configuration">
-        Follow our step-by-step guide to <span className="text-primary underline">download</span>, <span className="text-primary underline">configure</span>, and <span className="text-primary underline">run</span> PowerNukkitX on your machine.
+    <Card icon={<Apple className="text-primary" />} title="macOS Installation" href="/docs/installation/macos">
+        Install Java via Homebrew and launch PowerNukkitX on macOS.
+    </Card>
+
+    <Card icon={<Terminal className="text-primary" />} title="Linux Installation" href="/docs/installation/linux">
+        Deploy PowerNukkitX on Ubuntu/Debian or CentOS/RHEL, and configure it as a systemd service.
+    </Card>
+
+    <Card icon={<Container className="text-primary" />} title="Docker Installation" href="/docs/installation/docker">
+        Deploy using containerization with Docker or Docker Compose.
     </Card>
 </Cards>

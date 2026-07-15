@@ -1,0 +1,56 @@
+---
+title: "Configuration"
+description: "Detailed documentation for pnx.yml configuration options."
+icon: Settings
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX consolidates all configuration settings into a single file named `pnx.yml`, located in the server's root directory. This page documents the most important settings available under each category.
+
+## Base Settings (`baseSettings`)
+Basic configurations regarding server connectivity, identity, and level storage.
+
+- **`ip`** (default: `0.0.0.0`): The IP address the server binds to. Set to `0.0.0.0` to listen on all interfaces.
+- **`port`** (default: `19132`): The UDP port for Bedrock client connections.
+- **`maxPlayers`** (default: `20`): The maximum number of concurrent players allowed on the server.
+- **`defaultLevelName`** (default: `world`): The directory name of the default server world.
+- **`allowList`** (default: `false`): Enables the whitelist. When enabled, only players in `white-list.txt` can join.
+- **`allowListMessage`** (default: `Server is white-listed`): The kick message displayed to players not on the whitelist.
+- **`motd`** (default: `PowerNukkitX Server`): The primary message of the day shown in the server list.
+- **`subMotd`** (default: `powernukkitx.org`): The secondary sub-MOTD text.
+- **`xboxAuth`** (default: `true`): Enables Xbox Live authentication. Setting this to `false` disables authentication (offline mode).
+- **`autosaveDelay`** (default: `6000`): The delay in ticks between automatic level saves.
+
+---
+
+## Player Settings (`playerSettings`)
+Configuration settings related to players, movement checks, and skins.
+
+- **`savePlayerData`** (default: `true`): Whether player location, inventory, and status are saved on disconnect.
+- **`forceSkinTrusted`** (default: `false`): If true, forces the server to trust all player skins, allowing custom/third-party skins.
+- **`checkMovement`** (default: `true`): Enables server-side movement checks to prevent simple fly/speed cheats.
+- **`spawnRadius`** (default: `16`): The radius around the world spawn point where new players will spawn.
+
+---
+
+## Gameplay Settings (`gameplaySettings`)
+Options controlling game mechanics and world physics.
+
+- **`gamemode`** (default: `0`): The default game mode (0: Survival, 1: Creative, 2: Adventure, 3: Spectator).
+- **`difficulty`** (default: `1`): The default difficulty (0: Peaceful, 1: Easy, 2: Normal, 3: Hard).
+- **`pvp`** (default: `true`): Enables Player vs Player combat.
+- **`allowFlight`** (default: `false`): Enables flight for survival players.
+- **`viewDistance`** (default: `20`): The maximum view distance in chunks sent to players.
+- **`allowNether`** (default: `true`): Enables dimension travel to the Nether.
+- **`allowTheEnd`** (default: `true`): Enables dimension travel to the End.
+- **`spawnProtection`** (default: `16`): Radius of blocks around the spawn area protected from non-op players.
+
+---
+
+## Performance Settings (`performanceSettings`)
+Parameters to optimize resource consumption.
+
+- **`asyncWorkers`** (default: `4`): Number of background threads allocated for asynchronous tasks (e.g. chunk generation).
+- **`registryCacheEnabled`** (default: `true`): Speeds up block and item resolution by caching registry entries.

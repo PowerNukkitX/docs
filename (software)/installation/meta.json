@@ -1,0 +1,10 @@
+{
+  "title": "Installation",
+  "pages": [
+    "index",
+    "windows",
+    "macos",
+    "linux",
+    "docker"
+  ]
+}
