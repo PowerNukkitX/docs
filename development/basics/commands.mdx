@@ -42,7 +42,53 @@ Use onCommand for small or quick commands. For richer behavior (permissions, tab
 
 ### Registering with a Dedicated Command Class
 
-Creating a dedicated command class is the recommended approach for clean code organization. Extend `org.powernukkitx.command.Command` (or `org.powernukkitx.command.PluginCommand`):
+Creating a dedicated command class is the recommended approach for clean code organization. Extend `org.powernukkitx.command.Command` (or `org.powernukkitx.command.PluginCommand`).
+
+You can choose to register your command class **manually** or let the **Annotation Processor** handle it automatically:
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+<Tabs items={['Automatic (Annotation)', 'Manual Registration']}>
+  <Tab value="Automatic (Annotation)">
+
+#### Automatic Registration
+
+Annotate your command class with `@CommandDefinition`. When using annotations, you do not need to register the command inside your plugin's main class:
+
+```java filename="GreetCommand.java"
+package org.example.command;
+
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandSender;
+import org.powernukkitx.plugin.annotation.CommandDefinition;
+import org.powernukkitx.plugin.annotation.CommandDefinition.CommandMode;
+
+@CommandDefinition(
+    name = "greet",
+    description = "Greet a player",
+    usage = "/greet [name]",
+    permission = "greet.permission",
+    commandMode = CommandMode.RAW // Use RAW mode for standard string argument commands
+)
+public class GreetCommand extends Command {
+    @Override
+    public boolean execute(CommandSender sender, String label, String[] args) {
+        if (args.length > 0) {
+            sender.sendMessage("Hello, " + args[0] + "!");
+        } else {
+            sender.sendMessage("Hello!");
+        }
+        return true;
+    }
+}
+```
+
+  </Tab>
+  <Tab value="Manual Registration">
+
+#### Manual Registration
+
+Create the command class with a constructor defining the metadata, and override the execute method:
 
 ```java filename="GreetCommand.java"
 package org.example.command;
@@ -69,7 +115,7 @@ public class GreetCommand extends Command {
 }
 ```
 
-Register the command class during your plugin's initialization:
+Then, manually register the command class during your plugin's `onEnable()` phase:
 
 ```java
 @Override
@@ -77,6 +123,9 @@ public void onEnable() {
     this.getServer().getCommandMap().register("myplugin", new GreetCommand());
 }
 ```
+
+  </Tab>
+</Tabs>
 
 ---
 
