@@ -8,7 +8,7 @@ authors:
 ---
 
 import { Card, Cards } from "fumadocs-ui/components/card";
-import { Hammer, Sword, Skull, Sparkles, BookOpen } from "lucide-react";
+import { Hammer, Sword, Skull, Sparkles, BookOpen, Cpu, Globe, Home } from "lucide-react";
 
 PowerNukkitX introduces a custom registry architecture that allows developers to register custom blocks, items, entities, enchantments, and crafting recipes. These registries allow custom content to be served dynamically to Minecraft Bedrock Edition clients using server-side configurations and resource packs.
 
@@ -22,23 +22,35 @@ PowerNukkitX introduces a custom registry architecture that allows developers to
 Select a guide below to learn how to create and register custom components:
 
 <Cards>
-    <Card icon={<Hammer className="text-primary" />} title="Custom Blocks" href="/docs/development/customs/blocks">
+    <Card icon={<Hammer className="text-primary" />} title="Blocks" href="/docs/development/customs/blocks">
         Define custom block properties, geometries, states, and permutations.
     </Card>
 
-    <Card icon={<Sword className="text-primary" />} title="Custom Items" href="/docs/development/customs/items">
+    <Card icon={<Cpu className="text-primary" />} title="Block Entities" href="/docs/development/customs/block-entities">
+        Define custom NBT data stores and tick updates for placed blocks.
+    </Card>
+
+    <Card icon={<Sword className="text-primary" />} title="Items" href="/docs/development/customs/items">
         Create custom weapons, tools, armor, and simple items with custom durability and stats.
     </Card>
 
-    <Card icon={<Skull className="text-primary" />} title="Custom Entities" href="/docs/development/customs/entities">
-        Define custom mobs or non-player entities with specific collision boxes and behaviors.
+    <Card icon={<Skull className="text-primary" />} title="Entities" href="/docs/development/customs/entities">
+        Define custom mobs, mounts, and rideable entities with seat configurations.
     </Card>
 
-    <Card icon={<Sparkles className="text-primary" />} title="Custom Enchantments" href="/docs/development/customs/enchantments">
-        Create new enchantments with custom max levels and effects.
+    <Card icon={<Sparkles className="text-primary" />} title="Enchantments" href="/docs/development/customs/enchantments">
+        Create new enchantments with custom max levels and rarity stats.
     </Card>
 
-    <Card icon={<BookOpen className="text-primary" />} title="Custom Recipes" href="/docs/development/customs/recipes">
-        Register shaped, shapeless, and furnace crafting recipes for your items.
+    <Card icon={<BookOpen className="text-primary" />} title="Recipes" href="/docs/development/customs/recipes">
+        Register shaped, shapeless, and furnace crafting recipes.
+    </Card>
+
+    <Card icon={<Globe className="text-primary" />} title="Generators" href="/docs/development/customs/generators">
+        Define custom world gen stage pipelines and structure populators.
+    </Card>
+
+    <Card icon={<Home className="text-primary" />} title="Structure API" href="/docs/development/customs/structures">
+        Load, transform, and place Bedrock and Java Edition structure templates.
     </Card>
 </Cards>
