@@ -18,9 +18,9 @@ Install a fresh PowerNukkitX server. Follow the [Installation](/docs/installatio
 PocketMine-MP uses a Region or LevelDB world format.
 1. Locate your world folders inside the PocketMine-MP `worlds/` directory.
 2. Copy the world folders to the PowerNukkitX `worlds/` directory.
-3. Open `pnx.yml` in your PowerNukkitX directory, navigate to `baseSettings`, and update the `defaultLevelName` to match the directory name of your main world:
+3. Open `pnx.yml` in your PowerNukkitX directory, navigate to `settings`, and update the `defaultLevelName` to match the directory name of your main world:
    ```yaml
-   baseSettings:
+   settings:
      defaultLevelName: "MyWorld"
    ```
 
@@ -29,13 +29,13 @@ PocketMine-MP options in `pocketmine.yml` and `server.properties` must be manual
 
 | PocketMine-MP Setting | pnx.yml Category | pnx.yml Key | Description |
 | :--- | :--- | :--- | :--- |
-| `server-port` (`server.properties`) | `baseSettings` | `port` | Server UDP Port. |
-| `max-players` (`server.properties`) | `baseSettings` | `maxPlayers` | Max player slots. |
-| `xbox-auth` (`pocketmine.yml`) | `baseSettings` | `xboxAuth` | Requires Xbox authentication. |
-| `view-distance` (`server.properties`) | `gameplaySettings` | `viewDistance` | Max chunks rendered by client. |
-| `difficulty` (`server.properties`) | `gameplaySettings` | `difficulty` | 0: Peaceful, 1: Easy, 2: Normal, 3: Hard. |
-| `gamemode` (`server.properties`) | `gameplaySettings` | `gamemode` | 0: Survival, 1: Creative, 2: Adventure. |
-| `white-list` (`server.properties`) | `baseSettings` | `allowList` | Enable/disable server whitelist. |
+| `server-port` (`server.properties`) | `settings` | `port` | Server UDP Port. |
+| `max-players` (`server.properties`) | `settings` | `maxPlayers` | Max player slots. |
+| `xbox-auth` (`pocketmine.yml`) | `settings` | `xboxAuth` | Requires Xbox authentication. |
+| `view-distance` (`server.properties`) | `gameplay-settings` | `viewDistance` | Max chunks rendered by client. |
+| `difficulty` (`server.properties`) | `gameplay-settings` | `difficulty` | 0: Peaceful, 1: Easy, 2: Normal, 3: Hard. |
+| `gamemode` (`server.properties`) | `gameplay-settings` | `gamemode` | 0: Survival, 1: Creative, 2: Adventure. |
+| `white-list` (`server.properties`) | `settings` | `allowList` | Enable/disable server whitelist. |
 
 ---
 

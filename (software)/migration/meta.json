@@ -4,6 +4,7 @@
     "index",
     "nukkit",
     "bds",
-    "pocketmine"
+    "pocketmine",
+    "dragonfly"
   ]
 }

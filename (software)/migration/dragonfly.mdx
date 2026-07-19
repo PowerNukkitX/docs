@@ -1,0 +1,56 @@
+---
+title: "Dragonfly"
+description: "Detailed guide on migrating from Dragonfly (Go) to PowerNukkitX (Java)."
+icon: Bug
+authors:
+  - PowerNukkitX
+---
+
+Migrating from Dragonfly to PowerNukkitX means moving from a Go codebase to a Java one. World data ports over directly, but Dragonfly's server logic is compiled Go code, so any custom behavior has to be rebuilt with the PowerNukkitX plugin API.
+
+## Step-by-Step Migration
+
+### 1. Set Up PowerNukkitX
+Install a fresh PowerNukkitX server. Follow the [Installation](/docs/installation) guide for your operating system. Start the server once to generate configurations and then stop it.
+
+### 2. Migrate Worlds
+Dragonfly uses the same LevelDB world format as the Bedrock client.
+1. Find the world folder set by `Folder` under `[World]` in Dragonfly's `config.toml` (default `world`).
+2. Copy that folder into the PowerNukkitX `worlds/` directory and rename it to the level name you want.
+3. Open `pnx.yml`, navigate to `settings`, and set `defaultLevelName` to that folder name:
+   ```yaml
+   settings:
+     defaultLevelName: "MyWorld"
+   ```
+
+### 3. Translate Configuration
+Dragonfly keeps everything in `config.toml`. Map the values to `pnx.yml` by hand:
+
+| Dragonfly Setting (`config.toml`) | pnx.yml Category | pnx.yml Key | Description |
+| :--- | :--- | :--- | :--- |
+| `[Network] Address` (e.g. `:19132`) | `settings` | `ip` + `port` | Host before the colon, port after. Empty host maps to `0.0.0.0`. |
+| `[Server] Name` | `settings` | `motd` | Server name shown in the list. |
+| `[Players] MaxCount` | `settings` | `maxPlayers` | Max player slots. Dragonfly `0` means unlimited - set a concrete number in PNX. |
+| `[Server] AuthEnabled` | `settings` | `xboxAuth` | Requires Xbox authentication. |
+| `[World] Folder` | `settings` | `defaultLevelName` | Copied into `worlds/`, see step 2. |
+
+<Callout type="info">
+    In PowerNukkitX `gamemode` and `difficulty` under `gameplay-settings` are integers (gamemode `0`-`3`, difficulty `0`-`3`). Set them to match how your Dragonfly world played.
+</Callout>
+
+---
+
+## Critical Incompatibilities
+
+### Go Code vs Java Plugins
+Dragonfly is a framework: your server's behavior lives in Go source compiled into the binary, not in loadable plugins. None of that runs on PowerNukkitX.
+- You cannot drop Go code or a compiled Dragonfly binary into the `plugins/` folder.
+- **Action:** Rebuild your features as PowerNukkitX plugins in Java. Start from [Create a plugin](/docs/development/basics). Many common needs already exist as community plugins, so check those first.
+
+### Permissions
+Dragonfly handles permissions in code. PowerNukkitX uses a standard Java permission architecture.
+- For group permissions, install the **LuckPerms** plugin and recreate your groups and nodes. See the [Permissions & Security](/docs/permissions) page.
+
+### Player Data
+Player inventories and positions are stored inside the LevelDB world, so they travel with the world folder. Plugin-specific data (economy, kits, homes) does not - export it from the old setup and import it into the replacement plugin.
+</content>

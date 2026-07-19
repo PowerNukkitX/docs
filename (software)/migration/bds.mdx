@@ -18,9 +18,9 @@ Install a fresh PowerNukkitX server. Follow the [Installation](/docs/installatio
 BDS stores worlds in the `worlds/` directory.
 1. Locate your world folder inside the BDS `worlds/` directory (e.g., `worlds/MyBedrockWorld`).
 2. Copy this folder into the PowerNukkitX `worlds/` directory.
-3. Open `pnx.yml` in your PowerNukkitX server directory and find the `baseSettings` category. Set the `defaultLevelName` to match the exact folder name of your world:
+3. Open `pnx.yml` in your PowerNukkitX server directory and find the `settings` category. Set the `defaultLevelName` to match the exact folder name of your world:
    ```yaml
-   baseSettings:
+   settings:
      defaultLevelName: "MyBedrockWorld"
    ```
 
@@ -29,13 +29,13 @@ You must manually copy settings from the BDS `server.properties` file to `pnx.ym
 
 | BDS Setting | pnx.yml Category | pnx.yml Key | Description |
 | :--- | :--- | :--- | :--- |
-| `server-port` | `baseSettings` | `port` | Server UDP Port. |
-| `max-players` | `baseSettings` | `maxPlayers` | Max player slots. |
-| `online-mode` | `baseSettings` | `xboxAuth` | If `true`, requires Xbox authentication. |
-| `allow-list` | `baseSettings` | `allowList` | Enable/disable server whitelist. |
-| `gamemode` | `gameplaySettings` | `gamemode` | 0: Survival, 1: Creative, 2: Adventure. |
-| `difficulty` | `gameplaySettings` | `difficulty` | 0: Peaceful, 1: Easy, 2: Normal, 3: Hard. |
-| `view-distance` | `gameplaySettings` | `viewDistance` | Maximum chunk rendering distance. |
+| `server-port` | `settings` | `port` | Server UDP Port. |
+| `max-players` | `settings` | `maxPlayers` | Max player slots. |
+| `online-mode` | `settings` | `xboxAuth` | If `true`, requires Xbox authentication. |
+| `allow-list` | `settings` | `allowList` | Enable/disable server whitelist. |
+| `gamemode` | `gameplay-settings` | `gamemode` | 0: Survival, 1: Creative, 2: Adventure. |
+| `difficulty` | `gameplay-settings` | `difficulty` | 0: Peaceful, 1: Easy, 2: Normal, 3: Hard. |
+| `view-distance` | `gameplay-settings` | `viewDistance` | Maximum chunk rendering distance. |
 
 ### 4. Migrate Resource Packs
 If your BDS server uses resource packs:
@@ -54,4 +54,4 @@ If your BDS server uses resource packs:
 ### Player Data & Inventories
 BDS stores player inventories and locations within the LevelDB world database under player key entries. PowerNukkitX can read standard vanilla player profiles from LevelDB. However, to ensure inventory consistency:
 - Back up the `worlds/` directory prior to testing client joins.
-- Set `savePlayerData` to `true` in `pnx.yml` (`playerSettings`).
+- Set `savePlayerData` to `true` in `pnx.yml` (`player-settings`).

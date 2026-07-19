@@ -1,0 +1,82 @@
+---
+title: Manual Installation
+description: "How to manually install and configure PowerNukkitX."
+icon: FolderDown
+authors:
+  - AzaleeX
+  - PowerNukkitX
+---
+
+This guide walks through setting up a PowerNukkitX server by hand. For an automated setup, use the [PowerNukkitX CLI](/docs/installation) instead.
+
+## 1. Install Java 21
+
+PowerNukkitX requires a 64-bit **JDK 21 or newer**. Verify what you have:
+
+```bash
+java -version
+```
+
+If it reports anything older than `21`, install [OpenJDK 21](https://adoptium.net/) and make sure it is the one on your `PATH`. See [Requirements](/docs/requirements) for details.
+
+## 2. Create a server folder
+
+Run the server from a dedicated, writable directory - it will generate worlds, config and logs there.
+
+```bash
+mkdir powernukkitx && cd powernukkitx
+```
+
+## 3. Download the server
+
+Download the latest `powernukkitx.jar` from the [releases page](https://github.com/PowerNukkitX/PowerNukkitX/releases) into that folder. Grabbing a [start script](https://github.com/PowerNukkitX/scripts/tree/master) alongside it is recommended - the script passes every JVM flag the runtime needs and pulls in the required libraries.
+
+## 4. Start the server
+
+Using a start script (recommended):
+
+```bash
+./start.sh
+```
+
+Or launch it directly:
+
+```bash
+java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+```
+
+<Callout type="tip">
+    For production, add low-latency GC and memory flags:
+    `-Xms2G -Xmx4G -XX:+UseZGC -XX:+ZGenerational -XX:+UseStringDeduplication`
+</Callout>
+
+## 5. First-run setup
+
+On the first launch PowerNukkitX runs a setup wizard when no config exists yet. It asks for language, MOTD, port and license acceptance, then writes `pnx.yml`.
+
+To skip the wizard and boot with defaults, pass `--skip-setup --accept-license`.
+
+## 6. Directory layout
+
+After the first run your folder looks like this:
+
+```
+powernukkitx/
+├── powernukkitx.jar
+├── pnx.yml              # main configuration
+├── server.properties    # legacy / protocol settings
+├── plugins/             # drop plugin jars here
+├── worlds/              # your levels
+└── libs/                # runtime dependencies
+```
+
+## Next steps
+
+- Edit `pnx.yml` to tune your server - it is grouped into sections like `settings`, `gameplay-settings` and `network-settings`.
+- Add plugins by dropping their jars into `plugins/` and restarting.
+- Migrating from another server? Read the [Migration Guide](/docs/migration).
+
+<Callout type="warning">
+    Running into startup errors? The [Troubleshooting](/docs/troubleshooting) page covers Java version, port and permission issues.
+</Callout>
+</content>

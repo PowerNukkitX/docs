@@ -8,19 +8,22 @@ authors:
 
 ## Feature Comparison
 
-| Feature          | PowerNukkitX                       | Nukkit          | BDS (Official) |
-|-----------------|-----------------------------------|----------------|----------------|
-| Performance      | <span className="text-primary underline">High</span>            | Medium         | High           |
-| Plugin System    | <span className="text-primary underline">Yes</span>            | Yes            | No             |
-| API Stability    | <span className="text-primary underline">Modern</span>         | Legacy         | N/A            |
-| Bedrock Updates  | <span className="text-primary underline">Fast</span>           | Slow           | Official       |
-| Open Source      | <span className="text-primary underline">Yes</span>            | Yes            | No             |
-| Community        | <span className="text-primary underline">Active</span>         | Medium         | Official       |
-| Modding Support  | <span className="text-primary underline">Good</span>           | Medium         | Low            |
+| Feature          | PowerNukkitX                       | Nukkit          | PocketMine-MP  | Dragonfly      | BDS (Official) |
+|-----------------|-----------------------------------|----------------|----------------|----------------|----------------|
+| Language         | <span className="text-primary underline">Java</span>            | Java           | PHP            | Go             | C++            |
+| Performance      | <span className="text-primary underline">High</span>            | Medium         | Medium         | High           | High           |
+| Plugin System    | <span className="text-primary underline">Yes</span>            | Yes            | Yes            | Yes (Go)       | No             |
+| API Stability    | <span className="text-primary underline">Modern</span>         | Legacy         | Mature         | Modern         | N/A            |
+| Bedrock Updates  | <span className="text-primary underline">Fast</span>           | Slow           | Fast           | Fast           | Official       |
+| Open Source      | <span className="text-primary underline">Yes</span>            | Yes            | Yes            | Yes            | No             |
+| Community        | <span className="text-primary underline">Active</span>         | Medium         | Active         | Active         | Official       |
+| Modding Support  | <span className="text-primary underline">Good</span>           | Medium         | Good           | Good           | Low            |
 
 <Callout type="info">
     This table highlights the key differences between frameworks. PowerNukkitX is optimized for modern servers with high performance, cross-platform support, and an active developer community.
 </Callout>
+
+All of PowerNukkitX, Nukkit, PocketMine-MP and Dragonfly use Bedrock's native LevelDB world format, so worlds move between them without conversion. Plugins do not - each framework uses its own language and API.
 
 ---
 
@@ -36,9 +39,13 @@ authors:
 
 If you are switching from another framework:
 
-1. Check plugin compatibility – some Nukkit plugins may require adaptation.
+1. Check plugin compatibility – Nukkit plugins may require adaptation, while PocketMine-MP and Dragonfly plugins have to be replaced or rewritten.
 2. Export worlds and configurations, then import them into PowerNukkitX.
 3. Review `pnx.yml`, permissions, and other configuration differences.
+
+<Callout type="info">
+    Coming from PocketMine-MP or Dragonfly? Follow the step-by-step [Migration Guide](/docs/migration) for world transfer, config mapping and the plugin story.
+</Callout>
 
 <Callout type="warning">
     Ask for help on <a href="https://discord.gg/pnx" target="_blank">Discord</a> or <a href="https://github.com/PowerNukkitX/PowerNukkitX" target="_blank">GitHub</a> if you encounter migration issues.

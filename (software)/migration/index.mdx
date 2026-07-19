@@ -8,7 +8,7 @@ authors:
 ---
 
 import { Card, Cards } from "fumadocs-ui/components/card";
-import { Hammer, CircleAlert, Server } from "lucide-react";
+import { Hammer, CircleAlert, Server, Bug } from "lucide-react";
 
 If you are currently running a server using another Minecraft Bedrock software, you can migrate your configuration, world data, and resource packs to PowerNukkitX. 
 
@@ -25,5 +25,9 @@ Depending on your source software, select the appropriate guide below:
 
     <Card icon={<CircleAlert className="text-primary" />} title="From PocketMine-MP" href="/docs/migration/pocketmine">
         Migrate from PHP-based PocketMine-MP. Understand plugin incompatibilities and config translation mapping.
+    </Card>
+
+    <Card icon={<Bug className="text-primary" />} title="From Dragonfly" href="/docs/migration/dragonfly">
+        Migrate from Go-based Dragonfly. Move LevelDB worlds and rebuild compiled server logic as plugins.
     </Card>
 </Cards>
