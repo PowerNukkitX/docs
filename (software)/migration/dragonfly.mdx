@@ -53,3 +53,92 @@ Dragonfly handles permissions in code. PowerNukkitX uses a standard Java permiss
 
 ### Player Data
 Player inventories and positions are stored inside the LevelDB world, so they travel with the world folder. Plugin-specific data (economy, kits, homes) does not - export it from the old setup and import it into the replacement plugin.
+
+---
+
+## Migrating Server Code
+
+Dragonfly is a framework: you write Go and compile it into the server binary. PowerNukkitX is a server that loads Java plugins at runtime. The programming model is different, so your server logic has to be rewritten as one or more Java plugins. The mapping below shows the common patterns.
+
+### Entry point
+
+```go
+// Dragonfly (Go) - your main package
+func main() {
+    conf := server.DefaultConfig()
+    srv := conf.New()
+    srv.Listen()
+    for srv.Accept(func(p *player.Player) {}) {
+    }
+}
+```
+
+```java
+// PowerNukkitX (Java) - a plugin, not a main()
+import org.powernukkitx.plugin.PluginBase;
+
+public class MyPlugin extends PluginBase {
+    @Override
+    public void onEnable() {
+        getLogger().info("Enabled!");
+    }
+}
+```
+
+You do not manage the server loop yourself. PowerNukkitX runs it; your plugin hooks into lifecycle methods (`onLoad`, `onEnable`, `onDisable`) and events.
+
+### Handling events
+
+Dragonfly attaches a `Handler` to a player to react to actions. PowerNukkitX uses a `Listener` with `@EventHandler` methods.
+
+```go
+// Dragonfly (Go)
+func (h *MyHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, drops *[]item.Stack, xp *int) {
+    // react to a block break
+}
+```
+
+```java
+// PowerNukkitX (Java)
+import org.powernukkitx.event.EventHandler;
+import org.powernukkitx.event.Listener;
+import org.powernukkitx.event.block.BlockBreakEvent;
+
+public class MyListener implements Listener {
+    @EventHandler
+    public void onBreak(BlockBreakEvent event) {
+        // react to a block break
+    }
+}
+```
+
+Register it in `onEnable`:
+
+```java
+getServer().getPluginManager().registerEvents(new MyListener(), this);
+```
+
+Dragonfly's `event.Context.Cancel()` maps to `event.setCancelled(true)` on a cancellable PowerNukkitX event.
+
+### Blocks and items
+
+Dragonfly uses typed Go structs (`block.Stone{}`, `item.Sword{}`). PowerNukkitX resolves content by Bedrock **string identifier** through `BlockID` and `ItemID`.
+
+```java
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockID;
+
+Block stone = Block.get(BlockID.STONE); // "minecraft:stone"
+```
+
+### Commands
+
+Dragonfly registers commands with `cmd.Register`. In PowerNukkitX a command extends `Command` (optionally declared with `@CommandDefinition`) and is registered on the command map:
+
+```java
+getServer().getCommandMap().register("myplugin", new HelloCommand());
+```
+
+<Callout type="info">
+    Read the [Create a plugin](/docs/development/basics) guide to set up a Java project, then rebuild your Dragonfly logic as plugin code using the mappings above.
+</Callout>

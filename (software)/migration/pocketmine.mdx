@@ -50,3 +50,108 @@ PocketMine-MP plugins are written in PHP and are **entirely incompatible** with 
 ### Permissions
 PocketMine-MP utilizes a YAML-based permissions file (`permissions.yml`). PowerNukkitX uses a standard Java permission architecture.
 - For advanced group permissions, we recommend installing the **LuckPerms** plugin on PowerNukkitX to recreate your group hierarchies and node assignments. Refer to the [Permissions & Security](/docs/permissions) page for details.
+
+---
+
+## Migrating Plugin Code
+
+PocketMine-MP plugins are written in PHP; PowerNukkitX plugins are written in Java. There is no automatic port - the logic must be rewritten. The good news is that both descend from the same Nukkit/PocketMine lineage, so the concepts line up almost one to one and the rewrite is usually mechanical.
+
+### Plugin main class
+
+```php
+// PocketMine-MP (PHP)
+use pocketmine\plugin\PluginBase;
+
+class Main extends PluginBase {
+    public function onEnable(): void {
+        $this->getLogger()->info("Enabled!");
+    }
+}
+```
+
+```java
+// PowerNukkitX (Java)
+import org.powernukkitx.plugin.PluginBase;
+
+public class Main extends PluginBase {
+    @Override
+    public void onEnable() {
+        getLogger().info("Enabled!");
+    }
+}
+```
+
+Both use a `plugin.yml` with `name`, `main`, `version` and `api`. In PowerNukkitX `main` is the fully qualified Java class, and `api` is a string like `"3.0.0"`.
+
+### Events
+
+The event model is conceptually identical - a listener class with annotated handler methods.
+
+```php
+// PocketMine-MP (PHP)
+use pocketmine\event\Listener;
+use pocketmine\event\block\BlockBreakEvent;
+
+class MyListener implements Listener {
+    public function onBreak(BlockBreakEvent $event): void {
+        $event->getPlayer()->sendMessage("Broke a block");
+    }
+}
+```
+
+```java
+// PowerNukkitX (Java)
+import org.powernukkitx.event.EventHandler;
+import org.powernukkitx.event.Listener;
+import org.powernukkitx.event.block.BlockBreakEvent;
+
+public class MyListener implements Listener {
+    @EventHandler
+    public void onBreak(BlockBreakEvent event) {
+        event.getPlayer().sendMessage("Broke a block");
+    }
+}
+```
+
+Register it in `onEnable`:
+
+```java
+getServer().getPluginManager().registerEvents(new MyListener(), this);
+```
+
+### Blocks and items
+
+PocketMine references blocks and items through factory helpers. PowerNukkitX uses `Block.get` / `Item.get` with Bedrock **string identifiers** from `BlockID` and `ItemID`.
+
+```java
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockID;
+
+Block stone = Block.get(BlockID.STONE); // "minecraft:stone"
+```
+
+### Commands
+
+```java
+@CommandDefinition(name = "hello", description = "Say hi")
+public class HelloCommand extends Command {
+    public HelloCommand() { super("hello"); }
+
+    @Override
+    public boolean execute(CommandSender sender, String label, String[] args) {
+        sender.sendMessage("Hello!");
+        return true;
+    }
+}
+```
+
+Register with `getServer().getCommandMap().register("myplugin", new HelloCommand())`.
+
+### Config and scheduling
+
+`$this->getConfig()` becomes `getConfig()`, backed by the same YAML style. PocketMine's `getScheduler()` maps to `getServer().getScheduler()` - keep long-running work off the main thread with its delayed, repeating and async task methods.
+
+<Callout type="info">
+    Read the [Create a plugin](/docs/development/basics) guide to set up a Java project, then rewrite your PHP logic class by class using the mappings above.
+</Callout>

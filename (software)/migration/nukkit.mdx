@@ -66,3 +66,134 @@ Nukkit/Lumi plugins run on a legacy API. While PowerNukkitX maintains compatibil
 - **Action Required:**
   1. Check for updated or official PowerNukkitX releases of your plugins on the PowerNukkitX plugin portal.
   2. If updates are unavailable, you may need to recompile or modify the plugins to use the new API namespaces.
+
+---
+
+## Migrating Plugin Code
+
+Nukkit, Lumi, Nukkit-MOT and the PetteriM1 edition all share the classic `cn.nukkit` API. PowerNukkitX moved every class into the `org.powernukkitx` package and modernized several core systems. If you maintain your own plugins, these are the concrete code changes you need to make.
+
+### 1. Update your imports
+
+Every `cn.nukkit` import becomes `org.powernukkitx`. A project-wide find-and-replace of `cn.nukkit` with `org.powernukkitx` covers most of the work.
+
+| Legacy (`cn.nukkit`) | PowerNukkitX (`org.powernukkitx`) |
+| --- | --- |
+| `cn.nukkit.plugin.PluginBase` | `org.powernukkitx.plugin.PluginBase` |
+| `cn.nukkit.Player` | `org.powernukkitx.Player` |
+| `cn.nukkit.Server` | `org.powernukkitx.Server` |
+| `cn.nukkit.event.*` | `org.powernukkitx.event.*` |
+| `cn.nukkit.block.Block` | `org.powernukkitx.block.Block` |
+| `cn.nukkit.item.Item` | `org.powernukkitx.item.Item` |
+| `cn.nukkit.command.Command` | `org.powernukkitx.command.Command` |
+
+Update your `plugin.yml` too - `main` still points at your main class, but bump `api` to the PowerNukkitX API version (a string, e.g. `"3.0.0"`).
+
+### 2. Numeric IDs become string identifiers
+
+This is the biggest change. Legacy Nukkit addressed blocks and items by numeric ID and meta. PowerNukkitX uses Bedrock's string identifiers exposed through the `BlockID` and `ItemID` constant interfaces.
+
+```java
+// Legacy Nukkit - numeric IDs
+Block stone = Block.get(Block.STONE);          // int constant
+Item sword  = Item.get(Item.DIAMOND_SWORD);    // int constant
+
+// PowerNukkitX - string identifiers
+import org.powernukkitx.block.BlockID;
+import org.powernukkitx.item.ItemID;
+
+Block stone = Block.get(BlockID.STONE);        // "minecraft:stone"
+Item sword  = Item.get(ItemID.DIAMOND_SWORD);  // "minecraft:diamond_sword"
+```
+
+`Block.get`, `Item.get` and friends now take a `String` id. Hard-coded numeric IDs in your plugin will no longer compile - replace them with the matching `BlockID` / `ItemID` constant.
+
+### 3. Block meta gives way to block states
+
+Legacy Nukkit encoded block variants (wool colors, log axis, stairs facing) in a numeric meta/damage value. PowerNukkitX represents them as typed **block states**.
+
+```java
+// Legacy Nukkit - meta value
+Block wool = Block.get(Block.WOOL, 14); // 14 = red
+
+// PowerNukkitX - block state properties
+Block wool = Block.get(BlockID.RED_WOOL);
+```
+
+If your plugin read or wrote meta values directly, move that logic to the block-state API. See the [Block API](/docs/development/customs/blocks) reference for property access.
+
+### 4. Custom blocks, items and entities use the registry
+
+PowerNukkitX replaces static ID tables with a dynamic registry. Custom content is registered against `Registries` at load time instead of being hardcoded.
+
+```java
+@Override
+public void onLoad() {
+    Registries.BLOCK.registerCustomBlock(this, MyCustomBlock.class);
+}
+```
+
+Custom blocks implement the `CustomBlock` interface (`org.powernukkitx.block.customblock`). This is a full redesign compared to legacy Nukkit custom blocks - follow the [Custom Components](/docs/development/customs) guides to rebuild them.
+
+### 5. Events stay familiar
+
+The event model is unchanged in shape - implement `Listener`, annotate with `@EventHandler`, and register in `onEnable`. Only the package moves.
+
+```java
+import org.powernukkitx.event.EventHandler;
+import org.powernukkitx.event.Listener;
+import org.powernukkitx.event.block.BlockBreakEvent;
+
+public class MyListener implements Listener {
+    @EventHandler
+    public void onBreak(BlockBreakEvent event) {
+        event.getPlayer().sendMessage("You broke " + event.getBlock().getName());
+    }
+}
+```
+
+```java
+@Override
+public void onEnable() {
+    getServer().getPluginManager().registerEvents(new MyListener(), this);
+}
+```
+
+### 6. Commands
+
+`getServer().getCommandMap()` still registers commands, and `Command` is still the base class. You can also use the annotation-based `@CommandDefinition` for a more declarative style. Scheduling likewise stays on `getServer().getScheduler()`.
+
+### Before and after
+
+```java
+// Legacy Nukkit
+import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.block.Block;
+
+public class MyPlugin extends PluginBase {
+    @Override
+    public void onEnable() {
+        Block b = Block.get(Block.STONE);
+        getLogger().info("Loaded with block " + b.getId());
+    }
+}
+```
+
+```java
+// PowerNukkitX
+import org.powernukkitx.plugin.PluginBase;
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockID;
+
+public class MyPlugin extends PluginBase {
+    @Override
+    public void onEnable() {
+        Block b = Block.get(BlockID.STONE);
+        getLogger().info("Loaded with block " + b.getId());
+    }
+}
+```
+
+<Callout type="info">
+    Start from the [Create a plugin](/docs/development/basics) guide for a working project skeleton, then port your logic across using the mapping above.
+</Callout>
