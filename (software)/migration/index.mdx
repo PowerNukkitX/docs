@@ -9,15 +9,23 @@ authors:
 ---
 
 import { Card, Cards } from "fumadocs-ui/components/card";
-import { Hammer, CircleAlert, Server, Bug } from "lucide-react";
+import { Hammer, CircleAlert, Server, Bug, Layers, Boxes } from "lucide-react";
 
 If you are currently running a server using another Minecraft Bedrock software, you can migrate your configuration, world data, and resource packs to PowerNukkitX. 
 
 Depending on your source software, select the appropriate guide below:
 
 <Cards>
-    <Card icon={<Hammer className="text-primary" />} title="From Nukkit / PowerNukkit" href="/docs/migration/nukkit">
+    <Card icon={<Hammer className="text-primary" />} title="From Nukkit / Lumi" href="/docs/migration/nukkit">
         Migrate from legacy Java server software. Includes details on our built-in configuration converter.
+    </Card>
+
+    <Card icon={<Layers className="text-primary" />} title="From Nukkit-MOT" href="/docs/migration/nukkit-mot">
+        Migrate from the multi-version Nukkit-MOT fork. Automated config conversion and native world loading.
+    </Card>
+
+    <Card icon={<Boxes className="text-primary" />} title="From Nukkit PetteriM1 Edition" href="/docs/migration/petterim1">
+        Migrate from the PetteriM1 multi-version Nukkit fork. Same automated config and world migration path.
     </Card>
 
     <Card icon={<Server className="text-primary" />} title="From Bedrock Dedicated Server (BDS)" href="/docs/migration/bds">

@@ -1,0 +1,34 @@
+---
+title: "Nukkit-MOT"
+description: "Detailed guide on migrating from Nukkit-MOT to PowerNukkitX."
+icon: Layers
+authors:
+  - xRookieFight
+---
+
+Nukkit-MOT is a maintained Nukkit fork with multi-version Bedrock support. Since it shares Nukkit's Java architecture, config format and world format, migrating to PowerNukkitX is mostly automated.
+
+## Step-by-Step Migration
+
+### 1. Create a Complete Backup
+Copy your entire Nukkit-MOT server directory to a safe location before doing anything.
+
+### 2. Update Files
+1. Download the latest `powernukkitx.jar` from the [Releases Page](https://github.com/PowerNukkitX/PowerNukkitX/releases).
+2. Download a startup script (`start.bat` or `start.sh`) from [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts) and place it in the server folder.
+3. Replace the old jar with `powernukkitx.jar`. Do **not** delete your `nukkit.yml` or `server.properties` yet.
+
+### 3. Run the Server
+Start the server. PowerNukkitX detects the existing `nukkit.yml` and `server.properties`, backs them up, converts the values into the new `pnx.yml` structure, and continues booting.
+
+The configuration keys map the same way as a plain Nukkit migration - see the [Nukkit / Lumi](/docs/migration/nukkit) guide for the full mapping table (`settings`, `gameplay-settings`, `player-settings`).
+
+## World Data
+Nukkit-MOT and PowerNukkitX use the same world format. Your existing `worlds/` load natively, no conversion needed.
+
+## Plugin Compatibility
+Nukkit-MOT plugins target the legacy Nukkit API. Basic plugins often work on PowerNukkitX, but plugins that touch block, item or entity registries will fail because PowerNukkitX uses a modern dynamic registry system. Look for PowerNukkitX builds of your plugins, or recompile them against the new API.
+
+<Callout type="warning">
+    Nukkit-MOT can serve several Bedrock protocol versions at once. PowerNukkitX targets a single, current protocol - players on older client versions may not be able to connect after migrating. Confirm your player base is on a supported version first.
+</Callout>

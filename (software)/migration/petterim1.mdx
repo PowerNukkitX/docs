@@ -1,0 +1,34 @@
+---
+title: "Nukkit PetteriM1 Edition"
+description: "Detailed guide on migrating from the Nukkit PetteriM1 edition to PowerNukkitX."
+icon: Boxes
+authors:
+  - xRookieFight
+---
+
+The Nukkit PetteriM1 edition is a Nukkit fork focused on supporting a wide range of Bedrock protocol versions. It keeps Nukkit's Java architecture, config files and world format, so migrating to PowerNukkitX is largely automated.
+
+## Step-by-Step Migration
+
+### 1. Create a Complete Backup
+Copy your entire PetteriM1 server directory to a safe location first.
+
+### 2. Update Files
+1. Download the latest `powernukkitx.jar` from the [Releases Page](https://github.com/PowerNukkitX/PowerNukkitX/releases).
+2. Download a startup script (`start.bat` or `start.sh`) from [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts) and place it in the server folder.
+3. Replace the old jar with `powernukkitx.jar`. Keep your `nukkit.yml` and `server.properties` in place for now.
+
+### 3. Run the Server
+On startup PowerNukkitX detects `nukkit.yml` and `server.properties`, backs them up, converts the settings into `pnx.yml`, and continues booting.
+
+Configuration keys map exactly as in a plain Nukkit migration - see the [Nukkit / Lumi](/docs/migration/nukkit) guide for the full mapping table (`settings`, `gameplay-settings`, `player-settings`).
+
+## World Data
+The PetteriM1 edition and PowerNukkitX share the same world format. Your `worlds/` folders load natively without conversion.
+
+## Plugin Compatibility
+PetteriM1 edition plugins use the legacy Nukkit API. Simple plugins may run on PowerNukkitX, but anything interacting with block, item or entity registries will break against PowerNukkitX's modern registry system. Prefer PowerNukkitX-native plugin builds, or recompile against the new API.
+
+<Callout type="warning">
+    The PetteriM1 edition is built around multi-version support, letting old and new clients join the same server. PowerNukkitX targets a single, current protocol version - clients on older versions may lose access after migrating. Check what versions your players use before switching.
+</Callout>
