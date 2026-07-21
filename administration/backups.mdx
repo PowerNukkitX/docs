@@ -13,6 +13,7 @@ Regular backups are the difference between a minor hiccup and losing weeks of pr
 | Path | Contains |
 |---|---|
 | World folders (e.g. `world/`) | Terrain, blocks, and entities. |
+| `players/` | Player data - inventories, positions, and stats (when `savePlayerData` is on). |
 | `pnx.yml` | All server configuration. |
 | `plugins/` | Plugin jars and their `plugins/<name>/` data folders. |
 | `ops.txt`, `white-list.txt`, `banned-*.txt` | Operators, allow-list, and bans. |
@@ -27,11 +28,12 @@ A world that is being written to while you copy it can produce a corrupt backup.
 
 ```bash
 # Example: stop, archive, restart (Linux/macOS)
-tar -czf backups/pnx-$(date +%F).tar.gz world/ pnx.yml plugins/ ops.txt white-list.txt
+tar -czf backups/pnx-$(date +%F).tar.gz world/ players/ pnx.yml plugins/ ops.txt white-list.txt
 ```
 
-> [!TIP]
-> Keep backups on a **different disk or machine** than the server. A backup that dies with the server hasn't saved you.
+<Callout type="tip">
+    Keep backups on a **different disk or machine** than the server. A backup that dies with the server hasn't saved you.
+</Callout>
 
 ## Automating It
 

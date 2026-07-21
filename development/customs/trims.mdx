@@ -49,8 +49,9 @@ ItemTags.register("myplugin:cool_smithing_template", List.of("minecraft:trim_tem
 ItemTags.register("minecraft:emerald", List.of("minecraft:trim_materials"));
 ```
 
-> [!NOTE]
-> The item ids you register must exist. Use vanilla ids directly, or register your own [custom items](/docs/development/customs/items) first and then tag them.
+<Callout type="info">
+    The item ids you register must exist. Use vanilla ids directly, or register your own [custom items](/docs/development/customs/items) first and then tag them.
+</Callout>
 
 ---
 
@@ -80,5 +81,6 @@ Registries.TRIM.getPatterns();
 Registries.TRIM.getMaterials();
 ```
 
-> [!IMPORTANT]
-> Register each template and ingredient item id only once. A second `registerPattern`/`registerMaterial` for the same item id throws `RegisterException`.
+<Callout type="warn">
+    Register each template and ingredient item id only once. A second `registerPattern`/`registerMaterial` for the same item id throws `RegisterException`.
+</Callout>
