@@ -1,5 +1,6 @@
 {
   "title": "Custom Components",
+  "icon": "Blocks",
   "pages": [
     "index",
     "blocks",

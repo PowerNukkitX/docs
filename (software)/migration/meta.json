@@ -1,5 +1,6 @@
 {
   "title": "Migration",
+  "icon": "ArrowRightLeft",
   "pages": [
     "index",
     "nukkit",
