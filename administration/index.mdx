@@ -1,0 +1,34 @@
+---
+title: "Overview"
+description: "Everything you need to run and manage a PowerNukkitX server after installation."
+icon: LayoutDashboard
+authors:
+  - PowerNukkitX
+---
+
+Once your server is installed and running, most of your time is spent administering it - running commands, managing worlds and players, keeping backups, and tuning performance. This section collects the practical, day-to-day tasks.
+
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { SquareTerminal, Map, Users, Archive, Gauge } from "lucide-react";
+
+<Cards>
+  <Card icon={<SquareTerminal className="text-primary" />} title="Console & Commands" href="/docs/administration/commands">
+    The commands you use most from the console and in game.
+  </Card>
+  <Card icon={<Map className="text-primary" />} title="World Management" href="/docs/administration/worlds">
+    Load, configure, and switch between worlds.
+  </Card>
+  <Card icon={<Users className="text-primary" />} title="Player Management" href="/docs/administration/players">
+    Operators, the allow-list, bans, and kicks.
+  </Card>
+  <Card icon={<Archive className="text-primary" />} title="Backups" href="/docs/administration/backups">
+    Keep your world and configuration safe.
+  </Card>
+  <Card icon={<Gauge className="text-primary" />} title="Performance" href="/docs/administration/performance">
+    Tune memory, threads, and view distance.
+  </Card>
+</Cards>
+
+<Callout type="tip">
+    Most settings live in `pnx.yml` - see the [Configuration](/docs/configuration) reference for the full list of options. Remember to stop the server before editing it by hand.
+</Callout>

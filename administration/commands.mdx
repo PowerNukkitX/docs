@@ -1,0 +1,50 @@
+---
+title: "Console & Commands"
+description: "The console commands you use most often to operate a PowerNukkitX server."
+icon: SquareTerminal
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX supports the full vanilla Bedrock command set plus server-management commands. You can type commands in the server console (without a leading `/`) or in game as an operator (with a `/`).
+
+## Server Lifecycle
+
+| Command | What it does |
+|---|---|
+| `stop` | Saves everything and shuts the server down cleanly. Always use this instead of killing the process. |
+| `save-all` | Forces all loaded worlds to save to disk. |
+| `reload` | Reloads plugins and configuration. Prefer a full restart when in doubt. |
+| `version` / `plugins` | Show the server version and the list of loaded plugins. |
+| `status` | Prints uptime, TPS, memory, and loaded world/entity counts. |
+
+<Callout type="warning">
+    Never stop the server by closing the terminal or killing the process. Use `stop` so worlds and player data are flushed to disk first.
+</Callout>
+
+## Players
+
+| Command | What it does |
+|---|---|
+| `list` | Lists online players. |
+| `kick <player> [reason]` | Disconnects a player. |
+| `tp <player> <target>` | Teleports a player to another player or coordinates. |
+| `gamemode <mode> [player]` | Sets a player's game mode (`survival`, `creative`, `adventure`, `spectator`). |
+| `give <player> <item> [amount]` | Gives items. |
+| `xp <amount> [player]` | Grants experience. |
+
+See [Player Management](/docs/administration/players) for operators, bans, and the allow-list.
+
+## World
+
+| Command | What it does |
+|---|---|
+| `time set <value>` | Sets the world time (e.g. `day`, `night`, or a tick value). |
+| `weather <clear\|rain\|thunder>` | Changes the weather. |
+| `difficulty <0-3>` | Sets the difficulty (peaceful, easy, normal, hard). |
+| `gamerule <rule> <value>` | Toggles game rules such as `doDaylightCycle` or `keepInventory`. |
+| `setworldspawn` / `spawnpoint` | Sets the world spawn or a player's spawn point. |
+
+## Getting Help
+
+Run `help` for a paginated list of every command available to you, or `help <command>` for the usage of a single command. What a player can run depends on their [permissions](/docs/permissions).

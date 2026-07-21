@@ -1,5 +1,6 @@
 {
   "title": "Custom Components",
+  "icon": "Blocks",
   "pages": [
     "index",
     "blocks",
@@ -7,6 +8,7 @@
     "items",
     "entities",
     "enchantments",
+    "trims",
     "recipes",
     "generators",
     "structures"

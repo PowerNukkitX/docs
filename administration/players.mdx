@@ -1,0 +1,56 @@
+---
+title: "Player Management"
+description: "Operators, the allow-list, bans, and kicks on a PowerNukkitX server."
+icon: Users
+authors:
+  - PowerNukkitX
+---
+
+## Operators
+
+Operators bypass permission checks and can run every command. Grant and revoke OP from the console or as an existing operator:
+
+```bash
+op <player>
+deop <player>
+```
+
+Operators are stored in `ops.txt` in the server root, one name per line. You can edit it while the server is stopped. For anything beyond a couple of trusted admins, use a permission plugin instead - see [Permissions & Security](/docs/permissions).
+
+## Allow-List (Whitelist)
+
+Restrict the server to approved players. Enable it in `pnx.yml`:
+
+```yaml
+baseSettings:
+  allowList: true
+  allowListMessage: Server is white-listed
+```
+
+When enabled, only players listed in `white-list.txt` can join; everyone else is kicked with `allowListMessage`. Add and remove players with the `whitelist` command:
+
+```bash
+whitelist add <player>
+whitelist remove <player>
+whitelist list
+```
+
+<Callout type="info">
+    With `xboxAuth` enabled (the default), players are identified by their authenticated Xbox account, so the allow-list cannot be bypassed by changing a display name.
+</Callout>
+
+## Kicks and Bans
+
+| Command | Effect |
+|---|---|
+| `kick <player> [reason]` | Disconnects a player immediately. They can rejoin. |
+| `ban <player> [reason]` | Bans a player by name. |
+| `pardon <player>` | Removes a name ban. |
+| `ban-ip <address\|player>` | Bans an IP address. |
+| `pardon-ip <address>` | Removes an IP ban. |
+
+Bans are persisted in `banned-players.txt` and `banned-ips.txt`.
+
+## Offline Mode
+
+Setting `baseSettings.xboxAuth` to `false` disables Xbox authentication (offline mode). Only do this in trusted/LAN environments - without authentication, anyone can connect as any username, and the allow-list and bans become trivial to bypass.

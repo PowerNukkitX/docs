@@ -1,0 +1,86 @@
+---
+title: "Armor Trims"
+description: "How to register custom armor trim patterns and materials in PowerNukkitX."
+icon: Shirt
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX lets you register custom armor trim **patterns** and **materials**. A pattern comes from the smithing template placed in the template slot; a material comes from the ingredient placed in the material slot. Once registered, players can apply the trim in a smithing table just like a vanilla one.
+
+Trims are managed by the `TrimRegistry`, reachable through `Registries.TRIM`.
+
+## Registering Patterns and Materials
+
+Register your trims when your plugin loads. Both calls throw `RegisterException` if the item id is already registered, so wrap them in a `try/catch`:
+
+```java filename="MyPlugin.java"
+import org.powernukkitx.registry.Registries;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onEnable() {
+    try {
+        // A smithing template item -> the pattern id written into the trim NBT
+        Registries.TRIM.registerPattern("myplugin:cool_smithing_template", "cool");
+
+        // An ingredient item -> the material id + the hex tint used for the item name
+        Registries.TRIM.registerMaterial("minecraft:emerald", "emerald_special", "#17DD62");
+    } catch (RegisterException e) {
+        getLogger().error("Trim is already registered", e);
+    }
+}
+```
+
+- `registerPattern(templateItemId, patternId)` - `templateItemId` is the item that goes in the template slot; `patternId` is the id stored in the item's trim NBT.
+- `registerMaterial(ingredientItemId, materialId, color)` - `ingredientItemId` is the item that goes in the material slot; `materialId` is the id stored in the trim NBT; `color` is the hex color (with a leading `#`) used to tint the trim name.
+
+---
+
+## Tagging the Items
+
+The smithing table only accepts items that carry the right tag. Tag your template item as a trim template and your ingredient item as a trim material, otherwise the smithing table will reject them:
+
+```java
+import org.powernukkitx.item.ItemTags;
+import java.util.List;
+
+ItemTags.register("myplugin:cool_smithing_template", List.of("minecraft:trim_templates"));
+ItemTags.register("minecraft:emerald", List.of("minecraft:trim_materials"));
+```
+
+<Callout type="info">
+    The item ids you register must exist. Use vanilla ids directly, or register your own [custom items](/docs/development/customs/items) first and then tag them.
+</Callout>
+
+---
+
+## Applying to Online Players
+
+The trim list is sent to a client on join. If you register trims after players are already online, push the updated list to them so their smithing tables and rendering stay in sync:
+
+```java
+Registries.TRIM.resyncOnlinePlayers();
+```
+
+---
+
+## Removing and Inspecting Trims
+
+```java
+// Remove a registered pattern or material
+Registries.TRIM.unregisterPattern("myplugin:cool_smithing_template");
+Registries.TRIM.unregisterMaterial("minecraft:emerald");
+
+// Look one up (returns an Optional)
+Registries.TRIM.getPattern("myplugin:cool_smithing_template");
+Registries.TRIM.getMaterial("minecraft:emerald");
+
+// Read-only views of everything registered
+Registries.TRIM.getPatterns();
+Registries.TRIM.getMaterials();
+```
+
+<Callout type="warn">
+    Register each template and ingredient item id only once. A second `registerPattern`/`registerMaterial` for the same item id throws `RegisterException`.
+</Callout>

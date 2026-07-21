@@ -1,0 +1,48 @@
+---
+title: "Backups"
+description: "How to back up and restore a PowerNukkitX server safely."
+icon: Archive
+authors:
+  - PowerNukkitX
+---
+
+Regular backups are the difference between a minor hiccup and losing weeks of progress. Because everything a PowerNukkitX server needs lives in its own directory, backing up is mostly a matter of copying the right files at the right time.
+
+## What to Back Up
+
+| Path | Contains |
+|---|---|
+| World folders (e.g. `world/`) | Terrain, blocks, and entities. |
+| `players/` | Player data - inventories, positions, and stats (when `savePlayerData` is on). |
+| `pnx.yml` | All server configuration. |
+| `plugins/` | Plugin jars and their `plugins/<name>/` data folders. |
+| `ops.txt`, `white-list.txt`, `banned-*.txt` | Operators, allow-list, and bans. |
+
+## Taking a Safe Backup
+
+A world that is being written to while you copy it can produce a corrupt backup. Flush and quiesce first:
+
+1. Run `save-all` to flush worlds to disk.
+2. For a guaranteed-consistent copy, `stop` the server before copying.
+3. Copy the files listed above to a separate location.
+
+```bash
+# Example: stop, archive, restart (Linux/macOS)
+tar -czf backups/pnx-$(date +%F).tar.gz world/ players/ pnx.yml plugins/ ops.txt white-list.txt
+```
+
+<Callout type="tip">
+    Keep backups on a **different disk or machine** than the server. A backup that dies with the server hasn't saved you.
+</Callout>
+
+## Automating It
+
+- Schedule the archive command with `cron` (Linux/macOS) or Task Scheduler (Windows) during low-traffic hours.
+- Keep several rotations (for example the last 7 daily backups) so you can roll back further than the most recent copy.
+- Backup plugins from [Jarbage](https://powernukkitx.org/plugins) can snapshot worlds on a timer without stopping the server.
+
+## Restoring
+
+1. Stop the server.
+2. Replace the current world folder and config with the backup copies.
+3. Start the server and verify with `status` and by logging in.

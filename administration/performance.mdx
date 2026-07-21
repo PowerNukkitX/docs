@@ -1,0 +1,50 @@
+---
+title: "Performance Tuning"
+description: "Tune memory, threads, and view distance to get the most out of PowerNukkitX."
+icon: Gauge
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX is built to be fast - levels tick on their own threads and hot data is cached aggressively. A few settings still matter once you have real players online.
+
+## Memory
+
+Allocate enough heap, but not more than you need. When you launch with the CLI, pass the memory size:
+
+```bash
+pnx start --memory 4G
+```
+
+2 GB is a reasonable minimum; 4 GB or more is recommended for a populated server. PowerNukkitX uses the generational ZGC garbage collector, which keeps pauses low even at larger heaps.
+
+<Callout type="info">
+    Do not allocate all of the machine's RAM to the server. Leave headroom for the operating system and off-heap memory.
+</Callout>
+
+## View Distance
+
+`gameplaySettings.viewDistance` (default: `20` chunks) is the single biggest lever on CPU and bandwidth. Every extra chunk of view distance multiplies the work per player. If a busy server struggles, lower it:
+
+```yaml
+gameplaySettings:
+  viewDistance: 12
+```
+
+## Async Workers
+
+`performanceSettings.asyncWorkers` (default: `4`) is the number of background threads used for work like chunk generation. On a machine with more cores, raising this can smooth out lag spikes when players explore new terrain. Keep it at or below your available CPU cores.
+
+```yaml
+performanceSettings:
+  asyncWorkers: 6
+  registryCacheEnabled: true
+```
+
+## Autosave
+
+`baseSettings.autosaveDelay` (default: `6000` ticks) controls how often worlds save automatically. Saving less often reduces disk I/O but risks losing more progress on a crash - balance it against your [backup](/docs/administration/backups) strategy.
+
+## Profiling
+
+When something is slow, measure before you tune. The [Spark](/docs/integrations/spark) profiler shows exactly which plugins, entities, or tasks are eating your tick time, so you can fix the real bottleneck instead of guessing.
