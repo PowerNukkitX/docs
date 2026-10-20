@@ -1,0 +1,61 @@
+---
+title: "Servers, console and backups"
+description: "Create and switch servers, start and stop them, read the console and keep backups."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## Create a server
+
+**Create a server** is a four-step wizard:
+
+<Steps>
+  <Step>**Folder**: where the server lives. An empty folder, created if it does not exist.</Step>
+  <Step>**Version**: the PowerNukkitX release. The newest stable one is preselected.</Step>
+  <Step>**Memory**: the RAM given at startup. 2 GB comfortably covers about ten players.</Step>
+  <Step>**Build**: the official jar downloads with a live progress bar, the start scripts are written, and the server is registered.</Step>
+</Steps>
+
+When it is done, **Run now** starts it and **Open folder** shows the files.
+
+## Several servers
+
+The Assistant keeps a list of servers, shown as chips at the top of **My server**:
+
+- click a chip to make it the **active** server: start, stop, plugins and settings all act on it;
+- the pencil renames it, the bin removes it from the list. Its files stay on disk;
+- **Add a server** connects a folder you already have. It must contain a `powernukkitx.jar`.
+
+The default server of the CLI joins the list on its own the first time.
+
+## Start, stop and the console
+
+**My server** starts and stops the active server and shows its console live, with the server's own colours.
+
+| In the console | Does |
+| :-- | :-- |
+| The command field | Sends a command to the server, as you would type it in its terminal. **Enter** runs it. |
+| All / Warn / Errors | Filters the lines. |
+| Clear, Copy, Export | Empties the view, copies it, or saves the logs to a file. |
+| Auto-scroll | Keeps the newest line in view. |
+
+**Stop** sends the server a graceful `stop`, so it saves before it exits. With **Confirm on close** on, closing the app while the server runs offers to stop it first.
+
+## Vital signs
+
+Next to the console, live figures for the running server: uptime, players online, the port, and how many errors and warnings it has logged.
+
+## Backups
+
+**Backups**, in **My server**, takes a snapshot of the server (worlds and configuration) into its `backups/` folder.
+
+| Action | Note |
+| :-- | :-- |
+| New backup | Saves a copy now. |
+| Restore | Replaces the server's files with that copy, after a confirmation. The server must be stopped. Changes made since are lost. |
+| Delete | Removes the copy for good. |
+
+<Callout type="info">
+  Backups stay next to the server. To survive a dead disk, also copy them to another machine: see [Backups](/docs/administration/backups).
+</Callout>

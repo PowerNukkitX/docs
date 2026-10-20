@@ -1,0 +1,101 @@
+---
+title: "Server commands"
+description: "Create, start, stop and inspect a server with pnx."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## init [#init]
+
+Creates a server: a folder, the PowerNukkitX jar and the start scripts. Aliases: `new`, `create`.
+
+```bash
+pnx init
+pnx init --dir my-server
+pnx init --version 1.21.0
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `--dir <path>` | The folder to create the server in. |
+| `--version <tag>` | A PowerNukkitX release tag, which skips the version picker. |
+
+In a terminal it asks for what is missing; in a script (or with `--json`) it runs without questions. The jar comes from the PowerNukkitX GitHub releases and the scripts from [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts). The new server becomes the default one.
+
+## start [#start]
+
+Starts the server in the foreground, with the Java flags PowerNukkitX needs. Aliases: `run`, `up`.
+
+```bash
+pnx start
+pnx start --memory 4G
+pnx start --restart
+pnx start --dry-run
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `--dir <path>` | The server folder, instead of the default one. |
+| `-m`, `--memory <size>` | Java heap at startup, `2G` by default. |
+| `--restart` | Starts the server again when it exits with an error. |
+| `--dry-run` | Prints the `java` command instead of running it. |
+
+`pnx start` launches Java with UTF-8 everywhere, the ZGC garbage collector, the `--add-opens` flags and `-XX:MaxRAMPercentage=75.0`, so the heap can grow up to three quarters of the machine's memory. It uses the Java in `JAVA_HOME` when it is set.
+
+## stop [#stop]
+
+Stops the server that `pnx start` launched, through the process id it recorded. Alias: `down`.
+
+```bash
+pnx stop
+```
+
+<Callout type="info">
+  To stop cleanly from inside, type `stop` in the server console: everything is saved first.
+</Callout>
+
+## console [#console]
+
+Opens a console to a running server, over **RCON**.
+
+```bash
+pnx console
+```
+
+It reads `enable-rcon`, `rcon.port` (`25575` by default) and `rcon.password` from the server's `server.properties`. RCON is off by default; when it is, `pnx console` tells you what to turn on. Type `exit` to leave.
+
+## logs [#logs]
+
+Prints the server log, and keeps following it. Alias: `log`.
+
+```bash
+pnx logs
+pnx logs --lines 200
+pnx logs --no-follow
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `-n`, `--lines <n>` | How many lines to show first. |
+| `--follow` | Keeps printing new lines as they are written. `--no-follow` prints and exits. |
+
+## config [#config]
+
+Shows the configuration the server reads, so you can check a value without opening the file.
+
+```bash
+pnx config
+```
+
+## use [#use]
+
+Chooses the server every command works on.
+
+```bash
+pnx use
+pnx use ./my-server
+pnx use --clear
+```
+
+Without a folder, it lists the servers it can find and lets you pick one. `--clear` forgets the default again.

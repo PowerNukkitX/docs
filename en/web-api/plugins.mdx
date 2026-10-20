@@ -1,0 +1,87 @@
+---
+title: "Plugins"
+description: "Search plugins, read one in full, its reviews and download history, and embed its badge."
+icon: Boxes
+authors:
+  - AzaleeX
+---
+
+A plugin is addressed by its **slug**, the `owner.name` the hub gave it, as in `/plugins/owner.name`.
+
+## List and search
+
+```text
+GET /api/v1/plugins
+```
+
+Published plugins, 24 per page. The response carries the page and the total at the top level: `data`, `page`, `perPage`, `total`, `totalPages`, and `fuzzy`, which is `true` when `q` matched nothing exactly and the results are the closest names instead.
+
+| Parameter | What it does |
+| :-- | :-- |
+| `q` | Full-text search over name, slug and summary. |
+| `category` | One category id, from [`/categories`](/docs/web-api/catalogue). |
+| `api` | Only plugins declaring this PowerNukkitX API version in their `plugin.yml`. |
+| `sort` | `downloads`, `trending`, `stars`, `followers`, `rating`, `updated` or `name`. |
+| `page` | From 1 to 500. |
+
+<ApiTry path="/plugins" query="q=economy&sort=downloads" />
+
+## One plugin
+
+```text
+GET /api/v1/plugins/{slug}
+```
+
+One plugin with its GitHub metadata, its releases and its README, resolved at request time. Only **approved** releases can be downloaded.
+
+<ApiTry path="/plugins/{slug}" params={{ slug: "" }} />
+
+## Reviews
+
+```text
+GET /api/v1/plugins/{slug}/reviews
+```
+
+Community reviews, most recent first. Pagination is under `meta`: `{ hasMore, limit, offset }`.
+
+| Parameter | What it does |
+| :-- | :-- |
+| `limit` | How many to return. |
+| `offset` | How many to skip. |
+
+<ApiTry path="/plugins/{slug}/reviews" params={{ slug: "" }} query="limit=10" />
+
+## Download history
+
+```text
+GET /api/v1/plugins/{slug}/history
+```
+
+Daily download counts, as `data.points`. This is what draws the chart on a plugin page.
+
+<ApiTry path="/plugins/{slug}/history" params={{ slug: "" }} />
+
+## Badge
+
+```text
+GET /api/v1/plugins/{slug}/badge
+```
+
+A status badge as an **SVG image**, not JSON. Point an image at it in a README:
+
+```markdown
+![downloads](https://powernukkitx.org/api/v1/plugins/owner.name/badge?metric=downloads)
+```
+
+| Parameter | What it does |
+| :-- | :-- |
+| `metric` | `api`, `downloads`, `rating`, `stars` or `version`. |
+| `label` | Replaces the text on the left, up to 32 characters. |
+
+## Download a release
+
+```text
+GET /api/v1/plugins/{slug}/download?tag={tag}
+```
+
+Redirects to the jar of an approved release on GitHub, and counts the download. `tag` is required. A release that exists but is not approved answers `403 not_approved`. This is what the CLI's `pnx plugin install` calls.

@@ -1,0 +1,74 @@
+---
+title: "Hub pairing"
+description: "Pair a server with a dashboard, and let it supervise the server under the capabilities you grant."
+icon: PlugZap
+authors:
+  - AzaleeX
+---
+
+`pnx link` pairs a server with a **hub**, a web dashboard, and then runs the server under supervision: it starts the JVM, reads the console and reports to the dashboard, which can send commands back.
+
+<LinkPairing />
+
+<Callout type="info" title="Needs a hub with pairing">
+  Pairing needs a hub that supervises servers. The powernukkitx.org website does not offer it yet; point `--hub` at a hub that does.
+</Callout>
+
+## How it connects
+
+Every connection goes **out** from your machine to the hub: the hub never opens one towards you. No port to open, no firewall rule. When the hub is unreachable, the server keeps running.
+
+## Pair
+
+<Steps>
+  <Step>On the dashboard, create a pairing code.</Step>
+  <Step>On the server machine, run `pnx link <code>`.</Step>
+  <Step>The CLI trades the code for a token, stores it, and starts supervising the server.</Step>
+</Steps>
+
+```bash
+pnx link ABCD-1234 --hub https://hub.example.org --name "Survival"
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `<code>` | The pairing code from the dashboard. |
+| `--hub <url>` | The hub's address. |
+| `--allow <list>` | The capabilities to grant, comma separated. |
+| `--dir <path>` | The server folder. |
+| `--memory <size>` | Memory for the server. |
+| `--name <label>` | The name shown on the dashboard. |
+| `--start` / `--no-start` | Starts the server, or only attaches to it. |
+| `--status` | Shows what this machine is paired with. |
+| `--forget` | Deletes the stored token. |
+
+## Capabilities
+
+The dashboard can only do what you allow. A fresh pairing allows `console` and `control`; add others by name with `--allow`.
+
+| Capability | Lets the dashboard |
+| :-- | :-- |
+| `console` | Read the console and send commands. |
+| `control` | Start, stop and restart the server. |
+| `players` | Manage players, such as the allow-list. |
+| `worlds` | Work with worlds. |
+| `config` | Read and change the configuration. |
+| `files` | Read and write files in the server folder. |
+| `plugins` | Install and remove plugins. |
+| `backups` | Take backups. |
+| `schedules` | Run scheduled tasks. |
+
+```bash
+pnx link ABCD-1234 --allow console,control,backups
+```
+
+<Callout type="warn" title="What a remote command can never do">
+  File access is confined to the server folder, checked on your machine after following links. Executables and scripts (`.jar`, `.exe`, `.sh`, `.bat`, `.js` and others) can be read but never written remotely.
+</Callout>
+
+## Check and forget
+
+```bash
+pnx link --status
+pnx link --forget
+```

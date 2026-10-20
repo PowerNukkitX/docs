@@ -1,0 +1,54 @@
+---
+title: "Maintenance"
+description: "Update PowerNukkitX, back up the server and check the machine with pnx."
+icon: Wrench
+authors:
+  - AzaleeX
+---
+
+## update [#update]
+
+Updates PowerNukkitX itself to the latest release. Alias: `upgrade`.
+
+```bash
+pnx update
+pnx update --force
+```
+
+The current jar is kept beside the new one as `powernukkitx.jar.old`, so you can go back. Delete it once the new version runs as you want. `--force` ignores the release cache and asks GitHub again.
+
+## backup [#backup]
+
+Copies the server into `backups/pnx-backup-<date>/`, inside the server folder.
+
+```bash
+pnx backup
+```
+
+Everything is copied except `logs/`, `cache/`, `crash-reports/`, earlier `backups/` and hidden folders. For a clean copy of the worlds, run `save-all` in the console first, or stop the server. To keep backups safe from a dead disk, copy them to another machine: see [Backups](/docs/administration/backups).
+
+## doctor [#doctor]
+
+Checks what a server needs and says what blocks it. Alias: `check`.
+
+```bash
+pnx doctor
+pnx --json doctor
+```
+
+| Check | Looks at |
+| :-- | :-- |
+| Java | That Java 21 or newer is installed, and its vendor. |
+| Install | That the server folder holds a working `powernukkitx.jar`. |
+| Disk | The free space where the server lives. |
+| Port 19132 | Whether something already holds the default UDP port. |
+| Memory | Free and total memory. |
+
+## info [#info]
+
+Shows what is installed here: the server folder, the PowerNukkitX version and the plugins. Alias: `status`.
+
+```bash
+pnx info
+pnx --json info
+```

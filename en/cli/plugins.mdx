@@ -1,0 +1,57 @@
+---
+title: "Plugins"
+description: "Search the plugin hub, install reviewed releases and keep them up to date with pnx."
+icon: Package
+authors:
+  - AzaleeX
+---
+
+The `plugin` commands talk to the [plugin hub](https://powernukkitx.org/plugins), through the same [web API](/docs/web-api/plugins) as the website. They only ever install **releases the hub approved**, and check each jar against the SHA-256 the hub recorded before putting it in `plugins/`.
+
+| Command | What it does |
+| :-- | :-- |
+| `pnx plugin list` | Browses the hub, most starred first. |
+| `pnx plugin search [term]` | Searches by name. Asks for a term when you give none. |
+| `pnx plugin info [slug]` | Shows one plugin in full. |
+| `pnx plugin install [slugs]` | Installs one or more plugins. |
+| `pnx plugin installed` | Lists what is in `plugins/`. |
+| `pnx plugin update [slugs]` | Updates plugins to their newest approved release. |
+| `pnx plugin remove [names]` | Removes plugins from the folder. |
+| `pnx install <slug>` | Installs one approved plugin by slug, the shortcut the hub's install button gives. |
+
+`pnx plugins` is an alias of `pnx plugin`.
+
+## Find a plugin
+
+```bash
+pnx plugin list --sort updated --limit 20
+pnx plugin list --query chat
+pnx plugin search worldedit
+pnx plugin info owner.name
+```
+
+`plugin list` takes `--sort` (`newest`, `updated` or `stars`), `--limit` for results per page, `--page` and `--query`.
+
+## Install and update
+
+```bash
+pnx plugin install owner.name
+pnx plugin install owner.one owner.two
+pnx plugin update
+```
+
+Give one slug or several. A plugin is named by its slug, `owner.name`, as on its page. Without a slug, `install` lets you search and pick; `update` updates every plugin it installed. Restart the server to load them.
+
+<Callout type="warn">
+  `plugin install` also accepts a direct `.jar` URL. That jar has been reviewed by nobody: only install from sources you trust.
+</Callout>
+
+## See and remove
+
+```bash
+pnx plugin installed
+pnx --json plugin installed
+pnx plugin remove owner.name
+```
+
+Without a name, `remove` shows a list to pick from.
