@@ -69,6 +69,56 @@ public void onEnable() {
 }
 ```
 
+## Stop a task
+
+Every `schedule…` call returns a `TaskHandler`. Keep it to stop the task later; a `Task` can also stop itself with `cancel()`:
+
+```java
+private TaskHandler countdown;
+
+@Override
+public void onEnable() {
+    countdown = this.getServer().getScheduler().scheduleRepeatingTask(this, new ExampleTask(this), 20);
+}
+
+public void stopCountdown() {
+    countdown.cancel();
+}
+```
+
+`getScheduler().cancelTask(this)` stops every task of your plugin at once. The server does it for you when your plugin is disabled.
+
+## Slow work: off the main thread
+
+A task runs on the main thread, between two ticks: while it runs, the whole server waits. Reading a file, calling a web API or querying a database belongs in an `AsyncTask`, which runs on a worker thread:
+
+```java title="FetchTask.java"
+import org.powernukkitx.Server;
+import org.powernukkitx.scheduler.AsyncTask;
+
+public class FetchTask extends AsyncTask {
+    @Override
+    public void onRun() {
+        // on a worker thread: slow work only, no access to players or worlds
+        setResult(loadSomethingSlow()); // your own slow method
+    }
+
+    @Override
+    public void onCompletion(Server server) {
+        // back on the main thread: safe to use the result in the game
+        server.broadcastMessage("Loaded: " + getResult());
+    }
+}
+```
+
+```java
+this.getServer().getScheduler().scheduleAsyncTask(this, new FetchTask());
+```
+
+<Callout type="warn">
+  Never touch players, entities or worlds from `onRun()`: the game is not thread-safe. Hand the result over to `onCompletion()`, which runs on the main thread.
+</Callout>
+
 <Callout type="info">
   Prefer annotations? `@ScheduleTask` schedules a class or a static method for you: see [Annotation processor](/docs/development/basics/annotations).
 </Callout>

@@ -63,3 +63,38 @@ Un **listener** est une classe dont les méthodes portent `@EventHandler`. Quand
     ```
   </Tab>
 </Tabs>
+
+## Annuler un événement
+
+La plupart des événements peuvent être annulés : le serveur ne fait alors pas ce que l'événement annonçait. Ici, seuls les opérateurs peuvent casser des blocs :
+
+```java
+@EventHandler
+public void onBreak(BlockBreakEvent event) {
+    if (!event.getPlayer().isOp()) {
+        event.setCancelled(true);
+    }
+}
+```
+
+Un événement est annulable si sa classe implémente `Cancellable`, comme `BlockBreakEvent` et `PlayerChatEvent`.
+
+## Ordre et priorité
+
+Quand plusieurs handlers écoutent le même événement, ils s'exécutent par **priorité**, de `LOWEST` à `MONITOR`. Le dernier à passer a le dernier mot, car il peut défaire ce qu'un précédent a décidé.
+
+```java
+@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+public void onChat(PlayerChatEvent event) {
+    // passe après les handlers NORMAL, et pas du tout si l'un d'eux a annulé l'événement
+}
+```
+
+| Réglage | Par défaut | Rôle |
+| :-- | :-- | :-- |
+| `priority` | `NORMAL` | `LOWEST`, `LOW`, `NORMAL`, `HIGH`, `HIGHEST`, puis `MONITOR`. |
+| `ignoreCancelled` | `false` | Si `true`, le handler est sauté quand l'événement est déjà annulé. |
+
+<Callout type="warn">
+  Réservez `MONITOR` à l'observation du résultat final, pour des logs ou des statistiques. N'y modifiez pas l'événement : d'autres plugins ont déjà agi en conséquence.
+</Callout>

@@ -63,3 +63,38 @@ A **listener** is a class with methods marked `@EventHandler`. When the server f
     ```
   </Tab>
 </Tabs>
+
+## Cancel an event
+
+Most events can be cancelled: the server then skips what the event announced. Here, only operators may break blocks:
+
+```java
+@EventHandler
+public void onBreak(BlockBreakEvent event) {
+    if (!event.getPlayer().isOp()) {
+        event.setCancelled(true);
+    }
+}
+```
+
+An event can be cancelled if its class implements `Cancellable`, as `BlockBreakEvent` and `PlayerChatEvent` do.
+
+## Order and priority
+
+When several handlers listen to the same event, they run by **priority**, from `LOWEST` to `MONITOR`. A later handler has the last word, because it can undo what an earlier one decided.
+
+```java
+@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+public void onChat(PlayerChatEvent event) {
+    // runs after NORMAL handlers, and not at all if one of them cancelled the event
+}
+```
+
+| Setting | Default | What it does |
+| :-- | :-- | :-- |
+| `priority` | `NORMAL` | `LOWEST`, `LOW`, `NORMAL`, `HIGH`, `HIGHEST`, then `MONITOR`. |
+| `ignoreCancelled` | `false` | When `true`, the handler is skipped if the event is already cancelled. |
+
+<Callout type="warn">
+  Use `MONITOR` only to observe the final outcome, for logging or statistics. Do not change the event there: other plugins have already acted on it.
+</Callout>
