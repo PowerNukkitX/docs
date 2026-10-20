@@ -1,0 +1,57 @@
+---
+title: "Plugins"
+description: "Im Plugin-Hub suchen, geprüfte Releases installieren und mit pnx aktuell halten."
+icon: Package
+authors:
+  - AzaleeX
+---
+
+Die `plugin`-Befehle sprechen mit dem [Plugin-Hub](https://powernukkitx.org/plugins), über dieselbe [Web-API](/docs/de/web-api/plugins) wie die Website. Sie installieren nur **vom Hub freigegebene Releases** und prüfen jede Jar gegen den SHA-256, den der Hub gespeichert hat, bevor sie in `plugins/` landet.
+
+| Befehl | Was er macht |
+| :-- | :-- |
+| `pnx plugin list` | Durchstöbert den Hub, die meisten Sterne zuerst. |
+| `pnx plugin search [begriff]` | Sucht nach Namen. Fragt nach einem Begriff, wenn du keinen angibst. |
+| `pnx plugin info [slug]` | Zeigt ein Plugin vollständig. |
+| `pnx plugin install [slugs]` | Installiert ein oder mehrere Plugins. |
+| `pnx plugin installed` | Listet, was in `plugins/` liegt. |
+| `pnx plugin update [slugs]` | Aktualisiert Plugins auf ihr neuestes freigegebenes Release. |
+| `pnx plugin remove [namen]` | Entfernt Plugins aus dem Ordner. |
+| `pnx install <slug>` | Installiert ein freigegebenes Plugin per Slug, die Abkürzung, die der Installieren-Knopf des Hubs anzeigt. |
+
+`pnx plugins` ist ein Alias von `pnx plugin`.
+
+## Ein Plugin finden
+
+```bash
+pnx plugin list --sort updated --limit 20
+pnx plugin list --query chat
+pnx plugin search worldedit
+pnx plugin info owner.name
+```
+
+`plugin list` nimmt `--sort` (`newest`, `updated` oder `stars`), `--limit` für Ergebnisse pro Seite, `--page` und `--query`.
+
+## Installieren und aktualisieren
+
+```bash
+pnx plugin install owner.name
+pnx plugin install owner.one owner.two
+pnx plugin update
+```
+
+Gib einen Slug oder mehrere an. Ein Plugin wird über seinen Slug benannt, `owner.name`, wie auf seiner Seite. Ohne Slug lässt dich `install` suchen und wählen; `update` aktualisiert alle Plugins, die es installiert hat. Starte den Server neu, um sie zu laden.
+
+<Callout type="warn">
+  `plugin install` nimmt auch die direkte URL einer `.jar` an. Diese Jar hat niemand geprüft: Installiere nur aus Quellen, denen du vertraust.
+</Callout>
+
+## Ansehen und entfernen
+
+```bash
+pnx plugin installed
+pnx --json plugin installed
+pnx plugin remove owner.name
+```
+
+Ohne Namen zeigt `remove` eine Liste zur Auswahl.

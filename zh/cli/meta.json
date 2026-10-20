@@ -1,0 +1,15 @@
+{
+  "title": "PNX CLI",
+  "description": "在终端中创建、运行和维护 PowerNukkitX 服务器。",
+  "icon": "SquareTerminal",
+  "root": true,
+  "pages": [
+    "index",
+    "launcher",
+    "---命令---",
+    "server",
+    "plugins",
+    "maintenance",
+    "link"
+  ]
+}

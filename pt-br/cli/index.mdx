@@ -1,0 +1,84 @@
+---
+title: "Visão geral"
+description: "Instale a ferramenta de linha de comando pnx e conheça as opções que todos os comandos compartilham."
+icon: SquareTerminal
+authors:
+  - AzaleeX
+---
+
+import { Package, PlugZap, Rocket, Wrench } from "lucide-react";
+
+O `pnx` cria, inicia e mantém um servidor PowerNukkitX pelo terminal: baixa o jar certo, escreve os scripts de inicialização, escolhe as flags do Java, instala plugins revisados e verifica a máquina. Ele é de código aberto, no repositório [pnx-cli](https://github.com/PowerNukkitX/pnx-cli).
+
+<CliSession />
+
+## Instalar
+
+Você precisa do **Node.js 20.12** ou mais recente, e do Java 21 para o próprio servidor.
+
+```bash
+npm install -g @powernukkitx/cli
+pnx --version
+```
+
+Sem instalação global? Todo comando também funciona com `npx @powernukkitx/cli <comando>`.
+
+O pacote instala dois comandos:
+
+| Comando | Para |
+| :-- | :-- |
+| `pnx` | Tudo: os subcomandos destas páginas. Rodado sozinho, abre um menu interativo. |
+| `pnxcli` | O [inicializador guiado](/docs/pt-br/cli/launcher): uma única tarefa, criar um servidor, com perguntas em vez de flags. |
+
+## Em qual servidor um comando age
+
+A maioria dos comandos trabalha em **uma pasta de servidor**. O `pnx` a escolhe nesta ordem:
+
+<Steps>
+  <Step>A pasta passada com `--dir`, nos comandos que aceitam.</Step>
+  <Step>O servidor padrão, definido por `pnx init` ou por `pnx use <pasta>`.</Step>
+  <Step>Senão, um servidor encontrado por perto. Se houver vários, ele pede para você escolher.</Step>
+</Steps>
+
+## Opções que todo comando entende
+
+| Opção | Efeito |
+| :-- | :-- |
+| `-h`, `--help` | A ajuda do `pnx`, ou de um comando: `pnx start --help`. |
+| `-v`, `--version` | Mostra a versão da CLI. |
+| `--json` | Imprime um único documento JSON e nada mais: sem animação nem barra de progresso. Feito para scripts. |
+| `--no-color` | Texto puro sem cores, para logs e pipes. |
+| `--debug` | Mostra o stack trace completo sob um erro, em vez de uma linha de dica. |
+
+```bash
+pnx --json info
+pnx --json doctor
+```
+
+## Onde ela guarda o estado [#state]
+
+A CLI grava os próprios arquivos em `~/.pnx-cli`: `config.json` (o servidor padrão, o token do hub), o cache de versões e as preferências do [Assistant](/docs/pt-br/assistant). Os arquivos do seu servidor ficam na pasta do servidor.
+
+| Variável | Efeito |
+| :-- | :-- |
+| `PNX_HOME` | Move a pasta de estado para outro lugar que não `~/.pnx-cli`. |
+| `PNX_API_URL` | Faz os comandos de plugins usarem outro hub que não `https://powernukkitx.org`. |
+| `JAVA_HOME` | O Java usado para iniciar o servidor, antes do que está no seu `PATH`. |
+| `PNX_DEBUG` | O mesmo que `--debug`. |
+
+## Próximos passos
+
+<Cards>
+  <Card icon={<Rocket />} title="Comandos do servidor" href="/docs/pt-br/cli/server">
+    init, start, stop, console, logs, config, use.
+  </Card>
+  <Card icon={<Package />} title="Plugins" href="/docs/pt-br/cli/plugins">
+    Busque no hub, instale, atualize e remova plugins.
+  </Card>
+  <Card icon={<Wrench />} title="Manutenção" href="/docs/pt-br/cli/maintenance">
+    Atualize o PowerNukkitX, faça backup, diagnostique.
+  </Card>
+  <Card icon={<PlugZap />} title="Pareamento com um hub" href="/docs/pt-br/cli/link">
+    Supervisione um servidor a partir de um painel.
+  </Card>
+</Cards>

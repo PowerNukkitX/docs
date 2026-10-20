@@ -1,0 +1,61 @@
+---
+title: "Server, Konsole und Backups"
+description: "Server anlegen und wechseln, starten und stoppen, die Konsole lesen und Backups behalten."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## Einen Server anlegen
+
+**Server anlegen** ist ein Assistent in vier Schritten:
+
+<Steps>
+  <Step>**Ordner**: wo der Server liegt. Ein leerer Ordner, angelegt, falls er nicht existiert.</Step>
+  <Step>**Version**: das PowerNukkitX-Release. Das neueste stabile ist vorausgewählt.</Step>
+  <Step>**Speicher**: der RAM beim Start. 2 GB reichen bequem für etwa zehn Spieler.</Step>
+  <Step>**Bauen**: Die offizielle Jar wird mit Live-Fortschrittsbalken heruntergeladen, die Startskripte werden geschrieben und der Server registriert.</Step>
+</Steps>
+
+Danach startet **Jetzt starten** ihn, und **Ordner öffnen** zeigt die Dateien.
+
+## Mehrere Server
+
+Der Assistant führt eine Liste von Servern, oben in **Mein Server** als Chips angezeigt:
+
+- klicke auf einen Chip, um ihn zum **aktiven** Server zu machen: Start, Stopp, Plugins und Einstellungen wirken alle auf ihn;
+- der Stift benennt ihn um, der Papierkorb entfernt ihn aus der Liste. Seine Dateien bleiben auf der Festplatte;
+- **Server hinzufügen** verbindet einen Ordner, den du schon hast. Er muss eine `powernukkitx.jar` enthalten.
+
+Der Standardserver der CLI kommt beim ersten Mal von selbst auf die Liste.
+
+## Starten, stoppen und die Konsole
+
+**Mein Server** startet und stoppt den aktiven Server und zeigt seine Konsole live, in den Farben des Servers.
+
+| In der Konsole | Macht |
+| :-- | :-- |
+| Das Befehlsfeld | Sendet einen Befehl an den Server, wie du ihn in sein Terminal tippen würdest. **Enter** führt ihn aus. |
+| Alle / Warnungen / Fehler | Filtert die Zeilen. |
+| Leeren, Kopieren, Exportieren | Leert die Ansicht, kopiert sie oder speichert die Logs in eine Datei. |
+| Auto-Scroll | Hält die neueste Zeile im Blick. |
+
+**Stoppen** schickt dem Server ein sauberes `stop`, damit er vor dem Beenden speichert. Ist **Beim Schließen bestätigen** an, bietet das Schließen der App bei laufendem Server an, ihn zuerst zu stoppen.
+
+## Lebenszeichen
+
+Neben der Konsole Live-Werte des laufenden Servers: Laufzeit, Spieler online, Port und wie viele Fehler und Warnungen er protokolliert hat.
+
+## Backups
+
+**Backups** in **Mein Server** macht eine Momentaufnahme des Servers (Welten und Konfiguration) in seinem Ordner `backups/`.
+
+| Aktion | Hinweis |
+| :-- | :-- |
+| Neues Backup | Speichert jetzt eine Kopie. |
+| Wiederherstellen | Ersetzt die Dateien des Servers durch diese Kopie, nach einer Bestätigung. Der Server muss gestoppt sein. Seitdem gemachte Änderungen gehen verloren. |
+| Löschen | Entfernt die Kopie endgültig. |
+
+<Callout type="info">
+  Backups bleiben neben dem Server. Damit sie eine defekte Festplatte überleben, kopiere sie auch auf eine andere Maschine: siehe [Backups](/docs/de/administration/backups).
+</Callout>

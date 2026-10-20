@@ -1,0 +1,54 @@
+---
+title: "维护"
+description: "用 pnx 更新 PowerNukkitX、备份服务器并检查机器。"
+icon: Wrench
+authors:
+  - AzaleeX
+---
+
+## update [#update]
+
+把 PowerNukkitX 本身更新到最新版本。别名：`upgrade`。
+
+```bash
+pnx update
+pnx update --force
+```
+
+当前的 jar 会以 `powernukkitx.jar.old` 的名字保留在新 jar 旁边，方便回退。新版本运行满意后再删除它。`--force` 会忽略版本缓存，重新查询 GitHub。
+
+## backup [#backup]
+
+把服务器复制到服务器文件夹内的 `backups/pnx-backup-<日期>/`。
+
+```bash
+pnx backup
+```
+
+除 `logs/`、`cache/`、`crash-reports/`、之前的 `backups/` 和隐藏文件夹外，其他内容都会被复制。想得到干净的世界副本，请先在控制台运行 `save-all`，或停止服务器。为了让备份在磁盘损坏时仍然可用，请把它们复制到另一台机器：参见[备份](/docs/zh/administration/backups)。
+
+## doctor [#doctor]
+
+检查服务器所需的条件，并指出阻碍运行的问题。别名：`check`。
+
+```bash
+pnx doctor
+pnx --json doctor
+```
+
+| 检查项 | 内容 |
+| :-- | :-- |
+| Java | 是否安装了 Java 21 或更高版本，以及其发行商。 |
+| 安装 | 服务器文件夹中是否有可用的 `powernukkitx.jar`。 |
+| 磁盘 | 服务器所在位置的剩余空间。 |
+| 端口 19132 | 默认 UDP 端口是否已被占用。 |
+| 内存 | 可用内存和总内存。 |
+
+## info [#info]
+
+显示这里安装了什么：服务器文件夹、PowerNukkitX 版本和插件。别名：`status`。
+
+```bash
+pnx info
+pnx --json info
+```

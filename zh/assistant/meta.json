@@ -1,0 +1,13 @@
+{
+  "title": "PowerNukkitX Assistant",
+  "description": "无需终端即可创建并运行 PowerNukkitX 服务器的桌面应用。",
+  "icon": "AppWindow",
+  "root": true,
+  "pages": [
+    "index",
+    "---使用---",
+    "servers",
+    "plugins",
+    "settings"
+  ]
+}

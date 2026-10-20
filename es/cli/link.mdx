@@ -1,0 +1,74 @@
+---
+title: "Vincular con un hub"
+description: "Vincula un servidor con un panel y deja que lo supervise con los permisos que concedas."
+icon: PlugZap
+authors:
+  - AzaleeX
+---
+
+`pnx link` vincula un servidor con un **hub**, un panel web, y después ejecuta el servidor bajo supervisión: arranca la JVM, lee la consola e informa al panel, que puede enviar comandos de vuelta.
+
+<LinkPairing />
+
+<Callout type="info" title="Necesita un hub con vinculación">
+  La vinculación necesita un hub que supervise servidores. El sitio powernukkitx.org aún no lo ofrece; apunta `--hub` a un hub que sí lo haga.
+</Callout>
+
+## Cómo se conecta
+
+Todas las conexiones salen **de tu máquina** hacia el hub: el hub nunca abre una hacia ti. Ningún puerto que abrir, ninguna regla de cortafuegos. Si el hub no responde, el servidor sigue funcionando.
+
+## Vincular
+
+<Steps>
+  <Step>En el panel, crea un código de vinculación.</Step>
+  <Step>En la máquina del servidor, ejecuta `pnx link <código>`.</Step>
+  <Step>La CLI cambia el código por un token, lo guarda y empieza a supervisar el servidor.</Step>
+</Steps>
+
+```bash
+pnx link ABCD-1234 --hub https://hub.example.org --name "Survival"
+```
+
+| Opción | Efecto |
+| :-- | :-- |
+| `<código>` | El código de vinculación del panel. |
+| `--hub <url>` | La dirección del hub. |
+| `--allow <lista>` | Los permisos que conceder, separados por comas. |
+| `--dir <ruta>` | La carpeta del servidor. |
+| `--memory <tamaño>` | La memoria del servidor. |
+| `--name <nombre>` | El nombre que se muestra en el panel. |
+| `--start` / `--no-start` | Arranca el servidor, o solo se engancha a él. |
+| `--status` | Muestra con qué está vinculada esta máquina. |
+| `--forget` | Borra el token guardado. |
+
+## Permisos
+
+El panel solo puede hacer lo que permitas. Una vinculación nueva permite `console` y `control`; añade otros por su nombre con `--allow`.
+
+| Permiso | Permite al panel |
+| :-- | :-- |
+| `console` | Leer la consola y enviar comandos. |
+| `control` | Arrancar, detener y reiniciar el servidor. |
+| `players` | Gestionar jugadores, como la lista blanca. |
+| `worlds` | Trabajar con los mundos. |
+| `config` | Leer y cambiar la configuración. |
+| `files` | Leer y escribir archivos en la carpeta del servidor. |
+| `plugins` | Instalar y quitar plugins. |
+| `backups` | Hacer copias de seguridad. |
+| `schedules` | Ejecutar tareas programadas. |
+
+```bash
+pnx link ABCD-1234 --allow console,control,backups
+```
+
+<Callout type="warn" title="Lo que un comando remoto nunca puede hacer">
+  El acceso a archivos se limita a la carpeta del servidor, comprobado en tu máquina tras seguir los enlaces. Los ejecutables y scripts (`.jar`, `.exe`, `.sh`, `.bat`, `.js` y otros) se pueden leer, pero nunca escribir a distancia.
+</Callout>
+
+## Comprobar y olvidar
+
+```bash
+pnx link --status
+pnx link --forget
+```

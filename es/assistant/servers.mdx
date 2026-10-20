@@ -1,0 +1,61 @@
+---
+title: "Servidores, consola y copias"
+description: "Crea servidores y cambia entre ellos, arráncalos y detenlos, lee la consola y guarda copias de seguridad."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## Crear un servidor
+
+**Crear un servidor** es un asistente de cuatro pasos:
+
+<Steps>
+  <Step>**Carpeta**: dónde vive el servidor. Una carpeta vacía, que se crea si no existe.</Step>
+  <Step>**Versión**: la versión de PowerNukkitX. La última estable viene preseleccionada.</Step>
+  <Step>**Memoria**: la RAM que se da al arrancar. 2 GB cubren con holgura unos diez jugadores.</Step>
+  <Step>**Construir**: el jar oficial se descarga con una barra de progreso en directo, se escriben los scripts de inicio y se registra el servidor.</Step>
+</Steps>
+
+Al terminar, **Ejecutar ahora** lo arranca y **Abrir carpeta** muestra los archivos.
+
+## Varios servidores
+
+El Assistant guarda una lista de servidores, mostrados como fichas en la parte de arriba de **Mi servidor**:
+
+- haz clic en una ficha para que sea el servidor **activo**: arrancar, detener, plugins y ajustes actúan sobre él;
+- el lápiz le cambia el nombre y la papelera lo quita de la lista. Sus archivos se quedan en el disco;
+- **Añadir un servidor** conecta una carpeta que ya tienes. Debe contener un `powernukkitx.jar`.
+
+El servidor por defecto de la CLI se une a la lista solo la primera vez.
+
+## Arrancar, detener y la consola
+
+**Mi servidor** arranca y detiene el servidor activo y muestra su consola en directo, con los colores del servidor.
+
+| En la consola | Hace |
+| :-- | :-- |
+| El campo de comando | Envía un comando al servidor, como lo escribirías en su terminal. **Intro** lo ejecuta. |
+| Todo / Avisos / Errores | Filtra las líneas. |
+| Limpiar, Copiar, Exportar | Vacía la vista, la copia o guarda los logs en un archivo. |
+| Desplazamiento automático | Mantiene visible la línea más reciente. |
+
+**Detener** envía al servidor un `stop` limpio, para que guarde antes de salir. Con **Confirmar al cerrar** activado, cerrar la aplicación con el servidor en marcha ofrece detenerlo primero.
+
+## Constantes vitales
+
+Junto a la consola, cifras en directo del servidor en marcha: tiempo activo, jugadores conectados, el puerto y cuántos errores y avisos ha registrado.
+
+## Copias de seguridad
+
+**Copias de seguridad**, en **Mi servidor**, toma una instantánea del servidor (mundos y configuración) en su carpeta `backups/`.
+
+| Acción | Nota |
+| :-- | :-- |
+| Nueva copia | Guarda una copia ahora. |
+| Restaurar | Sustituye los archivos del servidor por esa copia, tras una confirmación. El servidor debe estar detenido. Los cambios hechos desde entonces se pierden. |
+| Eliminar | Borra la copia para siempre. |
+
+<Callout type="info">
+  Las copias se quedan junto al servidor. Para sobrevivir a un disco roto, cópialas también a otra máquina: consulta [Copias de seguridad](/docs/es/administration/backups).
+</Callout>

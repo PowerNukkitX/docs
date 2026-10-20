@@ -1,0 +1,41 @@
+---
+title: "Réglages"
+description: "Modifier visuellement le pnx.yml du serveur, et régler l'Assistant : langue, thème, mises à jour."
+icon: SlidersHorizontal
+authors:
+  - AzaleeX
+---
+
+## Réglages du serveur
+
+La vue **Réglages** du serveur est un éditeur pour le `pnx.yml` du serveur actif. Elle apparaît après le premier démarrage du serveur, moment où `pnx.yml` est créé.
+
+- Les **essentiels** viennent d'abord : MOTD, port, nombre de joueurs, nom du monde, liste blanche, distance de vue, authentification Xbox et plus.
+- **Toutes les clés** liste tous les autres réglages, groupés par section, avec un filtre pour en trouver un par son nom.
+- Chaque réglage a le bon contrôle : un interrupteur pour oui ou non, un champ numérique pour les nombres et les ports, une liste pour la langue du serveur. Les commentaires du fichier s'affichent en infobulles.
+
+**Enregistrer** ne réécrit que les lignes modifiées, pour que les commentaires et la mise en forme du fichier survivent, et garde une copie unique sous `pnx.yml.assistant-bak`. Les listes et les blocs imbriqués restent en lecture seule ici : **Ouvrir le fichier** pour les modifier à la main.
+
+<Callout type="warn">
+  Les réglages s'appliquent au prochain démarrage. Enregistrez serveur arrêté : un serveur en marche réécrit `pnx.yml` à l'arrêt.
+</Callout>
+
+## Préférences de l'Assistant
+
+Les **Réglages** de l'application elle-même. Chaque changement s'applique tout de suite.
+
+| Réglage | Choix |
+| :-- | :-- |
+| Langue | English, Français, Español, Deutsch, Português (Brasil). |
+| Thème | Clair, sombre, ou celui du système. |
+| Densité | Confortable, ou compacte pour les petits écrans. |
+| Réduire les animations | Coupe les transitions et les mouvements 3D. |
+| Confirmer à la fermeture | Propose d'arrêter proprement le serveur avant de quitter. |
+
+## Mises à jour
+
+L'Assistant se met à jour lui-même. Par défaut, il cherche une nouvelle version toutes les trois heures et peut la télécharger en arrière-plan ; l'installation reste votre décision. **Vérifier maintenant** cherche tout de suite.
+
+## Vos données
+
+L'Assistant garde ses préférences et sa liste de serveurs dans `~/.pnx-cli`, partagé avec la CLI. **Ouvrir** montre ce dossier. **Réinitialiser les préférences** remet le thème, la densité, les animations et la mémoire par défaut ; vos serveurs ne sont pas touchés.

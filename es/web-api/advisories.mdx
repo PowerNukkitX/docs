@@ -1,0 +1,21 @@
+---
+title: "Avisos de seguridad"
+description: "Avisos de seguridad publicados para los plugins del hub, en formato OSV."
+icon: ShieldAlert
+authors:
+  - AzaleeX
+---
+
+Cuando una versión de un plugin tiene una vulnerabilidad conocida, el equipo publica un aviso y la página del plugin lo muestra. Los mismos avisos están disponibles en formato [OSV](https://ossf.github.io/osv-schema/), que los escáneres de seguridad ya saben leer.
+
+```text
+GET /api/v1/advisories/osv
+```
+
+La respuesta es `{ advisories }`: un registro OSV por aviso publicado. Los borradores y los avisos retirados nunca se incluyen.
+
+<ApiTry path="/advisories/osv" />
+
+<Callout type="info">
+  Ejecuta un escáner sobre este feed en tu CI para enterarte cuando un plugin que distribuyes reciba un aviso.
+</Callout>

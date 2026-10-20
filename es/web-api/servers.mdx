@@ -1,0 +1,41 @@
+---
+title: "Servidores"
+description: "Lee el directorio público de servidores que funcionan con PowerNukkitX."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+El [directorio de servidores](https://powernukkitx.org/servers) lista los servidores Bedrock aprobados que funcionan con PowerNukkitX. Su API es de solo lectura para todos; los servidores se inscriben desde el sitio.
+
+## Listar servidores
+
+```text
+GET /api/v1/servers
+```
+
+Primero los destacados, luego el resto. La respuesta es `{ data, total }`.
+
+| Parámetro | Qué hace |
+| :-- | :-- |
+| `q` | Busca por nombre. |
+| `category` | Una categoría, como supervivencia o minijuegos. |
+| `region` | Dónde está alojado el servidor. |
+| `language` | Un idioma que se habla en el servidor. |
+| `page` | Número de página, desde 1. |
+
+<Callout type="info">
+  Esta lista tiene su propio presupuesto: 60 peticiones por minuto y dirección.
+</Callout>
+
+<ApiTry path="/servers" />
+
+## Un servidor
+
+```text
+GET /api/v1/servers/{slug}
+```
+
+La vista pública de un servidor aprobado: su dirección, descripción, etiquetas e insignias. Un servidor no aprobado responde `404`.
+
+<ApiTry path="/servers/{slug}" params={{ slug: "" }} />

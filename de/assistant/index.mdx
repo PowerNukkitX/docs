@@ -1,0 +1,65 @@
+---
+title: "Überblick"
+description: "Den PowerNukkitX Assistant installieren und deinen ersten Server aus einem Fenster anlegen."
+icon: AppWindow
+authors:
+  - AzaleeX
+---
+
+import { Package, Server, SlidersHorizontal } from "lucide-react";
+
+Der **PowerNukkitX Assistant** ist eine Desktop-App für Windows, Linux und macOS. Er legt einen Server an, startet ihn, zeigt seine Konsole, installiert Plugins und bearbeitet seine Einstellungen, alles ohne Terminal. Er ist für einen ersten Server gemacht und bleibt nützlich, wenn du mehrere betreibst.
+
+<AssistantWindow />
+
+Unter der Haube steuert er die [PNX CLI](/docs/de/cli): Die App bringt die kompilierte CLI mit und ruft genau dieselben Funktionen auf wie `pnx`, sodass Fenster und Terminal nie unterschiedlicher Meinung sein können, wie ein Server angelegt oder gestartet wird.
+
+## Installieren
+
+Lade den Installer für dein System aus den [pnx-cli-Releases](https://github.com/PowerNukkitX/pnx-cli/releases) herunter:
+
+| System | Datei |
+| :-- | :-- |
+| Windows | Der Installer (Setup-`.exe`) oder die portable `.exe`, die ohne Installation läuft. |
+| Linux | Das `.AppImage`: ausführbar machen, dann starten. |
+| macOS | Die `.dmg`: öffnen und die App in den Programme-Ordner ziehen. |
+
+Der Server braucht weiterhin **Java 21** oder neuer. Der Assistant prüft das beim ersten Start und sagt dir, wenn es fehlt.
+
+## Erster Start
+
+Eine kurze Begrüßung führt durch drei Bildschirme:
+
+<Steps>
+  <Step>**Willkommen**: was der Assistant macht.</Step>
+  <Step>**Java**: Er sucht Java 21+ und sagt, was er gefunden hat.</Step>
+  <Step>**Dein erster Server**: mit einem Klick einen anlegen, einen vorhandenen Serverordner verbinden oder vorerst überspringen.</Step>
+</Steps>
+
+Noch einmal ansehen? **Einstellungen > Einführung wiederholen**.
+
+## Das geführte Tutorial
+
+**Geführtes Tutorial** in der Seitenleiste hat sieben Schritte für einen ersten Server, jeder mit einem Knopf, der die Arbeit erledigt: was PowerNukkitX ist, Java prüfen, den Server anlegen, der erste Start, aus Minecraft beitreten, Plugins hinzufügen und Freunde von außerhalb deines Netzwerks einladen.
+
+## Zurechtfinden
+
+<Cards>
+  <Card icon={<Server />} title="Server, Konsole und Backups" href="/docs/de/assistant/servers">
+    Server anlegen, starten, die Konsole lesen und Backups machen.
+  </Card>
+  <Card icon={<Package />} title="Plugins" href="/docs/de/assistant/plugins">
+    Im Hub suchen und Plugins mit einem Klick installieren.
+  </Card>
+  <Card icon={<SlidersHorizontal />} title="Einstellungen" href="/docs/de/assistant/settings">
+    pnx.yml visuell bearbeiten und die App nach deinem Geschmack einstellen.
+  </Card>
+</Cards>
+
+## Tastenkürzel
+
+| Tasten | Aktion |
+| :-- | :-- |
+| `Strg` + `K` | Die Befehlspalette: überallhin springen, den Server starten oder stoppen, ein Backup machen. |
+| `Strg` + `1` … `7` | Zwischen den Ansichten der Seitenleiste wechseln. |
+| `Esc` | Palette oder Dialog schließen. |

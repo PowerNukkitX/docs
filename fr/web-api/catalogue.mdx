@@ -1,0 +1,49 @@
+---
+title: "Catalogue"
+description: "Catégories, collections, badges et mise en avant : les données qui organisent le hub."
+icon: Tags
+authors:
+  - AzaleeX
+---
+
+Ces endpoints changent rarement et sont mis en cache généreusement. Ils n'ont pas de paramètres.
+
+## Catégories
+
+```text
+GET /api/v1/categories
+```
+
+Chaque catégorie de plugin visible, sous la forme `{ id, label }`. Utilisez un `id` dans le paramètre `category` de [`/plugins`](/docs/fr/web-api/plugins).
+
+<ApiTry path="/categories" />
+
+## Collections
+
+```text
+GET /api/v1/collections
+```
+
+Les collections publiées : des listes de plugins choisies à la main, chacune avec les plugins qu'elle regroupe.
+
+<ApiTry path="/collections" />
+
+## Badges
+
+```text
+GET /api/v1/badges
+```
+
+Chaque badge que le hub peut décerner à un plugin, avec son niveau et son icône.
+
+<ApiTry path="/badges" />
+
+## Mise en avant
+
+```text
+GET /api/v1/spotlight
+```
+
+Le plugin que l'équipe met en avant sur la page d'accueil, avec sa note. `data` vaut `null` quand rien n'est mis en avant.
+
+<ApiTry path="/spotlight" />

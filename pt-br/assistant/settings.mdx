@@ -1,0 +1,41 @@
+---
+title: "Configurações"
+description: "Edite visualmente o pnx.yml do servidor e configure o Assistant: idioma, tema, atualizações."
+icon: SlidersHorizontal
+authors:
+  - AzaleeX
+---
+
+## Configurações do servidor
+
+A visão **Configurações** do servidor é um editor do `pnx.yml` do servidor ativo. Ela aparece depois da primeira inicialização do servidor, quando o `pnx.yml` é criado.
+
+- Os **essenciais** vêm primeiro: MOTD, porta, máximo de jogadores, nome do mundo, lista branca, distância de visão, autenticação Xbox e mais.
+- **Todas as chaves** lista as demais configurações, agrupadas por seção, com um filtro para achar uma pelo nome.
+- Cada configuração tem o controle certo: um interruptor para sim ou não, um campo numérico para quantidades e portas, uma lista para o idioma do servidor. Os comentários do arquivo aparecem como dicas.
+
+**Salvar** só regrava as linhas que você mudou, então os comentários e o layout do arquivo se mantêm, e guarda uma cópia única como `pnx.yml.assistant-bak`. Listas e blocos aninhados ficam somente leitura aqui: **Abrir o arquivo** para mudá-los à mão.
+
+<Callout type="warn">
+  As configurações valem a partir da próxima inicialização. Salve com o servidor parado: um servidor em execução regrava o `pnx.yml` ao desligar.
+</Callout>
+
+## Preferências do Assistant
+
+As **Configurações** do próprio app. Toda mudança vale na hora.
+
+| Configuração | Opções |
+| :-- | :-- |
+| Idioma | English, Français, Español, Deutsch, Português (Brasil). |
+| Tema | Claro, escuro ou o do sistema. |
+| Densidade | Confortável, ou compacta para telas pequenas. |
+| Reduzir movimento | Desliga as transições e o movimento 3D. |
+| Confirmar ao fechar | Oferece parar o servidor corretamente antes de sair. |
+
+## Atualizações
+
+O Assistant se atualiza sozinho. Por padrão, procura uma nova versão a cada três horas e pode baixá-la em segundo plano; instalar continua sendo decisão sua. **Verificar agora** procura na hora.
+
+## Seus dados
+
+O Assistant guarda as preferências e a lista de servidores em `~/.pnx-cli`, compartilhada com a CLI. **Abrir** mostra essa pasta. **Redefinir preferências** volta tema, densidade, movimento e memória ao padrão; seus servidores não são tocados.

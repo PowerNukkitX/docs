@@ -1,0 +1,13 @@
+{
+  "title": "PowerNukkitX Assistant",
+  "description": "Die Desktop-App, die einen PowerNukkitX-Server anlegt und betreibt, ohne Terminal.",
+  "icon": "AppWindow",
+  "root": true,
+  "pages": [
+    "index",
+    "---Benutzung---",
+    "servers",
+    "plugins",
+    "settings"
+  ]
+}

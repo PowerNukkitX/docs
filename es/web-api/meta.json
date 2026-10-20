@@ -1,0 +1,16 @@
+{
+  "title": "API web",
+  "description": "Lee el hub de PowerNukkitX desde tu propio código: plugins, servidores, insignias y más.",
+  "icon": "Webhook",
+  "root": true,
+  "pages": [
+    "index",
+    "---Endpoints---",
+    "plugins",
+    "servers",
+    "catalogue",
+    "advisories",
+    "---Tu cuenta---",
+    "account"
+  ]
+}

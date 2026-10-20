@@ -1,0 +1,74 @@
+---
+title: "Pareamento com um hub"
+description: "Pareie um servidor com um painel e deixe-o supervisionar o servidor com as permissões que você der."
+icon: PlugZap
+authors:
+  - AzaleeX
+---
+
+O `pnx link` pareia um servidor com um **hub**, um painel web, e depois roda o servidor sob supervisão: ele inicia a JVM, lê o console e reporta ao painel, que pode mandar comandos de volta.
+
+<LinkPairing />
+
+<Callout type="info" title="Precisa de um hub com pareamento">
+  O pareamento precisa de um hub que supervisione servidores. O site powernukkitx.org ainda não oferece isso; aponte `--hub` para um hub que ofereça.
+</Callout>
+
+## Como ele se conecta
+
+Toda conexão sai **da sua máquina** para o hub: o hub nunca abre uma conexão até você. Nenhuma porta para abrir, nenhuma regra de firewall. Se o hub estiver fora do ar, o servidor continua rodando.
+
+## Parear
+
+<Steps>
+  <Step>No painel, crie um código de pareamento.</Step>
+  <Step>Na máquina do servidor, rode `pnx link <código>`.</Step>
+  <Step>A CLI troca o código por um token, guarda-o e começa a supervisionar o servidor.</Step>
+</Steps>
+
+```bash
+pnx link ABCD-1234 --hub https://hub.example.org --name "Survival"
+```
+
+| Opção | Efeito |
+| :-- | :-- |
+| `<código>` | O código de pareamento do painel. |
+| `--hub <url>` | O endereço do hub. |
+| `--allow <lista>` | As permissões a conceder, separadas por vírgula. |
+| `--dir <caminho>` | A pasta do servidor. |
+| `--memory <tamanho>` | A memória do servidor. |
+| `--name <nome>` | O nome mostrado no painel. |
+| `--start` / `--no-start` | Inicia o servidor, ou só se conecta a ele. |
+| `--status` | Mostra com o que esta máquina está pareada. |
+| `--forget` | Apaga o token guardado. |
+
+## Permissões
+
+O painel só pode fazer o que você permitir. Um pareamento novo permite `console` e `control`; adicione outras pelo nome com `--allow`.
+
+| Permissão | Deixa o painel |
+| :-- | :-- |
+| `console` | Ler o console e enviar comandos. |
+| `control` | Iniciar, parar e reiniciar o servidor. |
+| `players` | Gerenciar jogadores, como a lista branca. |
+| `worlds` | Trabalhar com os mundos. |
+| `config` | Ler e mudar a configuração. |
+| `files` | Ler e gravar arquivos na pasta do servidor. |
+| `plugins` | Instalar e remover plugins. |
+| `backups` | Fazer backups. |
+| `schedules` | Rodar tarefas agendadas. |
+
+```bash
+pnx link ABCD-1234 --allow console,control,backups
+```
+
+<Callout type="warn" title="O que um comando remoto nunca pode fazer">
+  O acesso a arquivos fica restrito à pasta do servidor, verificado na sua máquina depois de seguir os links. Executáveis e scripts (`.jar`, `.exe`, `.sh`, `.bat`, `.js` e outros) podem ser lidos, mas nunca gravados remotamente.
+</Callout>
+
+## Verificar e esquecer
+
+```bash
+pnx link --status
+pnx link --forget
+```

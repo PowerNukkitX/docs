@@ -1,0 +1,25 @@
+---
+title: "Plugins"
+description: "Busca en el hub de plugins de PowerNukkitX e instala plugins en tu servidor desde el Assistant."
+icon: Package
+authors:
+  - AzaleeX
+---
+
+La vista **Plugins** busca en el [hub de plugins](https://powernukkitx.org/plugins) e instala directamente en la carpeta `plugins/` del servidor activo.
+
+## Mercado
+
+Escribe en el campo de búsqueda para encontrar un plugin. **Instalar** descarga la última versión **aprobada** desde GitHub y la comprueba con el SHA-256 que registró el hub antes de escribirla en `plugins/`. Reinicia el servidor para cargarla.
+
+## Instalados
+
+La pestaña **Instalados** lista lo que ha instalado el Assistant:
+
+- **Actualizar** aparece cuando existe una versión aprobada más reciente;
+- **Quitar** borra el plugin de `plugins/`;
+- **al día** significa que no hay nada más nuevo.
+
+<Callout type="info">
+  El Assistant usa los mismos endpoints del hub que `pnx plugin`. Para que ambos apunten a otro hub, define `PNX_API_URL`: consulta [la CLI](/docs/es/cli#state).
+</Callout>

@@ -1,0 +1,34 @@
+---
+title: "Lanceur guidé"
+description: "pnxcli crée un serveur de bout en bout, en posant des questions au lieu de prendre des options."
+icon: Wand
+authors:
+  - AzaleeX
+---
+
+`pnxcli` fait une seule chose : créer un serveur, de bout en bout. Il demande où, quelle version et s'il faut le démarrer, et s'occupe du reste. C'est l'entrée la plus rapide pour quelqu'un qui ne vit pas dans un terminal.
+
+```bash
+pnxcli
+```
+
+Il suit les mêmes étapes que [`pnx init`](/docs/fr/cli/server#init) : le dossier, la version de PowerNukkitX (la dernière stable est présélectionnée), le téléchargement du jar et des scripts de lancement. Le nouveau serveur devient le serveur par défaut de toutes les commandes `pnx`.
+
+## Options
+
+Pour sauter une question, répondez-y d'avance :
+
+| Option | Effet |
+| :-- | :-- |
+| `--dir <chemin>` | Crée le serveur dans ce dossier. |
+| `--version <tag>` | Fixe une version exacte de PowerNukkitX. |
+| `--start` | Démarre le serveur dès qu'il est prêt. |
+| `--no-color` | Texte brut, pour les pipes. |
+
+```bash
+pnxcli --dir ./survival --start
+```
+
+<Callout type="info">
+  Vous préférez une fenêtre à un terminal ? L'[Assistant](/docs/fr/assistant) fait la même chose, avec un assistant de création et une barre de téléchargement en direct.
+</Callout>

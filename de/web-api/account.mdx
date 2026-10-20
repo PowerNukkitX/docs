@@ -1,0 +1,41 @@
+---
+title: "Dein Konto"
+description: "Dein Profil, deine API-Tokens und dein persönlicher Feed der Plugins, denen du folgst."
+icon: UserRound
+authors:
+  - AzaleeX
+---
+
+Diese Endpunkte betreffen den angemeldeten Nutzer. Sie funktionieren mit dem **Sitzungs-Cookie** von powernukkitx.org im Browser, nicht mit einem API-Token: Ein Token kann nur lesen, was schon öffentlich ist.
+
+## Dein Profil
+
+```text
+GET /api/v1/me
+```
+
+Deine Einstellungen, wie das Dashboard sie bearbeitet: Bio, Links, Ort, angeheftete Plugins, Profilsichtbarkeit und Benachrichtigungseinstellungen. Ohne Sitzung kommt `401 unauthorized`.
+
+## Deine Tokens
+
+```text
+GET    /api/v1/me/tokens
+POST   /api/v1/me/tokens
+DELETE /api/v1/me/tokens/{keyId}
+```
+
+| Aufruf | Was er macht |
+| :-- | :-- |
+| `GET` | Listet deine Tokens: Name, Schlüssel-ID, Erstellungsdatum, letzte Nutzung. Nie das Geheimnis. |
+| `POST` | Legt eines aus `{ "name": "..." }` an. Nur in dieser Antwort erscheint das vollständige Token. |
+| `DELETE` | Widerruft das Token mit dieser Schlüssel-ID. |
+
+Anlegen und Widerrufen funktionieren nur von der Website selbst aus (gleicher Ursprung), deshalb macht man es im Dashboard: **Dashboard > Settings > Feed and API**.
+
+## Dein Feed
+
+```text
+GET /api/v1/feed/{key}
+```
+
+Ein Atom-Feed dessen, was mit den Plugins passiert, denen du folgst: neue Releases, Freigaben und mehr. Jedes Konto hat seinen eigenen geheimen `key`; kopiere die Feed-URL unter **Dashboard > Settings > Feed and API** und füge sie in einen beliebigen Feedreader ein. Ein erneuerter oder falscher Schlüssel antwortet `404`, damit ein Reader eine tote URL nicht weiter abfragt.

@@ -1,0 +1,57 @@
+---
+title: "Plugins"
+description: "Busca en el hub de plugins, instala versiones revisadas y mantenlas al día con pnx."
+icon: Package
+authors:
+  - AzaleeX
+---
+
+Los comandos `plugin` hablan con el [hub de plugins](https://powernukkitx.org/plugins), mediante la misma [API web](/docs/es/web-api/plugins) que el sitio. Solo instalan **versiones aprobadas por el hub**, y comprueban cada jar con el SHA-256 que registró el hub antes de ponerlo en `plugins/`.
+
+| Comando | Qué hace |
+| :-- | :-- |
+| `pnx plugin list` | Recorre el hub, los que tienen más estrellas primero. |
+| `pnx plugin search [término]` | Busca por nombre. Pide un término si no das ninguno. |
+| `pnx plugin info [slug]` | Muestra un plugin completo. |
+| `pnx plugin install [slugs]` | Instala uno o varios plugins. |
+| `pnx plugin installed` | Lista lo que hay en `plugins/`. |
+| `pnx plugin update [slugs]` | Actualiza los plugins a su última versión aprobada. |
+| `pnx plugin remove [nombres]` | Quita plugins de la carpeta. |
+| `pnx install <slug>` | Instala un plugin aprobado por su slug, el atajo que da el botón de instalar del hub. |
+
+`pnx plugins` es un alias de `pnx plugin`.
+
+## Encontrar un plugin
+
+```bash
+pnx plugin list --sort updated --limit 20
+pnx plugin list --query chat
+pnx plugin search worldedit
+pnx plugin info owner.name
+```
+
+`plugin list` acepta `--sort` (`newest`, `updated` o `stars`), `--limit` para los resultados por página, `--page` y `--query`.
+
+## Instalar y actualizar
+
+```bash
+pnx plugin install owner.name
+pnx plugin install owner.one owner.two
+pnx plugin update
+```
+
+Indica un slug o varios. Un plugin se nombra por su slug, `owner.name`, como en su página. Sin slug, `install` te deja buscar y elegir; `update` actualiza todos los plugins que instaló. Reinicia el servidor para cargarlos.
+
+<Callout type="warn">
+  `plugin install` acepta también la URL directa de un `.jar`. Ese jar no lo ha revisado nadie: instala solo desde fuentes de confianza.
+</Callout>
+
+## Ver y quitar
+
+```bash
+pnx plugin installed
+pnx --json plugin installed
+pnx plugin remove owner.name
+```
+
+Sin nombre, `remove` muestra una lista para elegir.

@@ -1,0 +1,54 @@
+---
+title: "Mantenimiento"
+description: "Actualiza PowerNukkitX, haz copias del servidor y revisa la máquina con pnx."
+icon: Wrench
+authors:
+  - AzaleeX
+---
+
+## update [#update]
+
+Actualiza el propio PowerNukkitX a la última versión. Alias: `upgrade`.
+
+```bash
+pnx update
+pnx update --force
+```
+
+El jar actual se guarda junto al nuevo como `powernukkitx.jar.old`, para poder volver atrás. Bórralo cuando la nueva versión funcione como quieres. `--force` ignora la caché de versiones y vuelve a preguntar a GitHub.
+
+## backup [#backup]
+
+Copia el servidor en `backups/pnx-backup-<fecha>/`, dentro de la carpeta del servidor.
+
+```bash
+pnx backup
+```
+
+Se copia todo salvo `logs/`, `cache/`, `crash-reports/`, los `backups/` anteriores y las carpetas ocultas. Para una copia limpia de los mundos, ejecuta antes `save-all` en la consola o detén el servidor. Para que las copias sobrevivan a un disco roto, cópialas a otra máquina: consulta [Copias de seguridad](/docs/es/administration/backups).
+
+## doctor [#doctor]
+
+Comprueba lo que necesita un servidor y dice qué lo bloquea. Alias: `check`.
+
+```bash
+pnx doctor
+pnx --json doctor
+```
+
+| Comprobación | Revisa |
+| :-- | :-- |
+| Java | Que Java 21 o superior esté instalado, y su proveedor. |
+| Instalación | Que la carpeta del servidor tenga un `powernukkitx.jar` que funcione. |
+| Disco | El espacio libre donde está el servidor. |
+| Puerto 19132 | Si algo ocupa ya el puerto UDP por defecto. |
+| Memoria | La memoria libre y total. |
+
+## info [#info]
+
+Muestra lo que hay instalado aquí: la carpeta del servidor, la versión de PowerNukkitX y los plugins. Alias: `status`.
+
+```bash
+pnx info
+pnx --json info
+```

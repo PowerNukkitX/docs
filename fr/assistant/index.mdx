@@ -1,0 +1,65 @@
+---
+title: "Vue d'ensemble"
+description: "Installer le PowerNukkitX Assistant et créer votre premier serveur depuis une fenêtre."
+icon: AppWindow
+authors:
+  - AzaleeX
+---
+
+import { Package, Server, SlidersHorizontal } from "lucide-react";
+
+Le **PowerNukkitX Assistant** est une application de bureau pour Windows, Linux et macOS. Il crée un serveur, le démarre, affiche sa console, installe des plugins et modifie ses réglages, le tout sans terminal. Il est pensé pour un premier serveur, et reste utile quand vous en faites tourner plusieurs.
+
+<AssistantWindow />
+
+En coulisses, il pilote la [PNX CLI](/docs/fr/cli) : l'application embarque la CLI compilée et appelle exactement les mêmes fonctions que `pnx`, si bien que la fenêtre et le terminal ne peuvent jamais diverger sur la façon de créer ou de démarrer un serveur.
+
+## Installer
+
+Téléchargez l'installeur de votre système depuis les [versions de pnx-cli](https://github.com/PowerNukkitX/pnx-cli/releases) :
+
+| Système | Fichier |
+| :-- | :-- |
+| Windows | L'installeur (`.exe` d'installation), ou le `.exe` portable qui tourne sans installation. |
+| Linux | L'`.AppImage` : rendez-le exécutable, puis lancez-le. |
+| macOS | Le `.dmg` : ouvrez-le et glissez l'application dans Applications. |
+
+Le serveur a toujours besoin de **Java 21** ou plus récent. L'Assistant le vérifie au premier lancement et vous prévient s'il manque.
+
+## Premier lancement
+
+Un court accueil passe par trois écrans :
+
+<Steps>
+  <Step>**Bienvenue** : ce que fait l'Assistant.</Step>
+  <Step>**Java** : il cherche Java 21+ et dit ce qu'il a trouvé.</Step>
+  <Step>**Votre premier serveur** : en créer un en un clic, connecter un dossier de serveur que vous avez déjà, ou passer pour l'instant.</Step>
+</Steps>
+
+Envie de le revoir ? **Réglages > Revoir l'introduction**.
+
+## Le tutoriel guidé
+
+**Tutoriel guidé**, dans la barre latérale, compte sept étapes pour un premier serveur, chacune avec un bouton qui fait le travail : ce qu'est PowerNukkitX, la vérification de Java, la création du serveur, le premier démarrage, rejoindre depuis Minecraft, ajouter des plugins et inviter des amis hors de votre réseau.
+
+## S'y retrouver
+
+<Cards>
+  <Card icon={<Server />} title="Serveurs, console et sauvegardes" href="/docs/fr/assistant/servers">
+    Créer des serveurs, les démarrer, lire la console et faire des sauvegardes.
+  </Card>
+  <Card icon={<Package />} title="Plugins" href="/docs/fr/assistant/plugins">
+    Chercher dans le hub et installer des plugins en un clic.
+  </Card>
+  <Card icon={<SlidersHorizontal />} title="Réglages" href="/docs/fr/assistant/settings">
+    Modifier pnx.yml visuellement, et régler l'application à votre façon.
+  </Card>
+</Cards>
+
+## Raccourcis clavier
+
+| Touches | Action |
+| :-- | :-- |
+| `Ctrl` + `K` | La palette de commandes : aller n'importe où, démarrer ou arrêter le serveur, faire une sauvegarde. |
+| `Ctrl` + `1` … `7` | Passer d'une vue de la barre latérale à l'autre. |
+| `Esc` | Fermer la palette ou une boîte de dialogue. |

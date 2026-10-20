@@ -1,0 +1,87 @@
+---
+title: "插件"
+description: "搜索插件、读取单个插件的完整信息、评价和下载历史，并嵌入它的徽章。"
+icon: Boxes
+authors:
+  - AzaleeX
+---
+
+插件通过它的 **slug** 来定位，即中心为它分配的 `owner.name`，例如 `/plugins/owner.name`。
+
+## 列表与搜索
+
+```text
+GET /api/v1/plugins
+```
+
+已发布的插件，每页 24 个。响应在顶层给出页码和总数：`data`、`page`、`perPage`、`total`、`totalPages`，以及 `fuzzy`：当 `q` 没有精确匹配、结果是最接近的名称时为 `true`。
+
+| 参数 | 作用 |
+| :-- | :-- |
+| `q` | 在名称、slug 和简介中全文搜索。 |
+| `category` | 一个分类 id，来自 [`/categories`](/docs/zh/web-api/catalogue)。 |
+| `api` | 只返回在 `plugin.yml` 中声明了该 PowerNukkitX API 版本的插件。 |
+| `sort` | `downloads`、`trending`、`stars`、`followers`、`rating`、`updated` 或 `name`。 |
+| `page` | 1 到 500。 |
+
+<ApiTry path="/plugins" query="q=economy&sort=downloads" />
+
+## 单个插件
+
+```text
+GET /api/v1/plugins/{slug}
+```
+
+单个插件及其 GitHub 元数据、版本和 README，在请求时解析。只有**已批准**的版本可以下载。
+
+<ApiTry path="/plugins/{slug}" params={{ slug: "" }} />
+
+## 评价
+
+```text
+GET /api/v1/plugins/{slug}/reviews
+```
+
+社区评价，最新的在前。分页信息在 `meta` 中：`{ hasMore, limit, offset }`。
+
+| 参数 | 作用 |
+| :-- | :-- |
+| `limit` | 返回多少条。 |
+| `offset` | 跳过多少条。 |
+
+<ApiTry path="/plugins/{slug}/reviews" params={{ slug: "" }} query="limit=10" />
+
+## 下载历史
+
+```text
+GET /api/v1/plugins/{slug}/history
+```
+
+每日下载量，位于 `data.points`。插件页面上的图表就是用它绘制的。
+
+<ApiTry path="/plugins/{slug}/history" params={{ slug: "" }} />
+
+## 徽章
+
+```text
+GET /api/v1/plugins/{slug}/badge
+```
+
+一个 **SVG 图片**形式的状态徽章，而不是 JSON。在 README 中把图片指向它：
+
+```markdown
+![downloads](https://powernukkitx.org/api/v1/plugins/owner.name/badge?metric=downloads)
+```
+
+| 参数 | 作用 |
+| :-- | :-- |
+| `metric` | `api`、`downloads`、`rating`、`stars` 或 `version`。 |
+| `label` | 替换左侧文字，最多 32 个字符。 |
+
+## 下载版本
+
+```text
+GET /api/v1/plugins/{slug}/download?tag={tag}
+```
+
+重定向到 GitHub 上已批准版本的 jar，并计入下载次数。`tag` 为必填。存在但未批准的版本会返回 `403 not_approved`。CLI 中的 `pnx plugin install` 调用的就是它。

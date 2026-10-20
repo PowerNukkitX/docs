@@ -1,0 +1,101 @@
+---
+title: "Commandes du serveur"
+description: "Créer, démarrer, arrêter et inspecter un serveur avec pnx."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## init [#init]
+
+Crée un serveur : un dossier, le jar de PowerNukkitX et les scripts de lancement. Alias : `new`, `create`.
+
+```bash
+pnx init
+pnx init --dir my-server
+pnx init --version 1.21.0
+```
+
+| Option | Effet |
+| :-- | :-- |
+| `--dir <chemin>` | Le dossier où créer le serveur. |
+| `--version <tag>` | Un tag de version de PowerNukkitX, qui saute le choix de version. |
+
+Dans un terminal, elle demande ce qui manque ; dans un script (ou avec `--json`), elle tourne sans questions. Le jar vient des versions GitHub de PowerNukkitX et les scripts de [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts). Le nouveau serveur devient le serveur par défaut.
+
+## start [#start]
+
+Démarre le serveur au premier plan, avec les options Java dont PowerNukkitX a besoin. Alias : `run`, `up`.
+
+```bash
+pnx start
+pnx start --memory 4G
+pnx start --restart
+pnx start --dry-run
+```
+
+| Option | Effet |
+| :-- | :-- |
+| `--dir <chemin>` | Le dossier du serveur, au lieu du serveur par défaut. |
+| `-m`, `--memory <taille>` | Le tas Java au démarrage, `2G` par défaut. |
+| `--restart` | Relance le serveur quand il s'arrête sur une erreur. |
+| `--dry-run` | Affiche la commande `java` au lieu de l'exécuter. |
+
+`pnx start` lance Java en UTF-8 partout, avec le ramasse-miettes ZGC, les options `--add-opens` et `-XX:MaxRAMPercentage=75.0`, pour que le tas puisse monter jusqu'aux trois quarts de la mémoire de la machine. Il utilise le Java de `JAVA_HOME` quand il est défini.
+
+## stop [#stop]
+
+Arrête le serveur lancé par `pnx start`, grâce à l'identifiant de processus qu'il a noté. Alias : `down`.
+
+```bash
+pnx stop
+```
+
+<Callout type="info">
+  Pour un arrêt propre depuis l'intérieur, tapez `stop` dans la console du serveur : tout est sauvegardé d'abord.
+</Callout>
+
+## console [#console]
+
+Ouvre une console vers un serveur en marche, via **RCON**.
+
+```bash
+pnx console
+```
+
+Elle lit `enable-rcon`, `rcon.port` (`25575` par défaut) et `rcon.password` dans le `server.properties` du serveur. RCON est désactivé par défaut ; dans ce cas, `pnx console` vous dit quoi activer. Tapez `exit` pour sortir.
+
+## logs [#logs]
+
+Affiche le log du serveur et continue de le suivre. Alias : `log`.
+
+```bash
+pnx logs
+pnx logs --lines 200
+pnx logs --no-follow
+```
+
+| Option | Effet |
+| :-- | :-- |
+| `-n`, `--lines <n>` | Combien de lignes afficher d'abord. |
+| `--follow` | Continue d'afficher les nouvelles lignes au fur et à mesure. `--no-follow` affiche puis quitte. |
+
+## config [#config]
+
+Affiche la configuration que lit le serveur, pour vérifier une valeur sans ouvrir le fichier.
+
+```bash
+pnx config
+```
+
+## use [#use]
+
+Choisit le serveur sur lequel agissent toutes les commandes.
+
+```bash
+pnx use
+pnx use ./my-server
+pnx use --clear
+```
+
+Sans dossier, elle liste les serveurs qu'elle trouve et vous laisse choisir. `--clear` oublie à nouveau le serveur par défaut.

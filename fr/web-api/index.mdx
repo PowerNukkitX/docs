@@ -1,0 +1,105 @@
+---
+title: "Vue d'ensemble"
+description: "URL de base, tokens, limites de débit, erreurs et cache de l'API du hub PowerNukkitX."
+icon: Webhook
+authors:
+  - AzaleeX
+---
+
+import { Boxes, Server, ShieldAlert, Tags, UserRound } from "lucide-react";
+
+Le hub [powernukkitx.org](https://powernukkitx.org) expose une API JSON sous `/api/v1`. C'est la même API que le site, la [CLI](/docs/fr/cli) et l'[Assistant](/docs/fr/assistant) utilisent pour chercher des plugins et télécharger les versions approuvées. Tout ce qui est décrit ici est **en lecture seule** et fonctionne sans compte.
+
+<ApiFlow />
+
+## URL de base
+
+```text
+https://powernukkitx.org/api/v1
+```
+
+Chaque endpoint répond à `GET` par un document JSON, sauf le badge de plugin, qui est une image SVG, et le flux personnel, qui est du XML Atom.
+
+```bash
+curl "https://powernukkitx.org/api/v1/plugins?q=economy&sort=downloads"
+```
+
+## Essayer ici
+
+Chaque page d'endpoint a un panneau **Essayer** : changez les paramètres, envoyez la requête depuis votre navigateur et lisez la vraie réponse.
+
+<ApiTry path="/categories" />
+
+## Tokens
+
+Un token est facultatif. Il identifie vos appels pour qu'ils aient leur propre budget, plus large que le budget anonyme. Il ne donne **aucune donnée en plus** : tout ce qu'un token peut lire, une requête anonyme le peut aussi.
+
+<Steps>
+  <Step>Connectez-vous sur powernukkitx.org avec GitHub.</Step>
+  <Step>Ouvrez **Dashboard > Settings > Feed and API** et créez-en un. Vous pouvez en garder jusqu'à 10.</Step>
+  <Step>Copiez-le tout de suite : il n'est affiché qu'une fois, et seule son empreinte est stockée.</Step>
+  <Step>Envoyez-le dans l'en-tête `Authorization`.</Step>
+</Steps>
+
+```bash
+curl -H "Authorization: Bearer pnx_<keyId>_<secret>" \
+  "https://powernukkitx.org/api/v1/plugins"
+```
+
+Un token s'écrit `pnx_`, suivi d'un identifiant de 12 caractères, d'un tiret bas et d'un secret de 64 caractères. Un token mal formé, inconnu ou révoqué reçoit un `401 invalid_token` : il n'est jamais rabattu en silence sur le budget anonyme.
+
+<Callout type="warn">
+  Gardez vos tokens hors des dépôts publics et du code exécuté côté client. Un token qui fuit ne peut rien modifier, mais quelqu'un d'autre peut consommer son budget. Révoquez-le depuis la même page de réglages.
+</Callout>
+
+## Limites de débit
+
+Les budgets se comptent à la minute.
+
+| Appelant | Budget | Compté sur |
+| :-- | :-- | :-- |
+| Anonyme | 240 requêtes par minute | Votre adresse IP |
+| Avec un token | 600 requêtes par minute | Le token |
+| Liste des serveurs, téléchargements de plugins | 60 requêtes par minute | Votre adresse IP |
+
+Au-delà du budget, l'API répond `429` avec un en-tête `Retry-After` qui donne le nombre de secondes à attendre.
+
+## Erreurs
+
+Les erreurs sont du JSON avec un code `error` :
+
+```json
+{ "error": "invalid_query", "issues": [] }
+```
+
+| Statut | Quand |
+| :-- | :-- |
+| `400` | Un paramètre de requête n'a pas passé la validation. `issues` dit lequel. |
+| `401` | Le token n'a pas été reconnu, ou a été révoqué. |
+| `403` | La version existe mais n'a pas été approuvée (téléchargements). |
+| `404` | Aucun plugin ou serveur de ce nom, ou il n'est pas publié. |
+| `429` | Budget épuisé. Attendez `Retry-After` secondes. |
+
+## Cache
+
+Les listes sont mises en cache une minute en bordure de réseau, les données plus stables (serveurs, collections, avis) dix minutes. Les réponses portent un `ETag` : un client qui envoie `If-None-Match` reçoit un `304` sans corps quand rien n'a changé.
+
+## Endpoints
+
+<Cards>
+  <Card icon={<Boxes />} title="Plugins" href="/docs/fr/web-api/plugins">
+    Recherche, détails, avis, historique des téléchargements, badges et téléchargements.
+  </Card>
+  <Card icon={<Server />} title="Serveurs" href="/docs/fr/web-api/servers">
+    L'annuaire public des serveurs.
+  </Card>
+  <Card icon={<Tags />} title="Catalogue" href="/docs/fr/web-api/catalogue">
+    Catégories, collections, badges et mise en avant.
+  </Card>
+  <Card icon={<ShieldAlert />} title="Avis de sécurité" href="/docs/fr/web-api/advisories">
+    Les avis publiés, au format OSV.
+  </Card>
+  <Card icon={<UserRound />} title="Votre compte" href="/docs/fr/web-api/account">
+    Votre profil, vos tokens et votre flux personnel.
+  </Card>
+</Cards>

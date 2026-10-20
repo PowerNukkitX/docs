@@ -2,7 +2,10 @@
   "pages": [
     "(software)",
     "administration",
+    "cli",
+    "assistant",
     "faq",
-    "development"
+    "development",
+    "web-api"
   ]
 }

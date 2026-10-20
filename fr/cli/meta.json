@@ -1,0 +1,15 @@
+{
+  "title": "PNX CLI",
+  "description": "Créer, lancer et entretenir un serveur PowerNukkitX depuis le terminal.",
+  "icon": "SquareTerminal",
+  "root": true,
+  "pages": [
+    "index",
+    "launcher",
+    "---Commandes---",
+    "server",
+    "plugins",
+    "maintenance",
+    "link"
+  ]
+}

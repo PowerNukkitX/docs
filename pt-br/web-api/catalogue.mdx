@@ -1,0 +1,49 @@
+---
+title: "Catálogo"
+description: "Categorias, coleções, emblemas e o destaque: os dados que organizam o hub."
+icon: Tags
+authors:
+  - AzaleeX
+---
+
+Estes endpoints mudam pouco e ficam em cache por bastante tempo. Eles não têm parâmetros.
+
+## Categorias
+
+```text
+GET /api/v1/categories
+```
+
+Cada categoria de plugin visível, como `{ id, label }`. Use um `id` no parâmetro `category` de [`/plugins`](/docs/pt-br/web-api/plugins).
+
+<ApiTry path="/categories" />
+
+## Coleções
+
+```text
+GET /api/v1/collections
+```
+
+As coleções publicadas: listas de plugins escolhidas à mão, cada uma com os plugins que reúne.
+
+<ApiTry path="/collections" />
+
+## Emblemas
+
+```text
+GET /api/v1/badges
+```
+
+Todo emblema que o hub pode dar a um plugin, com nível e ícone.
+
+<ApiTry path="/badges" />
+
+## Destaque
+
+```text
+GET /api/v1/spotlight
+```
+
+O plugin que a equipe destaca na página inicial, com a nota dele. `data` é `null` quando nada está em destaque.
+
+<ApiTry path="/spotlight" />

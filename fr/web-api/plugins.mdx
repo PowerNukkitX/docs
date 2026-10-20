@@ -1,0 +1,87 @@
+---
+title: "Plugins"
+description: "Chercher des plugins, en lire un en entier, ses avis et son historique de téléchargements, et intégrer son badge."
+icon: Boxes
+authors:
+  - AzaleeX
+---
+
+Un plugin est désigné par son **slug**, le `owner.name` que le hub lui a donné, comme dans `/plugins/owner.name`.
+
+## Lister et chercher
+
+```text
+GET /api/v1/plugins
+```
+
+Les plugins publiés, 24 par page. La réponse porte la page et le total au premier niveau : `data`, `page`, `perPage`, `total`, `totalPages`, et `fuzzy`, qui vaut `true` quand `q` ne correspond à rien exactement et que les résultats sont les noms les plus proches.
+
+| Paramètre | Rôle |
+| :-- | :-- |
+| `q` | Recherche plein texte sur le nom, le slug et le résumé. |
+| `category` | Un identifiant de catégorie, venant de [`/categories`](/docs/fr/web-api/catalogue). |
+| `api` | Seulement les plugins qui déclarent cette version de l'API PowerNukkitX dans leur `plugin.yml`. |
+| `sort` | `downloads`, `trending`, `stars`, `followers`, `rating`, `updated` ou `name`. |
+| `page` | De 1 à 500. |
+
+<ApiTry path="/plugins" query="q=economy&sort=downloads" />
+
+## Un plugin
+
+```text
+GET /api/v1/plugins/{slug}
+```
+
+Un plugin avec ses métadonnées GitHub, ses versions et son README, résolus au moment de la requête. Seules les versions **approuvées** peuvent être téléchargées.
+
+<ApiTry path="/plugins/{slug}" params={{ slug: "" }} />
+
+## Avis
+
+```text
+GET /api/v1/plugins/{slug}/reviews
+```
+
+Les avis de la communauté, les plus récents d'abord. La pagination est sous `meta` : `{ hasMore, limit, offset }`.
+
+| Paramètre | Rôle |
+| :-- | :-- |
+| `limit` | Combien en renvoyer. |
+| `offset` | Combien en sauter. |
+
+<ApiTry path="/plugins/{slug}/reviews" params={{ slug: "" }} query="limit=10" />
+
+## Historique des téléchargements
+
+```text
+GET /api/v1/plugins/{slug}/history
+```
+
+Les téléchargements par jour, dans `data.points`. C'est ce qui trace le graphique d'une page de plugin.
+
+<ApiTry path="/plugins/{slug}/history" params={{ slug: "" }} />
+
+## Badge
+
+```text
+GET /api/v1/plugins/{slug}/badge
+```
+
+Un badge de statut sous forme d'**image SVG**, pas de JSON. Pointez une image dessus dans un README :
+
+```markdown
+![downloads](https://powernukkitx.org/api/v1/plugins/owner.name/badge?metric=downloads)
+```
+
+| Paramètre | Rôle |
+| :-- | :-- |
+| `metric` | `api`, `downloads`, `rating`, `stars` ou `version`. |
+| `label` | Remplace le texte de gauche, jusqu'à 32 caractères. |
+
+## Télécharger une version
+
+```text
+GET /api/v1/plugins/{slug}/download?tag={tag}
+```
+
+Redirige vers le jar d'une version approuvée sur GitHub, et compte le téléchargement. `tag` est obligatoire. Une version qui existe mais n'est pas approuvée répond `403 not_approved`. C'est ce qu'appelle `pnx plugin install` dans la CLI.

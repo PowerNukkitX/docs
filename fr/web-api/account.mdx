@@ -1,0 +1,41 @@
+---
+title: "Votre compte"
+description: "Votre profil, vos tokens d'API et votre flux personnel des plugins suivis."
+icon: UserRound
+authors:
+  - AzaleeX
+---
+
+Ces endpoints concernent l'utilisateur connecté. Ils fonctionnent avec le **cookie de session** de powernukkitx.org, dans le navigateur, pas avec un token d'API : un token ne peut lire que ce qui est déjà public.
+
+## Votre profil
+
+```text
+GET /api/v1/me
+```
+
+Vos réglages tels que le tableau de bord les modifie : bio, liens, localisation, plugins épinglés, visibilité du profil et préférences de notification. Sans session, la réponse est `401 unauthorized`.
+
+## Vos tokens
+
+```text
+GET    /api/v1/me/tokens
+POST   /api/v1/me/tokens
+DELETE /api/v1/me/tokens/{keyId}
+```
+
+| Appel | Rôle |
+| :-- | :-- |
+| `GET` | Liste vos tokens : nom, identifiant, date de création, dernière utilisation. Jamais le secret. |
+| `POST` | En crée un à partir de `{ "name": "..." }`. La réponse est le seul moment où le token complet apparaît. |
+| `DELETE` | Révoque le token qui porte cet identifiant. |
+
+La création et la révocation ne fonctionnent que depuis le site lui-même (même origine) ; c'est pourquoi on les fait dans le tableau de bord : **Dashboard > Settings > Feed and API**.
+
+## Votre flux
+
+```text
+GET /api/v1/feed/{key}
+```
+
+Un flux Atom de ce qui arrive aux plugins que vous suivez : nouvelles versions, approbations et plus. Chaque compte a sa propre `key` secrète ; copiez l'URL du flux depuis **Dashboard > Settings > Feed and API** et collez-la dans n'importe quel lecteur de flux. Une clé renouvelée ou erronée répond `404`, pour qu'un lecteur arrête d'interroger une URL morte.
