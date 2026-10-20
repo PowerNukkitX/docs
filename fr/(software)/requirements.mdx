@@ -1,0 +1,59 @@
+---
+title: "Configuration requise"
+description: "Le matériel, la version de Java et le système dont PowerNukkitX a besoin."
+icon: Shapes
+authors:
+  - AzaleeX
+---
+
+Avant d'installer, vérifiez que votre machine a le matériel, la version de Java et le système ci-dessous.
+
+## Matériel
+
+<Tabs items={["Minimum", "Recommandé"]}>
+  <Tab value="Minimum">
+    Suffisant pour un petit serveur avec quelques joueurs. Les performances dépendent de la taille du monde et des plugins.
+
+    | Composant | Minimum |
+    | :-- | :-- |
+    | Processeur | 2 cœurs, 2,5 GHz |
+    | Mémoire | 2 Go |
+    | Stockage | 1 Go libre |
+    | Java | OpenJDK 21 ou plus récent |
+    | Système | Windows 10 / 11, Linux (Ubuntu 20.04+), macOS |
+    | Réseau | 1 Mb/s en envoi |
+  </Tab>
+  <Tab value="Recommandé">
+    Pour un serveur avec du monde. Au-delà de 20 joueurs ou avec plusieurs mondes, ajoutez processeur, mémoire et bande passante.
+
+    | Composant | Recommandé |
+    | :-- | :-- |
+    | Processeur | 4 cœurs ou plus, 3,0 GHz ou plus |
+    | Mémoire | 4 Go ou plus |
+    | Stockage | SSD avec 5 Go libres |
+    | Java | OpenJDK 21 ou plus récent |
+    | Système | Windows 10 / 11, Linux (Ubuntu 22.04+), macOS |
+    | Réseau | 10 Mb/s ou plus en envoi |
+  </Tab>
+</Tabs>
+
+## Java
+
+PowerNukkitX demande **Java 21 ou plus récent**, en 64 bits.
+
+<Steps>
+  <Step>Installez un Java 21 **64 bits**. OpenJDK est recommandé.</Step>
+  <Step>Définissez la variable d'environnement `JAVA_HOME` sur cette installation.</Step>
+  <Step>Ajoutez le dossier `bin` de Java à votre `PATH`, puis vérifiez avec `java -version`.</Step>
+</Steps>
+
+<Callout type="warn">
+  Les anciennes versions de Java (20 et moins) provoquent des plantages ou des erreurs de plugins. Voir [Dépannage](/docs/fr/faq/troubleshooting) si `java -version` affiche la mauvaise.
+</Callout>
+
+## Bonnes habitudes
+
+- **Sauvegardez** régulièrement le dossier `worlds/` et `pnx.yml`. Voir [Sauvegardes](/docs/fr/administration/backups).
+- **Gardez 20 % du disque libre** pour les logs et les mondes qui grossissent.
+- **N'installez que des plugins** prévus pour votre version de PowerNukkitX.
+- **Surveillez le processeur et la mémoire** avec `htop` sous Linux ou le Gestionnaire des tâches sous Windows.

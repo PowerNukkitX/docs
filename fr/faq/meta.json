@@ -1,0 +1,11 @@
+{
+  "title": "Aide",
+  "description": "Réponses, solutions aux problèmes courants, et le vocabulaire de la documentation.",
+  "icon": "LifeBuoy",
+  "root": true,
+  "pages": [
+    "index",
+    "troubleshooting",
+    "glossary"
+  ]
+}

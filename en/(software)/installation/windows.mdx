@@ -1,0 +1,96 @@
+---
+title: "Windows"
+description: "Install and run PowerNukkitX on Windows 10 or 11, step by step."
+icon: Monitor
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+On Windows 10 or 11, you install Java 21, put the server jar in a folder, and start it from a `start.bat` script.
+
+## Install
+
+<Steps>
+  <Step>
+    ### Install Java 21
+
+    Download the Windows **MSI** installer for **Eclipse Temurin JDK 21** from [Adoptium](https://adoptium.net/temurin/releases/?version=21&os=windows) and run it. During setup, tick **Set JAVA_HOME variable** and **Associate .jar files**.
+
+    Then open a new Command Prompt and check:
+
+    ```bat
+    java -version
+    ```
+
+    You should see version `21`, for example `openjdk version "21.x.x"`.
+  </Step>
+  <Step>
+    ### Create a server folder
+
+    Create a folder for the server, for example `C:\PNX-Server`.
+
+    <Callout type="warn">
+      Do not put it in `C:\Program Files` or `C:\Windows`: Windows may stop PowerNukkitX from creating its worlds, configuration and logs there.
+    </Callout>
+  </Step>
+  <Step>
+    ### Download the server
+
+    Download the latest `powernukkitx.jar` from the [GitHub releases](https://github.com/PowerNukkitX/PowerNukkitX/releases) and put it in your folder.
+  </Step>
+  <Step>
+    ### Create the start script
+
+    PowerNukkitX needs Java reflection flags (`--add-opens`) to load its registry and plugins, so start it from a script rather than by double-clicking the jar. Create `start.bat` in the folder:
+
+    ```bat title="start.bat"
+    @echo off
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    pause
+    ```
+
+    <Callout type="info">
+      Create it as a text file, then rename it. Turn on **View > Show > File name extensions** in File Explorer so the file really ends in `.bat`, not `.bat.txt`.
+    </Callout>
+  </Step>
+  <Step>
+    ### Start the server
+
+    Double-click `start.bat`. The first time, a setup wizard asks you to:
+
+    - accept the license by typing `y`;
+    - pick a language, for example `eng`;
+    - enter the server name (MOTD) and port (default `19132`).
+
+    The server then creates `pnx.yml` and the default world. Type `stop` to shut it down cleanly.
+  </Step>
+</Steps>
+
+Your folder now looks like this:
+
+<Files>
+  <Folder name="PNX-Server" defaultOpen>
+    <File name="powernukkitx.jar" />
+    <File name="start.bat" />
+    <File name="pnx.yml" />
+    <Folder name="worlds" />
+    <Folder name="plugins" />
+  </Folder>
+</Files>
+
+## Troubleshooting
+
+<Accordions>
+  <Accordion title="'java' is not recognized">
+    Windows cannot find Java. If Java 21 is installed:
+
+    1. Search the Start menu for **Edit the system environment variables**, then click **Environment Variables...**.
+    2. Under *System variables*, check that `JAVA_HOME` points to your JDK 21 folder, for example `C:\Program Files\Eclipse Adoptium\jdk-21.x.x\`.
+    3. Edit `Path` and make sure it contains `%JAVA_HOME%\bin`.
+    4. Open a new Command Prompt, or restart the PC.
+  </Accordion>
+  <Accordion title="BindException: Address already in use">
+    Another program, or another copy of the server, already uses port `19132`. Close the other server window, or change `port` in `pnx.yml` (for example to `19133`).
+  </Accordion>
+</Accordions>

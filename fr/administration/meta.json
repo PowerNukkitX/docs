@@ -1,0 +1,22 @@
+{
+  "title": "Administrer un serveur",
+  "description": "Configurer, sécuriser et entretenir un serveur PowerNukkitX au quotidien.",
+  "icon": "Server",
+  "root": true,
+  "pages": [
+    "index",
+    "---Mise en place---",
+    "configuration",
+    "permissions",
+    "plugin-hub",
+    "integrations",
+    "---Au quotidien---",
+    "commands",
+    "players",
+    "worlds",
+    "performance",
+    "backups",
+    "---Mise en ligne---",
+    "go-live"
+  ]
+}

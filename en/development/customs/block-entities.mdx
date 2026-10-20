@@ -1,0 +1,136 @@
+---
+title: "Block entities"
+description: "Attach extra data and tick logic to a placed block, like a chest or a furnace."
+icon: Cpu
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+A **block entity** (once called a tile entity) lives at a block's position. It stores extra NBT data and can run every tick: chests, furnaces and custom machines use one.
+
+It takes three pieces: the block entity class, its registration, and a block that creates it.
+
+## 1. The block entity
+
+Extend `BlockEntity`. Save your own data in `saveNBT()`, and return `true` from `onUpdate()` to keep ticking.
+
+```java filename="MyMachineEntity.java"
+package org.example.blockentity;
+
+import org.powernukkitx.blockentity.BlockEntity;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.nbt.tag.CompoundTag;
+
+public class MyMachineEntity extends BlockEntity {
+
+    public MyMachineEntity(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public boolean isBlockEntityValid() {
+        // Return true if the block entity matches the block type at its coordinates
+        return this.getLevel().getBlock(this).getId().equals("powernukkitx:my_machine");
+    }
+
+    @Override
+    public void saveNBT() {
+        super.saveNBT();
+        // Save any custom properties to NBT here
+        this.namedTag.putInt("energy", 100);
+    }
+
+    // Override onUpdate() if your block entity needs to run tick updates
+    @Override
+    public boolean onUpdate() {
+        // Run tick logic here
+        return false; // Return true if the block entity needs to keep ticking
+    }
+}
+```
+
+## 2. Register it in `onLoad()`
+
+The name you register is how the block will find it:
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.BLOCKENTITY.register("MyMachine", MyMachineEntity.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## 3. Bind it to a block
+
+Implement `BlockEntityHolder` on your custom block. `getBlockEntityType()` returns the registered name, and `BlockEntityHolder.setBlockAndCreateEntity(this)` in `place()` creates the block entity when the block is placed.
+
+```java filename="MyMachineBlock.java"
+package org.example.block;
+
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockProperties;
+import org.powernukkitx.block.BlockState;
+import org.powernukkitx.block.BlockEntityHolder;
+import org.powernukkitx.block.customblock.CustomBlock;
+import org.powernukkitx.block.customblock.CustomBlockDefinition;
+import org.powernukkitx.blockentity.BlockEntity;
+import org.powernukkitx.item.Item;
+import org.powernukkitx.math.BlockFace;
+import org.powernukkitx.Player;
+import org.example.blockentity.MyMachineEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class MyMachineBlock extends Block implements CustomBlock, BlockEntityHolder<MyMachineEntity> {
+
+    public static final BlockProperties PROPERTIES = new BlockProperties("powernukkitx:my_machine");
+
+    public MyMachineBlock() {
+        super(PROPERTIES.getDefaultState());
+    }
+
+    public MyMachineBlock(@Nullable BlockState blockState) {
+        super(blockState);
+    }
+
+    @Override
+    public @NotNull BlockProperties getProperties() {
+        return PROPERTIES;
+    }
+
+    @Override
+    public CustomBlockDefinition getDefinition() {
+        return CustomBlockDefinition.builder(this)
+                .texture("my_machine")
+                .breakTime(3)
+                .build();
+    }
+
+    // --- BlockEntityHolder Implementation ---
+
+    @Override
+    public @NotNull Class<MyMachineEntity> getBlockEntityClass() {
+        return MyMachineEntity.class;
+    }
+
+    @Override
+    public @NotNull String getBlockEntityType() {
+        return "MyMachine"; // Must match registered BlockEntity name
+    }
+
+    // Place the block and create the corresponding block entity
+    @Override
+    public boolean place(@NotNull Item item, @NotNull Block block, @NotNull Block target, @NotNull BlockFace face, double fx, double fy, double fz, @Nullable Player player) {
+        // Sets block state on the level and instantiates the block entity automatically
+        return BlockEntityHolder.setBlockAndCreateEntity(this) != null;
+    }
+}
+```

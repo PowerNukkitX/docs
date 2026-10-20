@@ -1,0 +1,62 @@
+---
+title: "Joueurs"
+description: "Opérateurs, liste blanche, expulsions et bannissements sur un serveur PowerNukkitX."
+icon: Users
+authors:
+  - PowerNukkitX
+---
+
+Qui peut faire quoi sur votre serveur : opérateurs, liste blanche, expulsions et bannissements, et ce que change le mode hors ligne.
+
+## Opérateurs
+
+Les opérateurs passent les vérifications de permission et peuvent lancer toutes les commandes.
+
+```bash title="Console"
+op <joueur>
+deop <joueur>
+```
+
+Ils sont stockés dans `ops.txt`, un nom par ligne, que vous pouvez modifier serveur arrêté. Au-delà de quelques administrateurs de confiance, utilisez un plugin de permissions : voir [Permissions et sécurité](/docs/fr/administration/permissions).
+
+## Liste blanche
+
+Ne laissez entrer que les joueurs approuvés. Activez-la dans `pnx.yml` :
+
+```yaml title="pnx.yml"
+baseSettings:
+  allowList: true
+  allowListMessage: Server is white-listed
+```
+
+Seuls les joueurs de `white-list.txt` peuvent alors se connecter ; les autres sont expulsés avec `allowListMessage`. Gérez-la avec :
+
+```bash title="Console"
+whitelist add <joueur>
+whitelist remove <joueur>
+whitelist list
+```
+
+<Callout type="info">
+  Avec `xboxAuth` activé (par défaut), les joueurs sont identifiés par leur compte Xbox : changer de pseudo ne permet pas de contourner la liste blanche.
+</Callout>
+
+## Expulsions et bannissements
+
+| Commande | Effet |
+| :-- | :-- |
+| `kick <joueur> [raison]` | Déconnecte un joueur tout de suite. Il peut revenir. |
+| `ban <joueur> [raison]` | Bannit un joueur par son nom. |
+| `pardon <joueur>` | Lève un bannissement par nom. |
+| `ban-ip <adresse\|joueur>` | Bannit une adresse IP. |
+| `pardon-ip <adresse>` | Lève un bannissement d'IP. |
+
+Les bannissements sont conservés dans `banned-players.txt` et `banned-ips.txt`.
+
+## Mode hors ligne
+
+Régler `baseSettings.xboxAuth` sur `false` désactive l'authentification Xbox.
+
+<Callout type="error" title="Réseaux de confiance uniquement">
+  Sans authentification, n'importe qui peut se connecter sous n'importe quel nom, et la liste blanche comme les bannissements deviennent faciles à contourner. N'utilisez le mode hors ligne que sur un réseau local, ou derrière un proxy qui authentifie les joueurs (voir [WaterdogPE](/docs/fr/administration/integrations/wdpe)).
+</Callout>

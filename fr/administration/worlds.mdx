@@ -1,0 +1,54 @@
+---
+title: "Mondes"
+description: "Comment PowerNukkitX stocke, charge et configure les mondes."
+icon: Map
+authors:
+  - PowerNukkitX
+---
+
+Chaque monde (un *level*) est un dossier dans `worlds/`. Celui par défaut porte le nom défini par `defaultLevelName` dans `pnx.yml` (`world` par défaut) et se charge au démarrage ; c'est là qu'apparaissent les nouveaux joueurs.
+
+## Changer de monde par défaut
+
+```yaml title="pnx.yml"
+baseSettings:
+  defaultLevelName: world
+```
+
+<Callout type="warn">
+  Arrêtez d'abord le serveur : un serveur en marche réécrit `pnx.yml` depuis sa mémoire à l'arrêt.
+</Callout>
+
+## Importer un monde
+
+PowerNukkitX lit le format **LevelDB** de Bedrock : les mondes d'un autre serveur ou exportés depuis le client Bedrock fonctionnent.
+
+<Steps>
+  <Step>Arrêtez le serveur.</Step>
+  <Step>Copiez le dossier du monde dans `worlds/`.</Step>
+  <Step>Réglez `defaultLevelName` sur le nom du dossier, ou chargez-le avec un plugin multi-mondes.</Step>
+  <Step>Démarrez le serveur.</Step>
+</Steps>
+
+## Réglages par monde
+
+La difficulté, le point d'apparition et les règles de jeu appartiennent à chaque monde et se changent en cours de partie :
+
+```bash title="Console"
+difficulty normal
+setworldspawn
+gamerule keepInventory true
+```
+
+## Plusieurs mondes à la fois
+
+Le cœur charge un seul monde par défaut. Pour en faire tourner plusieurs et y déplacer les joueurs, installez un plugin multi-mondes depuis le [hub de plugins](https://powernukkitx.org/plugins).
+
+## Apparition et génération
+
+| Réglage | Effet |
+| :-- | :-- |
+| `playerSettings.spawnRadius` | La distance au point d'apparition à laquelle arrivent les nouveaux joueurs. |
+| `gameplaySettings.spawnProtection` | Le rayon autour du spawn que les non-opérateurs ne peuvent pas modifier. |
+
+Le terrain peut être généré par [Terra](/docs/fr/administration/integrations/terra) ; la génération des chunks tourne sur les threads asynchrones (voir [Performances](/docs/fr/administration/performance)).

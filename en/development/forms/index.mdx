@@ -1,0 +1,113 @@
+---
+title: Forms
+icon: PanelTop
+description: "Show players menus, questions and settings screens, and read their answers."
+authors:
+  - PleaseInsertNameHere
+---
+
+import { MousePointerClick, MessageSquare, SlidersHorizontal, LayoutTemplate } from "lucide-react";
+
+A form is a window on the player's screen. There are three kinds, plus an experimental reactive one:
+
+<FormTypes />
+
+<Cards>
+  <Card icon={<MousePointerClick />} title="SimpleForm" href="/docs/development/forms/simple">
+    A list of buttons. Menus, shops, teleport lists.
+  </Card>
+  <Card icon={<MessageSquare />} title="ModalForm" href="/docs/development/forms/modal">
+    One question, two answers. Confirmations.
+  </Card>
+  <Card icon={<SlidersHorizontal />} title="CustomForm" href="/docs/development/forms/custom">
+    Inputs, toggles, sliders, dropdowns. Settings screens.
+  </Card>
+  <Card icon={<LayoutTemplate />} title="Data-Driven UI" href="/docs/development/forms/ddui">
+    Experimental: screens that update while they stay open.
+  </Card>
+</Cards>
+
+What follows works the same for every kind of form.
+
+## Title
+
+Set it in the constructor or with a method:
+
+```java
+// Using the constructor
+CustomForm custom = new CustomForm("title");
+ModalForm modal = new ModalForm("title");
+SimpleForm simple = new SimpleForm("title");
+
+// Using the method
+custom.title("other title");
+modal.title("other title");
+simple.title("other title");
+```
+
+## Listening for answers
+
+Each form runs a callback when the player submits it, and another when they close it:
+
+```java
+form.onSubmit((player, response) -> {
+    /*
+
+    Handle the form response here,
+    the object depends on the form you've created.
+    For details, check out the specific form documentation.
+
+    */
+})
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+
+## Sending a form
+
+```java
+form.send(player);
+```
+
+You can also pass an id, though it is not recommended:
+
+```java
+form.send(player, 123);
+```
+
+## Metadata
+
+Attach anything to a form, for example to recognise it later or to update it:
+
+```java
+// Example: Saving an entity
+Entity entity = ...;
+
+form.putMeta("form-type", "manage-entity")
+    .putMeta("entity", entity);
+```
+
+Read it back with `getMeta`:
+
+```java
+Entity entity = form.getMeta("entity");
+```
+
+With a fallback if the key may be missing:
+
+```java
+Entity entity = form.getMeta("entity", backupEntity);
+```
+
+## Who has it open
+
+A form can be shown to several players at once (a team picker, for example). List them:
+
+```java
+ObjectArraySet<Player> viewers = form.viewers();
+```
+
+Or check one player:
+
+```java
+boolean isViewer = form.isViewer(player);
+```

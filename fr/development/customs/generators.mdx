@@ -1,0 +1,225 @@
+---
+title: "Générateurs de monde"
+description: "Construire votre propre génération de monde, et ajouter des structures aux chunks générés."
+icon: Globe
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Un générateur est une **chaîne d'étapes** : le terrain, puis le peuplement (structures, décoration), puis l'éclairage, puis la fin. Vous écrivez les étapes dont vous avez besoin et les enchaînez.
+
+<GeneratorPipeline />
+
+## Un générateur custom
+
+Étendez `Generator`, passez la dimension et les options à `super`, et listez les étapes dans `stages(...)` :
+
+```java filename="MyFlatGenerator.java"
+package org.example.generator;
+
+import org.powernukkitx.level.DimensionData;
+import org.powernukkitx.level.DimensionEnum;
+import org.powernukkitx.level.generator.GenerateStage;
+import org.powernukkitx.level.generator.Generator;
+import org.powernukkitx.level.generator.stages.FinishedStage;
+import org.powernukkitx.level.generator.stages.LightPopulationStage;
+import org.powernukkitx.registry.Registries;
+import java.util.Map;
+
+public class MyFlatGenerator extends Generator {
+
+    public MyFlatGenerator(DimensionData dimensionData, Map<String, Object> options) {
+        // Enforce dimension data (e.g. Overworld) and configurations options
+        super(DimensionEnum.OVERWORLD.getDimensionData(), options);
+    }
+
+    @Override
+    public void stages(GenerateStage.Builder builder) {
+        // Configure the stage pipeline (e.g. initial generation stage, lighting, finalization)
+        builder.start(Registries.GENERATE_STAGE.get("MyCustomStage"))
+               .next(Registries.GENERATE_STAGE.get(LightPopulationStage.NAME))
+               .next(Registries.GENERATE_STAGE.get(FinishedStage.NAME));
+    }
+
+    @Override
+    public DimensionData getDimensionData() {
+        return DimensionEnum.OVERWORLD.getDimensionData();
+    }
+}
+```
+
+Enregistrez-le dans `onLoad()` :
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.GENERATOR.register("my_flat_generator", MyFlatGenerator.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## Des structures pendant la génération
+
+Pour placer des structures (maisons, ruines, montgolfières) au fil de la génération des chunks, écrivez un **populator** et lancez-le depuis une **étape de peuplement**.
+
+<Steps>
+  <Step>
+    ### Le populator
+
+    Étendez `Populator` et surchargez `apply(ChunkGenerateContext)`. Initialisez l'aléatoire par chunk pour qu'un monde se génère toujours de la même façon :
+
+```java filename="BalloonPopulator.java"
+package org.example.generator;
+
+import org.powernukkitx.level.Level;
+import org.powernukkitx.level.Position;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.level.generator.ChunkGenerateContext;
+import org.powernukkitx.level.generator.object.BlockManager;
+import org.powernukkitx.level.generator.populator.Populator;
+import org.powernukkitx.level.structure.Structure;
+import org.powernukkitx.level.structure.StructureAPI;
+import org.powernukkitx.utils.random.RandomSourceProvider;
+
+public class BalloonPopulator extends Populator {
+
+    public static final String NAME = "example:balloon";
+    private Structure balloonStructure;
+
+    @Override
+    public void apply(ChunkGenerateContext context) {
+        IChunk chunk = context.getChunk();
+        int chunkX = chunk.getX();
+        int chunkZ = chunk.getZ();
+        Level level = chunk.getLevel();
+        
+        // Seed the randomizer for this chunk
+        this.random.setSeed(level.getSeed() ^ Level.chunkHash(chunkX, chunkZ) | chunkZ);
+        
+        // Custom generation probability boundary checks
+        if (this.random.nextBoundedInt(100) >= 5) return; // 5% chance per chunk
+
+        int x = (chunkX << 4) + 7;
+        int z = (chunkZ << 4) + 7;
+        int highest = chunk.getLevel().getHighestBlockAt(x, z);
+        int y = highest + 30; // Spawn 30 blocks above the ground
+
+        if (balloonStructure == null) {
+            balloonStructure = StructureAPI.load("balloon_white");
+        }
+
+        if (balloonStructure != null) {
+            BlockManager manager = new BlockManager(level);
+            // Prepare structural coordinates and place
+            balloonStructure.preparePlace(new Position(x, y, z, level), manager);
+            manager.generateChunks();
+            queueObject(chunk, manager);
+        }
+    }
+
+    @Override
+    public String name() {
+        return NAME;
+    }
+}
+```
+  </Step>
+  <Step>
+    ### L'étape
+
+    Étendez `PopulatorStage` et renvoyez les noms des populators qu'elle lance :
+
+```java filename="BalloonPopulatorStage.java"
+package org.example.generator;
+
+import org.powernukkitx.level.generator.stages.PopulatorStage;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+
+public class BalloonPopulatorStage extends PopulatorStage {
+
+    public static final String NAME = "example:balloon_stage";
+
+    @Override
+    public ObjectArraySet<String> populators() {
+        // Return a set containing the registered names of populators to run in this stage
+        return new ObjectArraySet<>(new String[]{ BalloonPopulator.NAME });
+    }
+
+    @Override
+    public String name() {
+        return NAME;
+    }
+}
+```
+  </Step>
+  <Step>
+    ### Enregistrer les deux dans `onLoad()`
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        // 1. Register the generator itself
+        Registries.GENERATOR.register("my_flat_generator", MyFlatGenerator.class);
+        
+        // 2. Register the custom populator
+        Registries.POPULATOR.register(BalloonPopulator.NAME, BalloonPopulator.class);
+        
+        // 3. Register the custom populator stage
+        Registries.GENERATE_STAGE.register(BalloonPopulatorStage.NAME, BalloonPopulatorStage.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+  </Step>
+  <Step>
+    ### Ajouter l'étape à votre générateur
+
+```java
+@Override
+public void stages(GenerateStage.Builder builder) {
+    builder.start(Registries.GENERATE_STAGE.get(NormalTerrainStage.NAME))
+           .next(Registries.GENERATE_STAGE.get(BalloonPopulatorStage.NAME)) // Add stage
+           .next(Registries.GENERATE_STAGE.get(FinishedStage.NAME));
+}
+```
+  </Step>
+</Steps>
+
+## Des structures dans les mondes vanilla
+
+Pour ajouter vos structures à l'Overworld normal sans générateur à vous, ajoutez le nom du populator à `NormalPopulatorStage.POPULATORS`. Elles se génèrent alors aux côtés des villages, donjons et temples :
+
+```java
+import org.powernukkitx.level.generator.stages.normal.NormalPopulatorStage;
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        // 1. Register the custom populator in the registry
+        Registries.POPULATOR.register(BalloonPopulator.NAME, BalloonPopulator.class);
+        
+        // 2. Inject it directly into the vanilla Overworld populator stage list
+        NormalPopulatorStage.POPULATORS.add(BalloonPopulator.NAME);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## Un exemple réel
+
+[FuturePlots](https://github.com/Ovisdevelopment/FuturePlots) utilise sa propre étape (`PlotStage`) pour tracer routes, murs et limites de parcelles, et régénère les chunks en asynchrone.

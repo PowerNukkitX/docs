@@ -1,0 +1,67 @@
+---
+title: "Hub de plugins"
+description: "Trouver, installer et publier des plugins sur le hub de plugins PowerNukkitX."
+icon: Package
+---
+
+Le [hub de plugins](https://powernukkitx.org/plugins) recense les plugins de la communauté pour PowerNukkitX. Chaque fiche et chaque release sont **relues** avant leur mise en ligne, et chaque jar est **analysé**.
+
+## Installer un plugin
+
+<Steps>
+  <Step>
+    ### Le trouver
+
+    Cherchez par nom, dépôt ou mot-clé, ou parcourez par catégorie. Triez par téléchargements, tendance, étoiles, note ou dernière mise à jour, et filtrez par version de serveur ou éditeur vérifié. Vous préférez une vue compacte ? Passez en vue **liste** à côté du tri.
+  </Step>
+  <Step>
+    ### Le télécharger
+
+    Sur la page du plugin, **How to install** donne le jar de la dernière release approuvée, directement depuis la release GitHub de l'auteur.
+  </Step>
+  <Step>
+    ### L'installer
+
+    Placez le jar dans le dossier `plugins/` du serveur et redémarrez-le.
+  </Step>
+</Steps>
+
+<Callout type="info">
+  Regardez d'abord la carte **Details** : elle montre ce dont le plugin a besoin (dépendances, version d'API) et prévient quand un plugin n'a pas été mis à jour depuis plus d'un an.
+</Callout>
+
+## Publier votre plugin
+
+<Steps>
+  <Step>
+    ### Préparer le dépôt
+
+    Votre plugin doit être dans un **dépôt GitHub public** où vous pouvez pousser, avec une **release** contenant un `.jar`. Voir [Créer un plugin](/docs/fr/development/basics) pour en construire un.
+  </Step>
+  <Step>
+    ### Le soumettre
+
+    Connectez-vous et ouvrez [Submit a plugin](https://powernukkitx.org/dashboard/submit). Choisissez le dépôt, donnez un nom, un résumé d'une ligne et jusqu'à trois catégories, et si vous voulez une couleur d'accent. Un aperçu en direct montre le rendu.
+  </Step>
+  <Step>
+    ### Attendre la relecture
+
+    Un relecteur vérifie la fiche et lit le jar le plus récent. Vous recevez une notification avec la décision ; en cas de refus, vous voyez pourquoi et pouvez resoumettre.
+  </Step>
+  <Step>
+    ### Le tenir à jour
+
+    Chaque nouvelle release GitHub est relue à son tour avant que les joueurs puissent la télécharger. Gérez tout depuis **Dashboard > My plugins**.
+  </Step>
+</Steps>
+
+## Personnaliser votre page
+
+Depuis la page de gestion du plugin, dans **Listing** :
+
+| Quoi | Comment | Relecture |
+| :-- | :-- | :-- |
+| Nom, résumé, catégories | Modifier la fiche | Relus sur une fiche publique |
+| Icône | `.jarbage/icon.png` dans le dépôt, ou en l'envoyant | Relue |
+| Couleur d'accent | Une des sept couleurs du site | Appliquée tout de suite |
+| Liens | Site, docs, Discord, bugs, soutien (https uniquement) | Appliqués tout de suite |

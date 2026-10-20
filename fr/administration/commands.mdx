@@ -1,0 +1,50 @@
+---
+title: "Console et commandes"
+description: "Les commandes les plus utiles pour faire tourner un serveur PowerNukkitX."
+icon: SquareTerminal
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX dispose de toutes les commandes vanilla de Bedrock, plus des commandes serveur. Dans la **console**, tapez-les sans barre oblique ; **en jeu**, en tant qu'opérateur, avec.
+
+<Tabs items={["Serveur", "Joueurs", "Monde"]}>
+  <Tab value="Serveur">
+    | Commande | Effet |
+    | :-- | :-- |
+    | `stop` | Sauvegarde tout et s'arrête proprement. Utilisez-la toujours plutôt que de tuer le processus. |
+    | `save-all` | Écrit tout de suite chaque monde chargé sur le disque. |
+    | `reload` | Recharge plugins et configuration. Un redémarrage complet est plus sûr. |
+    | `version` / `plugins` | La version du serveur, et les plugins chargés. |
+    | `status` | Temps de fonctionnement, TPS, mémoire, mondes et entités chargés. |
+  </Tab>
+  <Tab value="Joueurs">
+    | Commande | Effet |
+    | :-- | :-- |
+    | `list` | Liste les joueurs connectés. |
+    | `kick <joueur> [raison]` | Déconnecte un joueur. |
+    | `tp <joueur> <cible>` | Téléporte un joueur vers un autre joueur ou des coordonnées. |
+    | `gamemode <mode> [joueur]` | Règle le mode de jeu : `survival`, `creative`, `adventure`, `spectator`. |
+    | `give <joueur> <item> [quantité]` | Donne des items. |
+    | `xp <quantité> [joueur]` | Donne de l'expérience. |
+
+    Opérateurs, bannissements et liste blanche sont dans [Joueurs](/docs/fr/administration/players).
+  </Tab>
+  <Tab value="Monde">
+    | Commande | Effet |
+    | :-- | :-- |
+    | `time set <valeur>` | Règle l'heure : `day`, `night`, ou un nombre de ticks. |
+    | `weather <clear\|rain\|thunder>` | Change la météo. |
+    | `difficulty <0-3>` | Paisible, facile, normale ou difficile. |
+    | `gamerule <règle> <valeur>` | Change une règle de jeu comme `doDaylightCycle` ou `keepInventory`. |
+    | `setworldspawn` / `spawnpoint` | Règle le point d'apparition du monde, ou celui d'un joueur. |
+  </Tab>
+</Tabs>
+
+<Callout type="error" title="Ne tuez jamais le processus">
+  Fermer le terminal ou tuer Java peut faire perdre des données de monde et de joueurs. Utilisez `stop` pour que tout soit d'abord écrit sur le disque.
+</Callout>
+
+## Aide
+
+`help` liste toutes les commandes que vous pouvez lancer, page par page ; `help <commande>` montre comment en utiliser une. Ce qu'un joueur peut lancer dépend de ses [permissions](/docs/fr/administration/permissions).

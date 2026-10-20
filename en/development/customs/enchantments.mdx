@@ -1,0 +1,70 @@
+---
+title: "Enchantments"
+description: "Create new enchantments with their own rarity, target items and levels."
+icon: Sparkles
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+A custom enchantment is a Java class that you register in `onLoad()`, before the worlds load, like every other custom content.
+
+## Register it in `onLoad()`
+
+```java
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onLoad() {
+    try {
+        Enchantment.register(new MyEnchantment());
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## Define it
+
+Extend `Enchantment` and pass the constructor an id, a display name, a rarity and the kind of item it applies to. Then set the maximum level and the enchantability range.
+
+```java filename="MyEnchantment.java"
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.item.enchantment.EnchantmentType;
+import org.powernukkitx.utils.Identifier;
+
+public class MyEnchantment extends Enchantment {
+    public MyEnchantment() {
+        super(
+            new Identifier("powernukkitx:lucky_strike"), // Unique identifier namespace:name
+            "Lucky Strike",                              // Display name
+            Rarity.RARE,                                 // Rarity (COMMON, UNCOMMON, RARE, VERY_RARE)
+            EnchantmentType.WEAPON                       // Applicable items (ARMOR, WEAPON, DIGGER, ALL, etc.)
+        );
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3; // Maximum level of the enchantment
+    }
+
+    @Override
+    public int getMinEnchantability(int level) {
+        return 1 + level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level) {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    // You can override additional handlers such as:
+    // - getDamageBonus(int level, Entity target) for custom weapon damage modifiers.
+    // - getDamageProtection(int level, DamageSource source) for custom protection modifiers.
+}
+```
+
+<Callout type="info" title="The effect is yours to write">
+  Registering an enchantment makes it exist; what it does is up to you. Check for it in your listeners, for example in `EntityDamageByEntityEvent` or `BlockBreakEvent`, and apply the effect there.
+</Callout>

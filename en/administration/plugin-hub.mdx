@@ -1,0 +1,67 @@
+---
+title: "Plugin hub"
+description: "Find, install and publish plugins on the PowerNukkitX plugin hub."
+icon: Package
+---
+
+The [plugin hub](https://powernukkitx.org/plugins) lists community plugins for PowerNukkitX. Every listing and every release is **reviewed** before it goes live, and each jar is **scanned**.
+
+## Install a plugin
+
+<Steps>
+  <Step>
+    ### Find it
+
+    Search by name, repository or keyword, or browse by category. Sort by downloads, trend, stars, rating or last update, and filter by server version or verified publisher. Prefer a compact view? Switch to the **list** view next to the sort.
+  </Step>
+  <Step>
+    ### Download it
+
+    On the plugin's page, **How to install** gives the jar of the latest approved release, straight from the author's GitHub release.
+  </Step>
+  <Step>
+    ### Install it
+
+    Put the jar in your server's `plugins/` folder and restart the server.
+  </Step>
+</Steps>
+
+<Callout type="info">
+  Check the **Details** card first: it shows what the plugin needs (dependencies, API version) and warns when a plugin has not been updated for over a year.
+</Callout>
+
+## Publish your plugin
+
+<Steps>
+  <Step>
+    ### Prepare the repository
+
+    Your plugin must be in a **public GitHub repository** you can push to, with a **release** containing a `.jar`. See [Create a plugin](/docs/development/basics) to build one.
+  </Step>
+  <Step>
+    ### Submit it
+
+    Sign in and open [Submit a plugin](https://powernukkitx.org/dashboard/submit). Pick the repository, give it a name, a one-line summary and up to three categories, and optionally an accent colour. A live preview shows how it will look.
+  </Step>
+  <Step>
+    ### Wait for review
+
+    A reviewer checks the listing and reads the newest jar. You get a notification with the decision; if it is turned down, you see why and can resubmit.
+  </Step>
+  <Step>
+    ### Keep it up to date
+
+    Each new GitHub release is reviewed in turn before players can download it. Manage everything from **Dashboard > My plugins**.
+  </Step>
+</Steps>
+
+## Make your page yours
+
+From your plugin's management page, under **Listing**:
+
+| What | How | Review |
+| :-- | :-- | :-- |
+| Name, summary, categories | Edit the listing | Reviewed on a public listing |
+| Icon | `.jarbage/icon.png` in your repository, or upload it | Reviewed |
+| Accent colour | One of the site's seven colours | Applied at once |
+| Links | Website, docs, Discord, bug reports, support (https only) | Applied at once |

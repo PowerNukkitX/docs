@@ -1,0 +1,55 @@
+---
+title: "Quick start"
+description: "From nothing to a server you can join, in about five minutes."
+icon: Zap
+---
+
+The fastest way in is the `pnx` command-line tool. It downloads the latest stable build and starts the server for you.
+
+<Callout type="info" title="You need">
+  **Java 21** or newer, **Node.js** (for `npm`), and 2 GB of free memory. See [Requirements](/docs/requirements).
+</Callout>
+
+<Steps>
+  <Step>
+    ### Install the CLI
+
+    ```bash
+    npm i -g @powernukkitx/cli
+    ```
+
+    No global install? `npx @powernukkitx/cli init` works too.
+  </Step>
+  <Step>
+    ### Create the server
+
+    In an empty folder:
+
+    ```bash
+    pnx init
+    ```
+  </Step>
+  <Step>
+    ### Start it
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    Run `pnx` with no argument for an interactive menu.
+  </Step>
+  <Step>
+    ### Join it
+
+    In Minecraft Bedrock, open **Play > Servers > Add Server**, and enter your machine's address with port **19132**. On the same computer, use `127.0.0.1`.
+  </Step>
+</Steps>
+
+## Next steps
+
+<Cards>
+  <Card title="Configure the server" href="/docs/administration/configuration">Name, slots, difficulty and more, in `pnx.yml`.</Card>
+  <Card title="Add plugins" href="/docs/administration/plugin-hub">Find and install plugins from the hub.</Card>
+  <Card title="Secure it" href="/docs/administration/permissions">Operators, permissions and the allow-list.</Card>
+  <Card title="Prefer Docker or a jar?" href="/docs/installation">Every other way to install.</Card>
+</Cards>

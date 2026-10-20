@@ -1,0 +1,122 @@
+---
+title: "Linux"
+description: "Install PowerNukkitX on Linux and keep it running as a systemd service."
+icon: Terminal
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+On Linux, you install Java 21 from your distribution's packages, start the server from a script, then run it as a systemd service so it starts on its own.
+
+## Install the server
+
+<Steps>
+  <Step>
+    ### Install Java 21
+
+    <Tabs items={["Ubuntu / Debian", "CentOS / RHEL / Rocky"]}>
+      <Tab value="Ubuntu / Debian">
+        ```bash
+        sudo apt update
+        sudo apt install -y openjdk-21-jre-headless wget
+        ```
+      </Tab>
+      <Tab value="CentOS / RHEL / Rocky">
+        ```bash
+        sudo dnf install -y java-21-openjdk-headless wget
+        ```
+      </Tab>
+    </Tabs>
+
+    Check with `java -version`.
+  </Step>
+  <Step>
+    ### Create a dedicated user
+
+    Run the server as its own unprivileged user, never as `root`:
+
+    ```bash
+    sudo useradd --system --user-group --home-dir /opt/pnx-server --create-home minecraft
+    ```
+  </Step>
+  <Step>
+    ### Download the server
+
+    ```bash
+    sudo -u minecraft -s
+    cd /opt/pnx-server
+    wget https://github.com/PowerNukkitX/PowerNukkitX/releases/download/snapshot/powernukkitx.jar
+    ```
+  </Step>
+  <Step>
+    ### Create the start script
+
+    ```bash title="start.sh"
+    #!/bin/bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+
+    ```bash
+    chmod +x start.sh
+    ```
+  </Step>
+  <Step>
+    ### Run the setup wizard once
+
+    ```bash
+    ./start.sh
+    ```
+
+    Accept the license (`y`), pick a language (`eng`), enter the MOTD and port. When the console shows `Startup finished`, type `stop`, then `exit` to go back to your own user.
+  </Step>
+</Steps>
+
+## Run it as a service
+
+A systemd service starts the server at boot and restarts it if it crashes.
+
+<Steps>
+  <Step>
+    ### Create the service
+
+    ```bash
+    sudo nano /etc/systemd/system/pnx.service
+    ```
+
+    ```ini title="/etc/systemd/system/pnx.service"
+    [Unit]
+    Description=PowerNukkitX Minecraft Bedrock Server
+    After=network.target
+
+    [Service]
+    User=minecraft
+    Group=minecraft
+    WorkingDirectory=/opt/pnx-server
+    ExecStart=/bin/bash /opt/pnx-server/start.sh
+    Restart=on-failure
+    RestartSec=10
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+  </Step>
+  <Step>
+    ### Enable and start it
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl enable pnx.service
+    sudo systemctl start pnx.service
+    ```
+  </Step>
+</Steps>
+
+## Everyday commands
+
+| What | Command |
+| :-- | :-- |
+| Status | `sudo systemctl status pnx.service` |
+| Live log (Ctrl + C to quit) | `journalctl -u pnx.service -f` |
+| Stop | `sudo systemctl stop pnx.service` |
+| Restart | `sudo systemctl restart pnx.service` |

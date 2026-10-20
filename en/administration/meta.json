@@ -1,0 +1,22 @@
+{
+  "title": "Run a server",
+  "description": "Configure, secure and look after a PowerNukkitX server day to day.",
+  "icon": "Server",
+  "root": true,
+  "pages": [
+    "index",
+    "---Set up---",
+    "configuration",
+    "permissions",
+    "plugin-hub",
+    "integrations",
+    "---Day to day---",
+    "commands",
+    "players",
+    "worlds",
+    "performance",
+    "backups",
+    "---Go live---",
+    "go-live"
+  ]
+}

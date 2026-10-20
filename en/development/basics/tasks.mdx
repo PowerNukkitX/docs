@@ -1,0 +1,74 @@
+---
+title: Tasks
+icon: Timer
+description: "Run code later, or again and again, without blocking the server."
+authors:
+  - tunikakeks
+---
+
+The scheduler runs your code later or on a timer, without blocking the main server thread. Time is counted in **ticks**: the server runs 20 ticks a second.
+
+<TickTimeline />
+
+## Quick tasks
+
+Schedule a lambda straight from your plugin:
+
+<Tabs items={["Repeating", "Delayed"]}>
+  <Tab value="Repeating">
+    ```java
+    @Override
+    public void onEnable() {
+        // every 20 ticks = every second
+        this.getServer().getScheduler().scheduleRepeatingTask(this, () -> {
+            this.getLogger().info("Repeating task executed!");
+        }, 20);
+    }
+    ```
+  </Tab>
+  <Tab value="Delayed">
+    ```java
+    // once, after 100 ticks = 5 seconds
+    this.getServer().getScheduler().scheduleDelayedTask(this, () -> {
+        this.getLogger().info("Delayed task executed after 5 seconds!");
+    }, 100);
+    ```
+  </Tab>
+</Tabs>
+
+## A task class
+
+For more involved logic, extend `Task`. `onRun` receives the current tick:
+
+```java title="ExampleTask.java"
+package com.example.task;
+
+import org.powernukkitx.plugin.Plugin;
+import org.powernukkitx.scheduler.Task;
+
+public class ExampleTask extends Task {
+    private final Plugin plugin;
+
+    public ExampleTask(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void onRun(int currentTick) {
+        plugin.getLogger().info("Task executed at tick: " + currentTick);
+    }
+}
+```
+
+Schedule it in `onEnable()`:
+
+```java
+@Override
+public void onEnable() {
+    this.getServer().getScheduler().scheduleRepeatingTask(this, new ExampleTask(this), 20);
+}
+```
+
+<Callout type="info">
+  Prefer annotations? `@ScheduleTask` schedules a class or a static method for you: see [Annotation processor](/docs/development/basics/annotations).
+</Callout>

@@ -1,0 +1,60 @@
+---
+title: "Vue d'ensemble"
+description: "Configurer, sécuriser et entretenir un serveur PowerNukkitX : réglages, permissions, plugins, joueurs, mondes, sauvegardes et performances."
+icon: LayoutDashboard
+authors:
+  - PowerNukkitX
+---
+
+import { Archive, CheckCheck, Gauge, KeyRound, Map, Package, Plug, Settings, SquareTerminal, Users } from "lucide-react";
+
+Une fois le serveur installé, le travail consiste à le faire tourner. Cette section suit l'ordre dans lequel vous rencontrerez les choses : mettre le serveur en place, l'entretenir au quotidien, puis l'ouvrir au public.
+
+## Mise en place
+
+<Cards>
+  <Card icon={<Settings />} title="Configuration" href="/docs/fr/administration/configuration">
+    Chaque réglage de `pnx.yml` : adresse, places, gameplay et performances.
+  </Card>
+  <Card icon={<KeyRound />} title="Permissions et sécurité" href="/docs/fr/administration/permissions">
+    Opérateurs, nœuds de permission, groupes, et une liste de contrôle de sécurité.
+  </Card>
+  <Card icon={<Package />} title="Plugins" href="/docs/fr/administration/plugin-hub">
+    Trouver, installer et mettre à jour des plugins depuis le hub.
+  </Card>
+  <Card icon={<Plug />} title="Intégrations" href="/docs/fr/administration/integrations/spark">
+    Spark pour le profilage, Terra pour le terrain, WaterdogPE pour les réseaux.
+  </Card>
+</Cards>
+
+## Au quotidien
+
+<Cards>
+  <Card icon={<SquareTerminal />} title="Console et commandes" href="/docs/fr/administration/commands">
+    Les commandes que vous utiliserez le plus, depuis la console et en jeu.
+  </Card>
+  <Card icon={<Users />} title="Joueurs" href="/docs/fr/administration/players">
+    Opérateurs, liste blanche, expulsions et bannissements.
+  </Card>
+  <Card icon={<Map />} title="Mondes" href="/docs/fr/administration/worlds">
+    Charger, importer et configurer des mondes.
+  </Card>
+  <Card icon={<Gauge />} title="Performances" href="/docs/fr/administration/performance">
+    Mémoire, threads et distance de vue.
+  </Card>
+  <Card icon={<Archive />} title="Sauvegardes" href="/docs/fr/administration/backups">
+    Protéger vos mondes et vos réglages, et les restaurer.
+  </Card>
+</Cards>
+
+## Mise en ligne
+
+<Cards>
+  <Card icon={<CheckCheck />} title="Avant d'ouvrir au public" href="/docs/fr/administration/go-live">
+    Une liste à cocher avant de partager l'adresse.
+  </Card>
+</Cards>
+
+<Callout type="info">
+  La plupart des réglages sont dans `pnx.yml`. Arrêtez le serveur avant de le modifier à la main : un serveur en marche le réécrit à l'arrêt, ce qui écrase vos changements.
+</Callout>

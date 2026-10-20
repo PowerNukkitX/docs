@@ -1,0 +1,80 @@
+---
+title: "Configuration"
+description: "Every important setting in pnx.yml, section by section."
+icon: Settings
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX keeps all its settings in **one file**, `pnx.yml`, at the root of the server folder.
+
+<ConfigSections />
+
+<Callout type="error" title="Stop the server before editing pnx.yml">
+  A running server keeps its configuration in memory and writes it back to `pnx.yml` when it shuts down, which overwrites anything you changed in the meantime.
+</Callout>
+
+## Base settings
+
+`baseSettings`: how players reach the server, and what they see in the server list.
+
+| Key | Default | Description |
+| :-- | :-- | :-- |
+| `ip` | `"0.0.0.0"` | The address the server listens on. 0.0.0.0 listens on every interface. |
+| `port` | `19132` | The UDP port Bedrock clients connect to. |
+| `maxPlayers` | `20` | How many players can be online at once. |
+| `defaultLevelName` | `"world"` | The folder name of the default world. |
+| `allowList` | `false` | Only players in white-list.txt can join. |
+| `allowListMessage` | `"Server is white-listed"` | The kick message for players not on the allow-list. |
+| `motd` | `"PowerNukkitX Server"` | The main line shown in the server list. |
+| `subMotd` | `"powernukkitx.org"` | The second line shown in the server list. |
+| `xboxAuth` | `true` | Xbox Live authentication. false is offline mode. |
+| `autosaveDelay` | `6000` | Ticks between automatic world saves. |
+
+## Player settings
+
+`playerSettings`: what is saved about players, and how they are checked.
+
+| Key | Default | Description |
+| :-- | :-- | :-- |
+| `savePlayerData` | `true` | Save position, inventory and status when a player leaves. |
+| `forceSkinTrusted` | `false` | Trust every skin, which allows custom and third-party skins. |
+| `checkMovement` | `true` | Server-side movement checks against simple fly and speed cheats. |
+| `spawnRadius` | `16` | How far from the world spawn new players appear. |
+
+## Gameplay settings
+
+`gameplaySettings`: the rules of the game.
+
+| Key | Default | Description |
+| :-- | :-- | :-- |
+| `gamemode` | `0` | Default game mode. 0 Survival, 1 Creative, 2 Adventure, 3 Spectator. |
+| `difficulty` | `1` | Default difficulty. 0 Peaceful, 1 Easy, 2 Normal, 3 Hard. |
+| `pvp` | `true` | Players can fight each other. |
+| `allowFlight` | `false` | Survival players can fly. |
+| `viewDistance` | `20` | The furthest distance, in chunks, sent to players. |
+| `allowNether` | `true` | Travel to the Nether is allowed. |
+| `allowTheEnd` | `true` | Travel to the End is allowed. |
+| `spawnProtection` | `16` | Radius around spawn that non-operators cannot edit. |
+
+## Performance settings
+
+`performanceSettings`: how the server uses your machine. See [Performance tuning](/docs/administration/performance) for advice.
+
+| Key | Default | Description |
+| :-- | :-- | :-- |
+| `asyncWorkers` | `4` | Background threads for asynchronous work such as chunk generation. |
+| `registryCacheEnabled` | `true` | Caches registry entries to resolve blocks and items faster. |
+
+## Example
+
+```yaml title="pnx.yml"
+baseSettings:
+  port: 19132
+  maxPlayers: 50
+  motd: "My Server"
+gameplaySettings:
+  difficulty: 2
+  viewDistance: 12
+```

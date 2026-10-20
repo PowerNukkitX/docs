@@ -1,0 +1,62 @@
+---
+title: "Players"
+description: "Operators, the allow-list, kicks and bans on a PowerNukkitX server."
+icon: Users
+authors:
+  - PowerNukkitX
+---
+
+Who can do what on your server: operators, the allow-list, kicks and bans, and what offline mode changes.
+
+## Operators
+
+Operators skip permission checks and can run every command.
+
+```bash title="Console"
+op <player>
+deop <player>
+```
+
+They are stored in `ops.txt`, one name per line, which you can edit while the server is stopped. Beyond a couple of trusted admins, use a permission plugin: see [Permissions & Security](/docs/administration/permissions).
+
+## Allow-list
+
+Only let approved players in. Turn it on in `pnx.yml`:
+
+```yaml title="pnx.yml"
+baseSettings:
+  allowList: true
+  allowListMessage: Server is white-listed
+```
+
+Only players in `white-list.txt` can then join; everyone else is kicked with `allowListMessage`. Manage it with:
+
+```bash title="Console"
+whitelist add <player>
+whitelist remove <player>
+whitelist list
+```
+
+<Callout type="info">
+  With `xboxAuth` on (the default), players are identified by their Xbox account, so changing a display name does not get around the allow-list.
+</Callout>
+
+## Kicks and bans
+
+| Command | Effect |
+| :-- | :-- |
+| `kick <player> [reason]` | Disconnects a player now. They can come back. |
+| `ban <player> [reason]` | Bans a player by name. |
+| `pardon <player>` | Lifts a name ban. |
+| `ban-ip <address\|player>` | Bans an IP address. |
+| `pardon-ip <address>` | Lifts an IP ban. |
+
+Bans are kept in `banned-players.txt` and `banned-ips.txt`.
+
+## Offline mode
+
+Setting `baseSettings.xboxAuth` to `false` turns off Xbox authentication.
+
+<Callout type="error" title="Trusted networks only">
+  Without authentication anyone can join under any name, and the allow-list and bans become easy to get around. Only use offline mode on a LAN, or behind a proxy that authenticates players (see [WaterdogPE](/docs/administration/integrations/wdpe)).
+</Callout>

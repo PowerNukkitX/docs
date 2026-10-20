@@ -1,0 +1,50 @@
+---
+title: "Console & commands"
+description: "The commands you use most to run a PowerNukkitX server."
+icon: SquareTerminal
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX has the full vanilla Bedrock command set plus server commands. In the **console**, type commands without a slash; **in game**, as an operator, with one.
+
+<Tabs items={["Server", "Players", "World"]}>
+  <Tab value="Server">
+    | Command | What it does |
+    | :-- | :-- |
+    | `stop` | Saves everything and shuts down cleanly. Always use it rather than killing the process. |
+    | `save-all` | Writes every loaded world to disk now. |
+    | `reload` | Reloads plugins and configuration. A full restart is safer. |
+    | `version` / `plugins` | The server version, and the loaded plugins. |
+    | `status` | Uptime, TPS, memory, and loaded worlds and entities. |
+  </Tab>
+  <Tab value="Players">
+    | Command | What it does |
+    | :-- | :-- |
+    | `list` | Lists online players. |
+    | `kick <player> [reason]` | Disconnects a player. |
+    | `tp <player> <target>` | Teleports a player to another player or to coordinates. |
+    | `gamemode <mode> [player]` | Sets the game mode: `survival`, `creative`, `adventure`, `spectator`. |
+    | `give <player> <item> [amount]` | Gives items. |
+    | `xp <amount> [player]` | Gives experience. |
+
+    Operators, bans and the allow-list are in [Players](/docs/administration/players).
+  </Tab>
+  <Tab value="World">
+    | Command | What it does |
+    | :-- | :-- |
+    | `time set <value>` | Sets the time: `day`, `night`, or a number of ticks. |
+    | `weather <clear\|rain\|thunder>` | Changes the weather. |
+    | `difficulty <0-3>` | Peaceful, easy, normal or hard. |
+    | `gamerule <rule> <value>` | Changes a game rule such as `doDaylightCycle` or `keepInventory`. |
+    | `setworldspawn` / `spawnpoint` | Sets the world spawn, or a player's spawn point. |
+  </Tab>
+</Tabs>
+
+<Callout type="error" title="Never kill the process">
+  Closing the terminal or killing Java can lose world and player data. Use `stop` so everything is written to disk first.
+</Callout>
+
+## Help
+
+`help` lists every command you can run, page by page; `help <command>` shows how to use one. What a player can run depends on their [permissions](/docs/administration/permissions).

@@ -1,0 +1,65 @@
+---
+title: Listeners
+icon: Ear
+description: "React to what happens in the game: a player joins, a block breaks, an entity takes damage."
+authors:
+  - tunikakeks
+---
+
+A **listener** is a class with methods marked `@EventHandler`. When the server fires an event of that type, your method runs.
+
+<EventFlow />
+
+<Tabs items={["A listener class", "In the main class"]}>
+  <Tab value="A listener class">
+    The tidy way for anything beyond a tiny plugin:
+
+    ```java title="JoinListener.java"
+    package com.example.listener;
+
+    import org.powernukkitx.Player;
+    import org.powernukkitx.event.EventHandler;
+    import org.powernukkitx.event.Listener;
+    import org.powernukkitx.event.player.PlayerJoinEvent;
+
+    public class JoinListener implements Listener {
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            Player player = event.getPlayer();
+            player.sendMessage("Welcome, " + player.getName() + "!");
+        }
+    }
+    ```
+
+    Register it when the plugin is enabled:
+
+    ```java
+    @Override
+    public void onEnable() {
+        this.getServer().getPluginManager().registerEvents(new JoinListener(), this);
+    }
+    ```
+
+    <Callout type="info">
+      Or add `@EventListener` to the class and let the [annotation processor](/docs/development/basics/annotations) register it.
+    </Callout>
+  </Tab>
+  <Tab value="In the main class">
+    Fine for a small plugin: the main class is its own listener.
+
+    ```java title="ExamplePlugin.java"
+    public class ExamplePlugin extends PluginBase implements Listener {
+        @Override
+        public void onEnable() {
+            this.getServer().getPluginManager().registerEvents(this, this);
+        }
+
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            Player player = event.getPlayer();
+            player.sendMessage("Welcome, " + player.getName() + "!");
+        }
+    }
+    ```
+  </Tab>
+</Tabs>

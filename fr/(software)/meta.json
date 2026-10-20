@@ -1,0 +1,16 @@
+{
+  "title": "Bien démarrer",
+  "description": "Ce qu'est PowerNukkitX, comment l'installer, et comment y passer depuis un autre serveur.",
+  "icon": "Rocket",
+  "root": true,
+  "pages": [
+    "index",
+    "quick-start",
+    "requirements",
+    "---Installer---",
+    "installation",
+    "migration",
+    "---Comparer---",
+    "comparisons"
+  ]
+}

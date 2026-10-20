@@ -1,0 +1,14 @@
+{
+  "title": "Develop plugins",
+  "description": "Write plugins for PowerNukkitX: events, commands, forms and custom content.",
+  "icon": "Code",
+  "root": true,
+  "pages": [
+    "index",
+    "basics",
+    "customs",
+    "forms",
+    "---Reference---",
+    "external:[FileCode][Javadoc](https://powernukkitx.github.io/PowerNukkitX/)"
+  ]
+}

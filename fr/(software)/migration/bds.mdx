@@ -1,0 +1,70 @@
+---
+title: "Depuis Bedrock Dedicated Server"
+description: "Passer du Bedrock Dedicated Server (BDS) officiel de Mojang à PowerNukkitX."
+icon: Server
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Vous gardez vos mondes et vos packs de ressources. Les réglages se recopient à la main, et les packs de comportement doivent être remplacés par des plugins.
+
+<CarryOver
+  items={[
+    { label: "Mondes", note: "Les mondes LevelDB se copient tels quels", status: "yes" },
+    { label: "Packs de ressources", note: "Copiés dans resource_packs/ et proposés aux joueurs", status: "yes" },
+    { label: "server.properties", note: "Recopié à la main dans pnx.yml", status: "manual" },
+    { label: "Packs de comportement", note: "Non pris en charge : la logique de jeu s'écrit en plugins Java", status: "no" },
+  ]}
+/>
+
+## Étapes
+
+<Steps>
+  <Step>
+    ### Installer PowerNukkitX
+
+    Suivez le [guide d'installation](/docs/fr/installation) de votre système, lancez le serveur une fois pour créer ses fichiers, puis arrêtez-le.
+  </Step>
+  <Step>
+    ### Copier votre monde
+
+    Copiez le dossier de votre monde depuis `worlds/` de BDS (par exemple `worlds/MyBedrockWorld`) vers `worlds/` de PowerNukkitX, puis faites-en le monde par défaut dans `pnx.yml` :
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      defaultLevelName: "MyBedrockWorld"
+    ```
+  </Step>
+  <Step>
+    ### Recopier vos réglages
+
+    Reportez les valeurs du `server.properties` de BDS dans `pnx.yml` :
+
+    | Réglage BDS | Section de `pnx.yml` | Clé de `pnx.yml` |
+    | :-- | :-- | :-- |
+    | `server-port` | `baseSettings` | `port` |
+    | `max-players` | `baseSettings` | `maxPlayers` |
+    | `online-mode` | `baseSettings` | `xboxAuth` |
+    | `allow-list` | `baseSettings` | `allowList` |
+    | `gamemode` | `gameplaySettings` | `gamemode` |
+    | `difficulty` | `gameplaySettings` | `difficulty` |
+    | `view-distance` | `gameplaySettings` | `viewDistance` |
+  </Step>
+  <Step>
+    ### Copier vos packs de ressources
+
+    Copiez les fichiers `.mcpack` ou `.zip` de `resource_packs/` de BDS vers `resource_packs/` de PowerNukkitX. Ils sont proposés aux joueurs à la connexion.
+  </Step>
+</Steps>
+
+## Bon à savoir
+
+<Accordions>
+  <Accordion title="Packs de comportement">
+    BDS fait tourner des packs de comportement avec logique d'entités, scripts et animations. PowerNukkitX non : blocs, items, entités et gameplay s'écrivent côté serveur en Java, avec l'[API de plugins](/docs/fr/development).
+  </Accordion>
+  <Accordion title="Données et inventaires des joueurs">
+    BDS garde inventaires et positions dans la base LevelDB du monde, et PowerNukkitX sait y lire les profils de joueurs vanilla standards. Par prudence, sauvegardez `worlds/` avant l'arrivée des premiers joueurs, et gardez `savePlayerData: true` dans `playerSettings`.
+  </Accordion>
+</Accordions>

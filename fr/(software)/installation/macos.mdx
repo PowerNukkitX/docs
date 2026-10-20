@@ -1,0 +1,73 @@
+---
+title: "macOS"
+description: "Installer et lancer PowerNukkitX sur macOS, Intel ou Apple Silicon."
+icon: Apple
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Sous macOS, vous installez Java 21 avec Homebrew, puis lancez le jar du serveur avec un script de lancement. Les Mac Intel et Apple Silicon suivent les mêmes étapes.
+
+## Installation
+
+<Steps>
+  <Step>
+    ### Installer Java 21
+
+    Installez Java avec [Homebrew](https://brew.sh/). Dans le Terminal :
+
+    ```bash
+    brew install openjdk@21
+    sudo ln -sfn /opt/homebrew/opt/openjdk@21/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+    ```
+
+    Sur un ancien Mac Intel, remplacez `/opt/homebrew` par `/usr/local`. Vérifiez avec `java -version` : vous devez voir la version `21`.
+  </Step>
+  <Step>
+    ### Créer un dossier pour le serveur
+
+    ```bash
+    mkdir ~/pnx-server
+    cd ~/pnx-server
+    ```
+  </Step>
+  <Step>
+    ### Télécharger le serveur
+
+    Téléchargez la dernière version de `powernukkitx.jar` depuis les [releases GitHub](https://github.com/PowerNukkitX/PowerNukkitX/releases) dans `~/pnx-server`.
+  </Step>
+  <Step>
+    ### Créer le script de lancement
+
+    PowerNukkitX a besoin d'options de réflexion Java pour démarrer. Créez `start.sh` :
+
+    ```bash title="start.sh"
+    #!/bin/bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+
+    Puis rendez-le exécutable :
+
+    ```bash
+    chmod +x start.sh
+    ```
+  </Step>
+  <Step>
+    ### Lancer le serveur
+
+    ```bash
+    ./start.sh
+    ```
+
+    La première fois, l'assistant vous demande d'accepter la licence (`y`), de choisir une langue (par exemple `eng`), puis le nom du serveur (MOTD) et le port. Tapez `stop` pour l'arrêter proprement.
+  </Step>
+</Steps>
+
+## Dépannage
+
+<Accordions>
+  <Accordion title="« Le développeur ne peut pas être vérifié » ou alerte Gatekeeper">
+    macOS peut bloquer Java ou le lanceur. Ouvrez **Réglages Système > Confidentialité et sécurité**, descendez jusqu'à la section sécurité, puis cliquez sur **Autoriser quand même** à côté de l'élément bloqué.
+  </Accordion>
+</Accordions>

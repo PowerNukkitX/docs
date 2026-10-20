@@ -1,0 +1,11 @@
+{
+  "title": "Help",
+  "description": "Answers, fixes for common problems, and the words the docs use.",
+  "icon": "LifeBuoy",
+  "root": true,
+  "pages": [
+    "index",
+    "troubleshooting",
+    "glossary"
+  ]
+}

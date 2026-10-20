@@ -1,0 +1,73 @@
+---
+title: "macOS"
+description: "Install and run PowerNukkitX on macOS, Intel or Apple Silicon."
+icon: Apple
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+On macOS, you install Java 21 with Homebrew, then run the server jar from a start script. Intel and Apple Silicon Macs follow the same steps.
+
+## Install
+
+<Steps>
+  <Step>
+    ### Install Java 21
+
+    Install Java with [Homebrew](https://brew.sh/). In Terminal:
+
+    ```bash
+    brew install openjdk@21
+    sudo ln -sfn /opt/homebrew/opt/openjdk@21/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+    ```
+
+    On an older Intel Mac, replace `/opt/homebrew` with `/usr/local`. Check with `java -version`: you should see version `21`.
+  </Step>
+  <Step>
+    ### Create a server folder
+
+    ```bash
+    mkdir ~/pnx-server
+    cd ~/pnx-server
+    ```
+  </Step>
+  <Step>
+    ### Download the server
+
+    Download the latest `powernukkitx.jar` from the [GitHub releases](https://github.com/PowerNukkitX/PowerNukkitX/releases) into `~/pnx-server`.
+  </Step>
+  <Step>
+    ### Create the start script
+
+    PowerNukkitX needs Java reflection flags to start. Create `start.sh`:
+
+    ```bash title="start.sh"
+    #!/bin/bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+
+    Then make it executable:
+
+    ```bash
+    chmod +x start.sh
+    ```
+  </Step>
+  <Step>
+    ### Start the server
+
+    ```bash
+    ./start.sh
+    ```
+
+    The first time, the setup wizard asks you to accept the license (`y`), pick a language (for example `eng`), and enter the server name (MOTD) and port. Type `stop` to shut it down cleanly.
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordions>
+  <Accordion title="&quot;Developer cannot be verified&quot; or a Gatekeeper warning">
+    macOS may block Java or the launcher. Open **System Settings > Privacy & Security**, scroll to the security section, and click **Allow Anyway** next to the blocked item.
+  </Accordion>
+</Accordions>

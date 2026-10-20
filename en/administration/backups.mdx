@@ -1,0 +1,64 @@
+---
+title: "Backups"
+description: "Back up and restore a PowerNukkitX server safely."
+icon: Archive
+authors:
+  - PowerNukkitX
+---
+
+A backup turns a crash into a minor setback instead of weeks of lost work. Everything a server needs lives in its folder, so backing up means copying the right files at the right moment.
+
+## What to back up
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="worlds" />
+    <Folder name="players" />
+    <Folder name="plugins" />
+    <File name="pnx.yml" />
+    <File name="ops.txt" />
+    <File name="white-list.txt" />
+    <File name="banned-players.txt" />
+    <File name="banned-ips.txt" />
+  </Folder>
+</Files>
+
+| Path | Holds |
+| :-- | :-- |
+| `worlds/` | Terrain, blocks and entities. |
+| `players/` | Inventories, positions and stats (when `savePlayerData` is on). |
+| `plugins/` | Plugin jars, and each plugin's data folder. |
+| `pnx.yml` | Every server setting. |
+| `ops.txt`, `white-list.txt`, `banned-*.txt` | Operators, the allow-list and bans. |
+
+## Take a clean backup
+
+A world copied while it is being written can be corrupt.
+
+<Steps>
+  <Step>Run `save-all` to write the worlds to disk.</Step>
+  <Step>For a guaranteed-clean copy, `stop` the server.</Step>
+  <Step>Copy the files above somewhere else, then start the server again.</Step>
+</Steps>
+
+```bash title="Linux / macOS"
+tar -czf backups/pnx-$(date +%F).tar.gz worlds/ players/ pnx.yml plugins/ ops.txt white-list.txt
+```
+
+<Callout type="info">
+  Keep backups on **another disk or machine**. A backup that dies with the server has not saved anything.
+</Callout>
+
+## Automate it
+
+- Schedule the command with `cron` (Linux, macOS) or Task Scheduler (Windows), at quiet hours.
+- Keep several copies, for example the last 7 days, so you can go back further than the latest one.
+- Backup plugins from the [plugin hub](https://powernukkitx.org/plugins) can snapshot worlds on a timer without stopping the server.
+
+## Restore
+
+<Steps>
+  <Step>Stop the server.</Step>
+  <Step>Replace the current worlds and settings with the backup copies.</Step>
+  <Step>Start the server, then check with `status` and by joining.</Step>
+</Steps>
