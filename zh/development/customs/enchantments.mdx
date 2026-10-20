@@ -1,0 +1,70 @@
+---
+title: "附魔"
+description: "创建拥有自己稀有度、目标物品和等级的新附魔。"
+icon: Sparkles
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+自定义附魔是一个 Java 类，和其他自定义内容一样，要在加载世界之前的 `onLoad()` 中注册。
+
+## 在 `onLoad()` 中注册
+
+```java
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onLoad() {
+    try {
+        Enchantment.register(new MyEnchantment());
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## 定义附魔
+
+继承 `Enchantment`，在构造函数中传入 id、显示名称、稀有度以及它适用的物品类型。然后设置最高等级和附魔能力范围。
+
+```java filename="MyEnchantment.java"
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.item.enchantment.EnchantmentType;
+import org.powernukkitx.utils.Identifier;
+
+public class MyEnchantment extends Enchantment {
+    public MyEnchantment() {
+        super(
+            new Identifier("powernukkitx:lucky_strike"), // Unique identifier namespace:name
+            "Lucky Strike",                              // Display name
+            Rarity.RARE,                                 // Rarity (COMMON, UNCOMMON, RARE, VERY_RARE)
+            EnchantmentType.WEAPON                       // Applicable items (ARMOR, WEAPON, DIGGER, ALL, etc.)
+        );
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3; // Maximum level of the enchantment
+    }
+
+    @Override
+    public int getMinEnchantability(int level) {
+        return 1 + level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level) {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    // You can override additional handlers such as:
+    // - getDamageBonus(int level, Entity target) for custom weapon damage modifiers.
+    // - getDamageProtection(int level, DamageSource source) for custom protection modifiers.
+}
+```
+
+<Callout type="info" title="效果需要你自己实现">
+  注册附魔只是让它存在；它的效果由你决定。在监听器中检测它，例如在 `EntityDamageByEntityEvent` 或 `BlockBreakEvent` 中，并在那里应用效果。
+</Callout>

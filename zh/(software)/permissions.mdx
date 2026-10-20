@@ -1,0 +1,50 @@
+---
+title: "权限与安全"
+description: "控制谁能在你的服务器上做什么：管理员、权限节点和权限插件。"
+icon: Shield
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+权限决定每个玩家可以使用哪些命令和操作。从最简单到最灵活，共有三个层级。
+
+## 1. 管理员
+
+**管理员**（OP）会跳过所有权限检查，可以执行任何命令。只把它交给少数可信任的管理员。
+
+```bash title="Console"
+op <player>
+deop <player>
+```
+
+管理员列在服务器根目录的 `ops.txt` 中，每行一个名字。可以在服务器**停止**时编辑它。
+
+## 2. 权限节点
+
+命令和插件会检查**权限节点**：用点分隔的名称，例如：
+
+- `/help` 对应 `nukkit.command.help`
+- `/gamemode` 对应 `nukkit.command.gamemode`
+
+默认情况下，普通玩家可以使用基础命令（`/tell`、`/list`、`/help`），管理员可以使用全部命令。
+
+## 3. 权限插件
+
+对于公开服务器或有多个分组的服务器，仅靠 OP 是不够的。请安装权限插件，例如已移植到 Nukkit 和 PowerNukkitX 的 **LuckPerms**。它可以：
+
+- 创建 `admin`、`moderator`、`player` 等分组；
+- 把权限节点授予某个分组或某个玩家；
+- 设置前缀、后缀以及分组之间的继承。
+
+<Callout type="info">
+  可以在[插件中心](https://powernukkitx.org/plugins)找到权限插件。
+</Callout>
+
+## 安全清单
+
+<Steps>
+  <Step>保持 **Xbox 验证**开启（`pnx.yml` 中的 `xboxAuth: true`），防止有人冒用其他玩家的名字加入。</Step>
+  <Step>尽量只给**少数人** OP，其他人使用分组管理。</Step>
+  <Step>私人服务器请开启**白名单**。参见[玩家管理](/docs/zh/administration/players)。</Step>
+</Steps>

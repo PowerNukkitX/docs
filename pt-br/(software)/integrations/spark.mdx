@@ -1,0 +1,45 @@
+---
+title: "Profiler Spark"
+description: "Descubra o que deixa o servidor lento com o profiler Spark, ativado em uma linha."
+icon: Activity
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+O [Spark](https://spark.lucko.me/) é um profiler de desempenho. Ele mostra para onde vão o tempo de CPU e a memória, para você corrigir a causa real do lag.
+
+## Ativar
+
+<Steps>
+  <Step>
+    ### Pare o servidor
+
+    Um servidor em execução sobrescreve o `pnx.yml` ao desligar, então edite-o com o servidor parado.
+  </Step>
+  <Step>
+    ### Ative o Spark
+
+    ```yaml title="pnx.yml"
+    miscSettings:
+      installSpark: true
+    ```
+  </Step>
+  <Step>
+    ### Inicie o servidor
+
+    O PowerNukkitX baixa o jar do Spark correspondente para `plugins/` e o carrega. A partir daí, o Spark observa todas as threads do servidor em segundo plano.
+  </Step>
+</Steps>
+
+## Usar
+
+Rode estes comandos no console, ou no jogo como operador:
+
+| Comando | O que faz |
+| :-- | :-- |
+| `/spark profiler start` | Começa a gravar. Deixe rodando alguns minutos com jogadores online. |
+| `/spark profiler stop` | Para e mostra um link para um visualizador de árvore de chamadas com gráficos de CPU e memória. |
+| `/spark health` | Mostra TPS, memória e CPU no momento. |
+
+O resto está na [documentação do Spark](https://spark.lucko.me/docs).

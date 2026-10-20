@@ -1,0 +1,59 @@
+---
+title: "快速开始"
+description: "从零开始，大约五分钟得到一个可以加入的服务器。"
+icon: Zap
+---
+
+最快的方式是使用命令行工具 `pnx`。它会下载最新的稳定版本，并替你启动服务器。
+
+<Callout type="info" title="你需要">
+  **Java 21** 或更高版本、**Node.js**（用于 `npm`），以及 2 GB 可用内存。参见[系统要求](/docs/zh/requirements)。
+</Callout>
+
+<Steps>
+  <Step>
+    ### 安装 CLI
+
+    ```bash
+    npm i -g @powernukkitx/cli
+    ```
+
+    不想全局安装？`npx @powernukkitx/cli init` 也可以。
+  </Step>
+  <Step>
+    ### 创建服务器
+
+    在一个空文件夹中：
+
+    ```bash
+    pnx init
+    ```
+  </Step>
+  <Step>
+    ### 启动服务器
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    不带参数运行 `pnx` 会打开交互式菜单。
+  </Step>
+  <Step>
+    ### 加入服务器
+
+    在 Minecraft 基岩版中，打开 **游戏 > 服务器 > 添加服务器**，输入你电脑的地址和端口 **19132**。在同一台电脑上，使用 `127.0.0.1`。
+
+    <Callout type="tip" title="其他设备上的玩家无法连接？">
+      基岩版使用 **UDP**，而不是 TCP。在防火墙中放行 UDP 端口 `19132`，并在路由器上做端口转发，让局域网外的玩家也能加入。详见[故障排除](/docs/zh/faq/troubleshooting)。
+    </Callout>
+  </Step>
+</Steps>
+
+## 下一步
+
+<Cards>
+  <Card title="配置服务器" href="/docs/zh/configuration">在 `pnx.yml` 中设置名称、人数、难度等。</Card>
+  <Card title="添加插件" href="/docs/zh/plugin-hub">在插件中心查找并安装插件。</Card>
+  <Card title="保护服务器" href="/docs/zh/permissions">管理员、权限和白名单。</Card>
+  <Card title="更喜欢 Docker 或 jar？" href="/docs/zh/installation">其他所有安装方式。</Card>
+</Cards>

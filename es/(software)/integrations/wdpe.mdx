@@ -1,0 +1,49 @@
+---
+title: "Proxy WaterdogPE"
+description: "Conecta varios servidores PowerNukkitX detrás de un proxy WaterdogPE."
+icon: Link
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Un proxy permite a los jugadores moverse entre varios servidores (un lobby, supervivencia, creativo...) sin desconectarse. PowerNukkitX admite [WaterdogPE](https://github.com/WaterdogPE/WaterdogPE), con reenvío de IP y transferencia de sesión.
+
+<ProxyNetwork />
+
+## Configurar cada subservidor
+
+<Steps>
+  <Step>
+    ### Detén el subservidor
+
+    Edita `pnx.yml` solo con el servidor detenido.
+  </Step>
+  <Step>
+    ### Activa el modo proxy
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      waterdogpe: true
+      xboxAuth: false
+    ```
+
+    El proxy autentica a los jugadores, así que los subservidores no deben volver a comprobar Xbox Live: en ellos `xboxAuth` es `false`.
+  </Step>
+  <Step>
+    ### Regístralo en el proxy
+
+    En el `config.yml` de WaterdogPE, añade cada subservidor con su dirección y su puerto UDP, y haz que el modo de reenvío de IP del proxy coincida.
+  </Step>
+  <Step>
+    ### Reinicia
+
+    Reinicia cada subservidor para aplicar los ajustes.
+  </Step>
+</Steps>
+
+![Configuración de WaterdogPE](../../../assets/proxy-config-waterdogpe.png)
+
+<Callout type="warn" title="Cierra los inventarios antes de una transferencia">
+  Cuando muevas a un jugador a otro servidor, desde código o con un comando, cierra antes sus contenedores abiertos (cofres, formularios). Si no, su inventario puede desincronizarse en el servidor de destino.
+</Callout>

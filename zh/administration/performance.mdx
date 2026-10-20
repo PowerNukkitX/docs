@@ -1,0 +1,47 @@
+---
+title: "性能"
+description: "调整内存、线程和视距，充分发挥 PowerNukkitX 的性能。"
+icon: Gauge
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX 开箱即用就很快：各个世界在自己的线程上运行刻，热点数据会被缓存。不过当真正有玩家在线时，仍有几项设置很重要。
+
+<Callout type="info" title="先测量">
+  遇到卡顿时，先用 [Spark](/docs/zh/integrations/spark) 分析，再改设置。它会显示是哪些插件、实体或任务占用了刻的时间。
+</Callout>
+
+## 四个调节点
+
+<Accordions>
+  <Accordion title="内存">
+    给服务器足够的堆内存，但不要占满机器的全部内存：给系统和堆外内存留出空间。使用 `pnx` 命令行工具：
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    2 GB 是合理的最低值，繁忙的服务器建议 4 GB 或更多。PowerNukkitX 使用分代 ZGC 垃圾回收器，即使堆很大，停顿也很短。
+  </Accordion>
+  <Accordion title="视距">
+    `gameplaySettings.viewDistance`（默认 `20` 个区块）是影响 CPU 和带宽最大的设置：每多一个区块，每名玩家的工作量都会成倍增加。如果繁忙的服务器吃力，请调低它：
+
+    ```yaml title="pnx.yml"
+    gameplaySettings:
+      viewDistance: 12
+    ```
+  </Accordion>
+  <Accordion title="异步工作线程">
+    `performanceSettings.asyncWorkers`（默认 `4`）是用于区块生成等工作的后台线程数。在核心更多的机器上，调高它可以减少玩家探索时的卡顿。不要超过你的 CPU 核心数。
+
+    ```yaml title="pnx.yml"
+    performanceSettings:
+      asyncWorkers: 6
+      registryCacheEnabled: true
+    ```
+  </Accordion>
+  <Accordion title="自动保存">
+    `baseSettings.autosaveDelay`（默认 `6000` 刻）决定世界保存的频率。保存得越少，磁盘活动越少，但崩溃时丢失的也越多：请结合你的[备份](/docs/zh/administration/backups)来权衡。
+  </Accordion>
+</Accordions>

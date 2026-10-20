@@ -1,0 +1,10 @@
+{
+  "title": "Migración",
+  "icon": "ArrowRightLeft",
+  "pages": [
+    "index",
+    "nukkit",
+    "bds",
+    "pocketmine"
+  ]
+}

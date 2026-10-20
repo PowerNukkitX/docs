@@ -1,0 +1,73 @@
+---
+title: "macOS"
+description: "PowerNukkitX unter macOS installieren und starten, auf Intel oder Apple Silicon."
+icon: Apple
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Unter macOS installierst du Java 21 mit Homebrew und startest die Server-Jar dann über ein Startskript. Intel- und Apple-Silicon-Macs folgen denselben Schritten.
+
+## Installation
+
+<Steps>
+  <Step>
+    ### Java 21 installieren
+
+    Installiere Java mit [Homebrew](https://brew.sh/). Im Terminal:
+
+    ```bash
+    brew install openjdk@21
+    sudo ln -sfn /opt/homebrew/opt/openjdk@21/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+    ```
+
+    Auf einem älteren Intel-Mac ersetzt du `/opt/homebrew` durch `/usr/local`. Prüfe mit `java -version`: Du solltest Version `21` sehen.
+  </Step>
+  <Step>
+    ### Einen Serverordner anlegen
+
+    ```bash
+    mkdir ~/pnx-server
+    cd ~/pnx-server
+    ```
+  </Step>
+  <Step>
+    ### Den Server herunterladen
+
+    Lade die neueste `powernukkitx.jar` aus den [GitHub-Releases](https://github.com/PowerNukkitX/PowerNukkitX/releases) nach `~/pnx-server` herunter.
+  </Step>
+  <Step>
+    ### Das Startskript anlegen
+
+    PowerNukkitX braucht zum Starten Java-Reflection-Flags. Lege `start.sh` an:
+
+    ```bash title="start.sh"
+    #!/bin/bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+
+    Mach es dann ausführbar:
+
+    ```bash
+    chmod +x start.sh
+    ```
+  </Step>
+  <Step>
+    ### Den Server starten
+
+    ```bash
+    ./start.sh
+    ```
+
+    Beim ersten Mal fragt der Einrichtungsassistent nach der Lizenz (`y`), einer Sprache (zum Beispiel `deu`) sowie dem Servernamen (MOTD) und dem Port. Gib `stop` ein, um ihn sauber zu beenden.
+  </Step>
+</Steps>
+
+## Fehlerbehebung
+
+<Accordions>
+  <Accordion title="&quot;Entwickler kann nicht verifiziert werden&quot; oder eine Gatekeeper-Warnung">
+    macOS kann Java oder den Starter blockieren. Öffne **Systemeinstellungen > Datenschutz & Sicherheit**, scrolle zum Abschnitt Sicherheit und klicke neben dem blockierten Element auf **Trotzdem erlauben**.
+  </Accordion>
+</Accordions>

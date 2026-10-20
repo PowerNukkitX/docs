@@ -1,0 +1,9 @@
+{
+  "title": "集成",
+  "icon": "Puzzle",
+  "pages": [
+    "spark",
+    "terra",
+    "wdpe"
+  ]
+}

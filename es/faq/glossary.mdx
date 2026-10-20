@@ -1,0 +1,29 @@
+---
+title: Glosario
+description: "Las palabras que usa esta documentación, en un solo sitio."
+icon: BookA
+---
+
+Las palabras que usa esta documentación y lo que significan en un servidor PowerNukkitX.
+
+| Término | Significado |
+| :-- | :-- |
+| **Bedrock Edition** | La versión de Minecraft de móviles, consolas y Windows. PowerNukkitX la sirve. |
+| **BDS** | Bedrock Dedicated Server, el software de servidor oficial de Mojang. |
+| **Tick** | Un paso del bucle de juego del servidor. Hay 20 por segundo, así que 100 ticks son 5 segundos. |
+| **TPS** | Ticks por segundo. 20 es lo normal; menos significa que el servidor va con lag. |
+| **Level** | Un mundo. Cada uno es una carpeta en `worlds/`. |
+| **Chunk** | Una columna de 16 por 16 del mundo, que se genera y se carga como una sola pieza. |
+| **Distancia de visión** | Cuántos chunks alrededor recibe cada jugador. La palanca más grande sobre el rendimiento. |
+| **Operador (OP)** | Un jugador que puede ejecutar cualquier comando. |
+| **Nodo de permiso** | Un nombre con puntos, como `nukkit.command.help`, que un comando o plugin comprueba antes de actuar. |
+| **Lista blanca** | La lista de jugadores que pueden entrar cuando está activada (`white-list.txt`). También llamada whitelist. |
+| **Autenticación Xbox** | La comprobación de la cuenta Xbox de cada jugador. Desactivarla es el modo sin conexión. |
+| **Plugin** | Un jar de Java en `plugins/` que añade comandos, eventos, contenido o jugabilidad. |
+| **Listener** | Una clase de un plugin cuyos métodos `@EventHandler` se ejecutan cuando ocurre un evento. |
+| **Registro** | Donde se registran los bloques, items, entidades y recetas personalizados. Se registra en `onLoad()`. |
+| **Paquete de recursos** | Texturas y modelos que los jugadores descargan al entrar; necesarios para ver el contenido personalizado. |
+| **Paquete de comportamiento** | Lógica de juego del lado del cliente. No compatible: PowerNukkitX lo hace en plugins de Java. |
+| **Formulario** | Una ventana que se muestra a un jugador: SimpleForm, ModalForm, CustomForm o DDUI. |
+| **Proxy** | Un servidor, como WaterdogPE, que mueve a los jugadores entre varios servidores. |
+| **`pnx.yml`** | El único archivo que contiene todos los ajustes del servidor. |

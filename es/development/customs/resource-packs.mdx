@@ -1,0 +1,42 @@
+---
+title: "Paquetes de recursos"
+description: "El contenido personalizado es invisible sin sus texturas. Cómo enviarlas con tu servidor."
+icon: Palette
+---
+
+El servidor decide lo que **hace** un bloque, item o entidad personalizados. Su **aspecto** viene de un **paquete de recursos** que los jugadores descargan al entrar. Sin él, los jugadores ven texturas que faltan.
+
+## De dónde saca su aspecto cada tipo
+
+| Contenido personalizado | Lo que aporta el paquete | Equivalente en tu código |
+| :-- | :-- | :-- |
+| [Bloque](/docs/es/development/customs/blocks) | La textura, listada en `terrain_texture.json`, y su geometría para los bloques con forma | `.texture("name")`, `Geometry("geometry.name")` |
+| [Item](/docs/es/development/customs/items) | La textura, listada en `item_texture.json` | `.texture("name")` |
+| [Entidad](/docs/es/development/customs/entities) | Texturas, el modelo y la definición de la entidad en el cliente | el identificador de la entidad |
+
+<Callout type="warn" title="Los nombres deben coincidir exactamente">
+  El nombre que pasas a `.texture(...)` debe ser la clave en `terrain_texture.json` o `item_texture.json` del paquete. Una errata se ve como una textura que falta, sin ningún error en el servidor.
+</Callout>
+
+## Enviar el paquete con tu servidor
+
+<Steps>
+  <Step>Empaqueta tu paquete como `.mcpack` o `.zip`.</Step>
+  <Step>Ponlo en la carpeta `resource_packs/` del servidor.</Step>
+  <Step>Reinicia el servidor. Ofrece el paquete a cada jugador al conectarse.</Step>
+</Steps>
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="plugins" defaultOpen>
+      <File name="my-plugin.jar" />
+    </Folder>
+    <Folder name="resource_packs" defaultOpen>
+      <File name="my-plugin-pack.mcpack" />
+    </Folder>
+  </Folder>
+</Files>
+
+<Callout type="info">
+  El repositorio [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven) es un plugin funcional con bloques, items y entidades personalizados.
+</Callout>

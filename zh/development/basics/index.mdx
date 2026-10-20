@@ -1,0 +1,235 @@
+---
+title: 创建插件
+icon: PackagePlus
+description: "配置 Maven 或 Gradle 项目，编写主类，运行你的第一个插件。"
+authors:
+  - tunikakeks
+---
+
+## 开始之前
+
+- **JDK 21** 或更高版本
+- 一些 Java 基础
+- 一个用于测试的 PowerNukkitX 服务器
+- 一个 IDE：IntelliJ IDEA、Eclipse 或 VS Code
+
+<Callout type="info" title="跳过配置">
+  [PowerNukkitX 插件模板](https://github.com/PowerNukkitX/PluginTemplate)是一个现成的项目，下面的所有内容都已配置好。
+</Callout>
+
+你的项目结构如下：
+
+<Files>
+  <Folder name="MyPlugin" defaultOpen>
+    <File name="pom.xml / build.gradle.kts" />
+    <Folder name="src/main" defaultOpen>
+      <Folder name="java/org/example" defaultOpen>
+        <File name="ExamplePlugin.java" />
+      </Folder>
+      <Folder name="resources" defaultOpen>
+        <File name="plugin.yml" />
+      </Folder>
+    </Folder>
+  </Folder>
+</Files>
+
+<Steps>
+  <Step>
+    ### 配置构建
+
+    构建会从 PowerNukkitX 仓库拉取服务器 API，并把你的插件打包成 jar。目标版本为 **Java 21**。
+
+    <Tabs items={["Maven", "Gradle"]}>
+      <Tab value="Maven">
+        ```xml title="pom.xml"
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+
+            <groupId>org.example</groupId>
+            <artifactId>MyPlugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+
+            <properties>
+                <maven.compiler.source>21</maven.compiler.source>
+                <maven.compiler.target>21</maven.compiler.target>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2/</url>
+                </repository>
+                <repository>
+                    <id>PowerNukkitX-releases</id>
+                    <name>PowerNukkitX Repository</name>
+                    <url>https://repo.powernukkitx.org/releases</url>
+                </repository>
+            </repositories>
+
+            <dependencies>
+                <!-- "3.0.0-SNAPSHOT" is the current release; "nightly-SNAPSHOT" the latest
+                     development build, which may break the API. -->
+                <dependency>
+                    <groupId>org.powernukkitx</groupId>
+                    <artifactId>server</artifactId>
+                    <version>3.0.0-SNAPSHOT</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.11.0</version>
+                        <configuration>
+                            <source>21</source>
+                            <target>21</target>
+                        </configuration>
+                    </plugin>
+                    <!-- bundles your own dependencies into the jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </project>
+        ```
+      </Tab>
+      <Tab value="Gradle">
+        ```kotlin title="settings.gradle.kts"
+        rootProject.name = "MyPlugin"
+        ```
+
+        ```kotlin title="build.gradle.kts"
+        plugins {
+            java
+            id("com.github.johnrengelman.shadow") version "8.1.1"
+        }
+
+        group = "org.example"
+        version = "1.0.0-SNAPSHOT"
+
+        repositories {
+            mavenCentral()
+            maven { url = uri("https://repo.powernukkitx.org/releases") }
+        }
+
+        dependencies {
+            // "3.0.0-SNAPSHOT" is the current release; "nightly-SNAPSHOT" the latest
+            // development build, which may break the API.
+            compileOnly("org.powernukkitx:server:3.0.0-SNAPSHOT")
+        }
+
+        tasks.withType<JavaCompile> {
+            options.encoding = "UTF-8"
+            sourceCompatibility = "21"
+            targetCompatibility = "21"
+        }
+
+        tasks {
+            build { dependsOn(shadowJar) }
+        }
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step>
+    ### 描述插件
+
+    服务器会读取 `src/main/resources` 中名为 `plugin.yml`（或 `powernukkitx.yml`）的元数据文件：
+
+    ```yaml title="plugin.yml"
+    name: ExamplePlugin
+    main: org.example.ExamplePlugin
+    # version and api must be strings: keep the quotes
+    version: "1.0.0"
+    api: "2.0.0"
+    load: POSTWORLD
+    author: PowerNukkitX Team
+    # author and authors are merged into one list
+    authors: ["Example", "Another"]
+    description: Example plugin from the PNX documentation
+    website: https://docs.powernukkitx.org/
+    ```
+
+    <Callout type="info">
+      使用[注解处理器](/docs/zh/development/basics/annotations)时，这个文件会自动生成。
+    </Callout>
+  </Step>
+  <Step>
+    ### 编写主类
+
+    主类继承 `PluginBase`。服务器会在插件生命周期的各个阶段调用它的三个方法：
+
+    ```java title="ExamplePlugin.java"
+    package org.example;
+
+    import org.powernukkitx.plugin.PluginBase;
+    import org.powernukkitx.utils.TextFormat;
+
+    public class ExamplePlugin extends PluginBase {
+        @Override
+        public void onLoad() {
+            this.getLogger().info(TextFormat.WHITE + "Example plugin loaded!");
+        }
+
+        @Override
+        public void onEnable() {
+            this.getLogger().info(TextFormat.DARK_GREEN + "Example plugin enabled!");
+        }
+
+        @Override
+        public void onDisable() {
+            this.getLogger().info(TextFormat.DARK_RED + "Example plugin disabled!");
+        }
+    }
+    ```
+
+    <PluginLifecycle />
+  </Step>
+  <Step>
+    ### 构建并安装
+
+    <Tabs items={["Maven", "Gradle"]}>
+      <Tab value="Maven">
+        ```bash
+        mvn clean package
+        ```
+
+        jar 位于 `target/` 中。
+      </Tab>
+      <Tab value="Gradle">
+        ```bash
+        ./gradlew clean build
+        ```
+
+        包含所有打包依赖的 jar 是 `build/libs/MyPlugin-1.0.0-SNAPSHOT-all.jar`。
+      </Tab>
+    </Tabs>
+
+    把 jar 复制到服务器的 `plugins/` 文件夹并重启服务器。你的消息会出现在控制台中。
+  </Step>
+</Steps>
+
+## 下一步
+
+<Cards>
+  <Card title="命令" href="/docs/zh/development/basics/commands">让玩家可以输入 `/greet`。</Card>
+  <Card title="监听器" href="/docs/zh/development/basics/listener">响应玩家加入、破坏方块等事件。</Card>
+  <Card title="任务" href="/docs/zh/development/basics/tasks">延迟或定时运行代码。</Card>
+</Cards>

@@ -1,0 +1,42 @@
+---
+title: "资源包"
+description: "没有材质，自定义内容就是看不见的。如何随服务器分发资源包。"
+icon: Palette
+---
+
+服务器决定自定义方块、物品或实体**做什么**。它们**长什么样**则来自玩家加入时下载的**资源包**。没有资源包，玩家会看到缺失的材质。
+
+## 各类内容的外观来源
+
+| 自定义内容 | 资源包提供的内容 | 代码中的对应项 |
+| :-- | :-- | :-- |
+| [方块](/docs/zh/development/customs/blocks) | 列在 `terrain_texture.json` 中的材质，以及异形方块的几何模型 | `.texture("name")`、`Geometry("geometry.name")` |
+| [物品](/docs/zh/development/customs/items) | 列在 `item_texture.json` 中的材质 | `.texture("name")` |
+| [实体](/docs/zh/development/customs/entities) | 材质、模型和客户端实体定义 | 实体的标识符 |
+
+<Callout type="warn" title="名称必须完全一致">
+  传给 `.texture(...)` 的名称必须是资源包 `terrain_texture.json` 或 `item_texture.json` 中的键。拼写错误只会显示为缺失材质，服务器不会报错。
+</Callout>
+
+## 随服务器分发资源包
+
+<Steps>
+  <Step>把资源包打包为 `.mcpack` 或 `.zip`。</Step>
+  <Step>放进服务器的 `resource_packs/` 文件夹。</Step>
+  <Step>重启服务器。玩家连接时，服务器会向每个人提供该资源包。</Step>
+</Steps>
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="plugins" defaultOpen>
+      <File name="my-plugin.jar" />
+    </Folder>
+    <Folder name="resource_packs" defaultOpen>
+      <File name="my-plugin-pack.mcpack" />
+    </Folder>
+  </Folder>
+</Files>
+
+<Callout type="info">
+  [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven) 仓库是一个可运行的插件，包含自定义方块、物品和实体。
+</Callout>

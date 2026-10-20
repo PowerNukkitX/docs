@@ -1,0 +1,50 @@
+---
+title: "Permisos y seguridad"
+description: "Controla quién puede hacer qué en tu servidor: operadores, nodos de permisos y plugins de permisos."
+icon: Shield
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Los permisos deciden qué comandos y acciones puede usar cada jugador. Hay tres niveles, del más simple al más flexible.
+
+## 1. Operadores
+
+Un **operador** (OP) se salta todas las comprobaciones de permisos y puede ejecutar cualquier comando. Resérvalo para unos pocos administradores de confianza.
+
+```bash title="Console"
+op <player>
+deop <player>
+```
+
+Los operadores se guardan en `ops.txt`, en la raíz del servidor, un nombre por línea. Puedes editarlo con el servidor **detenido**.
+
+## 2. Nodos de permisos
+
+Los comandos y los plugins comprueban **nodos de permisos**: nombres con puntos, como:
+
+- `nukkit.command.help` para `/help`
+- `nukkit.command.gamemode` para `/gamemode`
+
+Por defecto, los jugadores normales pueden usar comandos básicos (`/tell`, `/list`, `/help`) y los operadores pueden usarlos todos.
+
+## 3. Un plugin de permisos
+
+Para un servidor público o con varios grupos, el OP no basta. Instala un plugin de permisos como **LuckPerms**, que se ha portado a Nukkit y PowerNukkitX. Te permite:
+
+- crear grupos como `admin`, `moderator` y `player`;
+- dar nodos de permisos a un grupo o a un solo jugador;
+- definir prefijos, sufijos y herencia entre grupos.
+
+<Callout type="info">
+  Encuentra plugins de permisos en el [hub de plugins](https://powernukkitx.org/plugins).
+</Callout>
+
+## Lista de seguridad
+
+<Steps>
+  <Step>Mantén activada la **autenticación Xbox** (`xboxAuth: true` en `pnx.yml`) para que nadie pueda entrar con el nombre de otro jugador.</Step>
+  <Step>Da OP a las **menos personas** posibles y usa grupos para el resto.</Step>
+  <Step>Activa la **lista blanca** en un servidor privado. Consulta [Gestión de jugadores](/docs/es/administration/players).</Step>
+</Steps>

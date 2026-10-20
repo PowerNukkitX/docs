@@ -1,0 +1,17 @@
+{
+  "title": "Eigene Inhalte",
+  "icon": "Blocks",
+  "pages": [
+    "index",
+    "resource-packs",
+    "blocks",
+    "block-entities",
+    "items",
+    "entities",
+    "enchantments",
+    "trims",
+    "recipes",
+    "generators",
+    "structures"
+  ]
+}

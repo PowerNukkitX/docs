@@ -1,0 +1,15 @@
+{
+  "title": "Administration",
+  "description": "Anleitungen, um einen PowerNukkitX-Server im Alltag zu betreiben und zu verwalten.",
+  "icon": "Cog",
+  "root": true,
+  "pages": [
+    "index",
+    "commands",
+    "worlds",
+    "players",
+    "backups",
+    "performance",
+    "go-live"
+  ]
+}

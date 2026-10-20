@@ -1,0 +1,70 @@
+---
+title: "Encantamientos"
+description: "Crea nuevos encantamientos con su propia rareza, items objetivo y niveles."
+icon: Sparkles
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Un encantamiento personalizado es una clase de Java que registras en `onLoad()`, antes de que se carguen los mundos, como cualquier otro contenido personalizado.
+
+## Regístralo en `onLoad()`
+
+```java
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onLoad() {
+    try {
+        Enchantment.register(new MyEnchantment());
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## Defínelo
+
+Extiende `Enchantment` y pasa al constructor un id, un nombre visible, una rareza y el tipo de item al que se aplica. Después fija el nivel máximo y el rango de encantabilidad.
+
+```java filename="MyEnchantment.java"
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.item.enchantment.EnchantmentType;
+import org.powernukkitx.utils.Identifier;
+
+public class MyEnchantment extends Enchantment {
+    public MyEnchantment() {
+        super(
+            new Identifier("powernukkitx:lucky_strike"), // Unique identifier namespace:name
+            "Lucky Strike",                              // Display name
+            Rarity.RARE,                                 // Rarity (COMMON, UNCOMMON, RARE, VERY_RARE)
+            EnchantmentType.WEAPON                       // Applicable items (ARMOR, WEAPON, DIGGER, ALL, etc.)
+        );
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3; // Maximum level of the enchantment
+    }
+
+    @Override
+    public int getMinEnchantability(int level) {
+        return 1 + level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level) {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    // You can override additional handlers such as:
+    // - getDamageBonus(int level, Entity target) for custom weapon damage modifiers.
+    // - getDamageProtection(int level, DamageSource source) for custom protection modifiers.
+}
+```
+
+<Callout type="info" title="El efecto lo escribes tú">
+  Registrar un encantamiento hace que exista; lo que hace depende de ti. Búscalo en tus listeners, por ejemplo en `EntityDamageByEntityEvent` o `BlockBreakEvent`, y aplica allí el efecto.
+</Callout>

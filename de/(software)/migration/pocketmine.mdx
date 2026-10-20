@@ -1,0 +1,63 @@
+---
+title: "Von PocketMine-MP"
+description: "Von PocketMine-MP (PHP) zu PowerNukkitX (Java) wechseln."
+icon: CircleAlert
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PocketMine-MP ist in PHP geschrieben, PowerNukkitX in Java. Deine Welten können mitkommen, Plugins und Konfiguration nicht.
+
+<CarryOver
+  items={[
+    { label: "Welten", note: "Region- oder LevelDB-Welten lassen sich kopieren", status: "yes" },
+    { label: "Einstellungen", note: "Von Hand nach pnx.yml übertragen", status: "manual" },
+    { label: "Berechtigungen", note: "Neu angelegt, zum Beispiel mit LuckPerms", status: "manual" },
+    { label: "PHP-Plugins (.phar)", note: "Inkompatibel: nutze stattdessen Java-Plugins", status: "no" },
+  ]}
+/>
+
+## Schritte
+
+<Steps>
+  <Step>
+    ### PowerNukkitX installieren
+
+    Folge der [Installationsanleitung](/docs/de/installation), starte den Server einmal, damit er seine Dateien anlegt, und stoppe ihn dann.
+  </Step>
+  <Step>
+    ### Deine Welten kopieren
+
+    Kopiere deine Weltordner aus `worlds/` von PocketMine-MP nach `worlds/` von PowerNukkitX und lege die Hauptwelt als Standard fest:
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      defaultLevelName: "MyWorld"
+    ```
+  </Step>
+  <Step>
+    ### Deine Einstellungen übertragen
+
+    | PocketMine-MP-Einstellung | Abschnitt in `pnx.yml` | Schlüssel in `pnx.yml` |
+    | :-- | :-- | :-- |
+    | `server-port` (`server.properties`) | `baseSettings` | `port` |
+    | `max-players` (`server.properties`) | `baseSettings` | `maxPlayers` |
+    | `xbox-auth` (`pocketmine.yml`) | `baseSettings` | `xboxAuth` |
+    | `view-distance` (`server.properties`) | `gameplaySettings` | `viewDistance` |
+    | `difficulty` (`server.properties`) | `gameplaySettings` | `difficulty` |
+    | `gamemode` (`server.properties`) | `gameplaySettings` | `gamemode` |
+    | `white-list` (`server.properties`) | `baseSettings` | `allowList` |
+  </Step>
+</Steps>
+
+## Was nicht mitkommt
+
+<Accordions>
+  <Accordion title="Plugins">
+    PocketMine-MP-Plugins sind PHP und **laufen nicht** auf PowerNukkitX: Kopiere keine `.phar`-Dateien oder PHP-Code nach `plugins/`. Suche Java-Entsprechungen im [Plugin-Hub](https://powernukkitx.org/plugins) oder baue die Funktionen mit der [Plugin-API](/docs/de/development) nach.
+  </Accordion>
+  <Accordion title="Berechtigungen">
+    PocketMine-MP nutzt eine YAML-Datei `permissions.yml`. Unter PowerNukkitX installierst du **LuckPerms**, um deine Gruppen und Knoten neu anzulegen. Siehe [Berechtigungen & Sicherheit](/docs/de/permissions).
+  </Accordion>
+</Accordions>

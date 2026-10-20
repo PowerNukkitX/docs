@@ -1,0 +1,33 @@
+---
+title: "Bevor du öffentlich wirst"
+description: "Eine Checkliste, die du durchgehst, bevor du deinen Server für alle öffnest."
+icon: ListChecks
+---
+
+Hake jede Zeile ab. Deine Haken werden in diesem Browser gespeichert, du kannst also später weitermachen.
+
+<Checklist
+  name="go-live"
+  items={[
+    { label: "Java 21 oder neuer, 64-Bit", detail: "Prüfe mit java -version. Siehe Voraussetzungen." },
+    { label: "Die Xbox-Authentifizierung ist an", detail: "xboxAuth: true in pnx.yml, damit niemand unter fremdem Namen beitritt." },
+    { label: "Nur vertrauenswürdige Leute sind Operatoren", detail: "Alle anderen bekommen Berechtigungen über ein Berechtigungs-Plugin." },
+    { label: "Die Whitelist ist an, wenn der Server privat ist", detail: "allowList: true, dann whitelist add <player>." },
+    { label: "Der UDP-Port 19132 ist offen", detail: "In der Firewall und am Router weitergeleitet." },
+    { label: "Backups laufen nach Zeitplan", detail: "Auf eine andere Festplatte oder Maschine, mit mehreren Kopien." },
+    { label: "Die Sichtweite passt zu deiner Maschine", detail: "Senke gameplaySettings.viewDistance, wenn ein voller Server strauchelt." },
+    { label: "Die Plugins passen zu deiner PowerNukkitX-Version", detail: "Prüfe die Karte Details jedes Plugins im Hub." },
+    { label: "Ressourcenpakete liegen in resource_packs/", detail: "Nötig, wenn ein Plugin eigene Blöcke, Items oder Entitäten hinzufügt." },
+  ]}
+/>
+
+## Wo jeder Punkt erklärt wird
+
+<Cards>
+  <Card title="Voraussetzungen" href="/docs/de/requirements">Java und Hardware.</Card>
+  <Card title="Berechtigungen & Sicherheit" href="/docs/de/permissions">Operatoren, Knoten, Berechtigungs-Plugins.</Card>
+  <Card title="Spieler" href="/docs/de/administration/players">Whitelist, Kicks und Banns.</Card>
+  <Card title="Backups" href="/docs/de/administration/backups">Was du sicherst und wie du es automatisierst.</Card>
+  <Card title="Leistung" href="/docs/de/administration/performance">Speicher, Threads und Sichtweite.</Card>
+  <Card title="Ressourcenpakete" href="/docs/de/development/customs/resource-packs">Texturen für eigene Inhalte ausliefern.</Card>
+</Cards>

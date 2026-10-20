@@ -1,0 +1,63 @@
+---
+title: "从 PocketMine-MP 迁移"
+description: "从 PocketMine-MP（PHP）迁移到 PowerNukkitX（Java）。"
+icon: CircleAlert
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PocketMine-MP 用 PHP 编写，PowerNukkitX 用 Java 编写。世界可以带过来，插件和配置则不行。
+
+<CarryOver
+  items={[
+    { label: "世界", note: "区域或 LevelDB 世界可以复制", status: "yes" },
+    { label: "设置", note: "手动复制到 pnx.yml", status: "manual" },
+    { label: "权限", note: "需要重新创建，例如使用 LuckPerms", status: "manual" },
+    { label: "PHP 插件（.phar）", note: "不兼容：请改用 Java 插件", status: "no" },
+  ]}
+/>
+
+## 步骤
+
+<Steps>
+  <Step>
+    ### 安装 PowerNukkitX
+
+    按照[安装指南](/docs/zh/installation)操作，先启动一次服务器让它生成文件，然后停止。
+  </Step>
+  <Step>
+    ### 复制世界
+
+    把 PocketMine-MP 的 `worlds/` 中的世界文件夹复制到 PowerNukkitX 的 `worlds/`，并把主世界设为默认：
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      defaultLevelName: "MyWorld"
+    ```
+  </Step>
+  <Step>
+    ### 复制设置
+
+    | PocketMine-MP 设置 | `pnx.yml` 分区 | `pnx.yml` 键 |
+    | :-- | :-- | :-- |
+    | `server-port`（`server.properties`） | `baseSettings` | `port` |
+    | `max-players`（`server.properties`） | `baseSettings` | `maxPlayers` |
+    | `xbox-auth`（`pocketmine.yml`） | `baseSettings` | `xboxAuth` |
+    | `view-distance`（`server.properties`） | `gameplaySettings` | `viewDistance` |
+    | `difficulty`（`server.properties`） | `gameplaySettings` | `difficulty` |
+    | `gamemode`（`server.properties`） | `gameplaySettings` | `gamemode` |
+    | `white-list`（`server.properties`） | `baseSettings` | `allowList` |
+  </Step>
+</Steps>
+
+## 无法迁移的内容
+
+<Accordions>
+  <Accordion title="插件">
+    PocketMine-MP 插件是 PHP 编写的，**无法在** PowerNukkitX 上运行：不要把 `.phar` 文件或 PHP 代码复制到 `plugins/`。可以在[插件中心](https://powernukkitx.org/plugins)寻找 Java 替代品，或用[插件 API](/docs/zh/development) 重新实现这些功能。
+  </Accordion>
+  <Accordion title="权限">
+    PocketMine-MP 使用 YAML 格式的 `permissions.yml`。在 PowerNukkitX 上，请安装 **LuckPerms** 重新创建你的分组和节点。参见[权限与安全](/docs/zh/permissions)。
+  </Accordion>
+</Accordions>

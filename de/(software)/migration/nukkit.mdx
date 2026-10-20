@@ -1,0 +1,71 @@
+---
+title: "Von Nukkit / PowerNukkit"
+description: "Einen Nukkit- oder PowerNukkit-Server auf PowerNukkitX umstellen. Die Konfiguration wandelt sich selbst um."
+icon: Hammer
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Das ist die einfachste Migration: PowerNukkitX liest deine alte Konfiguration und wandelt sie beim ersten Start um.
+
+<CarryOver
+  items={[
+    { label: "Welten", note: "Gleiches Region-Format, sie laden so, wie sie sind", status: "yes" },
+    { label: "Konfiguration", note: "Automatisch nach pnx.yml umgewandelt", status: "yes" },
+    { label: "Einfache Plugins", note: "Viele funktionieren weiter", status: "yes" },
+    { label: "Komplexe Plugins", note: "Wer Block-, Item- oder Entitäts-Registries nutzt, braucht ein Update", status: "manual" },
+  ]}
+/>
+
+## Schritte
+
+<Steps>
+  <Step>
+    ### Sichern
+
+    Kopiere deinen ganzen Serverordner an einen sicheren Ort.
+  </Step>
+  <Step>
+    ### Die Dateien ersetzen
+
+    1. Lade die neueste `powernukkitx.jar` aus den [Releases](https://github.com/PowerNukkitX/PowerNukkitX/releases) herunter.
+    2. Lade das Startskript für dein System (`start.bat` oder `start.sh`) aus [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts) herunter.
+    3. Ersetze deine alte Jar durch `powernukkitx.jar`. **Behalte** `nukkit.yml` und `server.properties` vorerst.
+  </Step>
+  <Step>
+    ### Den Server starten
+
+    PowerNukkitX findet `nukkit.yml` und `server.properties` und überträgt sie:
+
+    - es kopiert beide Dateien in einen neuen Ordner `backup/`;
+    - es liest jede Einstellung daraus und schreibt sie in `pnx.yml`;
+    - es löscht die alten Dateien und startet weiter.
+  </Step>
+</Steps>
+
+## Wohin jede Einstellung wandert
+
+| Alte Einstellung | Alte Datei | Abschnitt in `pnx.yml` | Schlüssel in `pnx.yml` |
+| :-- | :-- | :-- | :-- |
+| `server-ip` | `server.properties` | `baseSettings` | `ip` |
+| `server-port` | `server.properties` | `baseSettings` | `port` |
+| `max-players` | `server.properties` | `baseSettings` | `maxPlayers` |
+| `level-name` | `server.properties` | `baseSettings` | `defaultLevelName` |
+| `white-list` | `server.properties` | `baseSettings` | `allowList` |
+| `xbox-auth` | `server.properties` | `baseSettings` | `xboxAuth` |
+| `gamemode` | `server.properties` | `gameplaySettings` | `gamemode` |
+| `difficulty` | `server.properties` | `gameplaySettings` | `difficulty` |
+| `view-distance` | `server.properties` | `gameplaySettings` | `viewDistance` |
+| `language` | `nukkit.yml` | `baseSettings` | `language` |
+| `autosave` | `nukkit.yml` | `baseSettings` | `autosaveDelay` |
+| `save-player-data` | `nukkit.yml` | `playerSettings` | `savePlayerData` |
+
+## Plugins
+
+Einfache Nukkit-Plugins funktionieren oft weiter, aber Plugins, die mit **Block-, Item- oder Entitäts-Registries** arbeiten, scheitern: PowerNukkitX hat diese Registries durch ein dynamisches System ersetzt, um die eigenen Inhalte von Bedrock zu unterstützen.
+
+<Steps>
+  <Step>Suche im [Plugin-Hub](https://powernukkitx.org/plugins) nach einer PowerNukkitX-Version jedes Plugins.</Step>
+  <Step>Gibt es keine, muss das Plugin aktualisiert oder gegen die PowerNukkitX-API neu kompiliert werden.</Step>
+</Steps>

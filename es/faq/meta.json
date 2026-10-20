@@ -1,0 +1,11 @@
+{
+  "title": "Preguntas frecuentes",
+  "description": "Preguntas frecuentes.",
+  "icon": "CircleQuestionMark",
+  "root": true,
+  "pages": [
+    "index",
+    "troubleshooting",
+    "glossary"
+  ]
+}

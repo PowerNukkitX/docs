@@ -1,0 +1,135 @@
+---
+title: SimpleForm
+icon: MousePointerClick
+description: "一个标题、一些文字和一列按钮。用于菜单和商店的表单。"
+authors:
+  - PleaseInsertNameHere
+---
+
+<FormPreview type="simple" />
+
+## 标题和内容
+
+<Tabs items={["构造函数", "仅标题", "方法"]}>
+  <Tab value="构造函数">
+```java
+// Setting the title and content within the constructor
+SimpleForm form = new SimpleForm("title", "content");
+```
+  </Tab>
+  <Tab value="仅标题">
+```java
+// Only setting the title within the constructor
+SimpleForm form = new SimpleForm("title");
+```
+  </Tab>
+  <Tab value="方法">
+```java
+// Setting the title and content using methods
+SimpleForm form = new SimpleForm()
+                    .title("title")
+                    .content("content");
+```
+  </Tab>
+</Tabs>
+
+## 按钮
+
+| 方法 | 添加的内容 |
+| :-- | :-- |
+| `addButton(ElementButton)` | 一个完整的按钮元素。 |
+| `addButton(ElementButton, Consumer<Player>)` | 一个完整的按钮元素，带点击处理器。 |
+| `addButton(String)` | 一个纯文字按钮。 |
+| `addButton(String, Consumer<Player>)` | 一个文字按钮，带点击处理器。 |
+| `addButton(String, ButtonImage)` | 一个带图片的按钮。 |
+| `addButton(String, ButtonImage, Consumer<Player>)` | 一个带图片和点击处理器的按钮。 |
+
+按钮图片可以来自资源包（`ButtonImage.Type.PATH`）或 URL（`ButtonImage.Type.URL`）：
+
+```java
+ButtonImage emeraldItem = ButtonImage.Type.PATH.of("textures/ui/emerald");
+```
+
+## 处理点击
+
+<Tabs items={["每个按钮", "整个表单", "事件"]}>
+  <Tab value="每个按钮">
+给每个按钮设置自己的处理器。调用可以链式进行：
+
+```java
+form.addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"), player -> player.sendMessage("You clicked the Emerald!"))
+    .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"), player -> player.sendMessage("You clicked the Diamond!")); // You can also chain methods!
+```
+  </Tab>
+  <Tab value="整个表单">
+一个处理器处理所有按钮，适合按钮来自列表的情况：
+
+```java
+form.onSubmit((player, response) -> {
+    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
+    ElementButton button = response.button(); // The clicked button (null if invalid)
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+  </Tab>
+  <Tab value="事件">
+或者监听 `PlayerFormRespondedEvent`：
+
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a SimpleForm called 'Ingots' was closed
+    if (form instanceof SimpleForm && form.title().equals("Ingots")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted an ingot.");
+    }
+}
+```
+  </Tab>
+</Tabs>
+
+发送方式与所有表单相同：参见[表单](/docs/zh/development/forms#sending-a-form)。
+
+## 更新已打开的表单
+
+玩家仍打开着表单时，你也可以修改按钮：
+
+```java
+ElementButton button = new ElementButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot", player -> player.sendMessage("You clicked the Netherite Ingot!")));
+form.updateElement(0, button); // We want to replace the first button (index 0) with the new one
+form.sendUpdate(player); // Send the update to the player
+```
+
+<Callout type="warn">
+  大型表单请避免这样做：更新会重置玩家当前的操作，例如滚动位置。
+</Callout>
+
+## 完整示例
+
+上图中的表单，3 秒后移除第一个按钮：
+
+```java
+SimpleForm form = new SimpleForm("Ingots", "Please select an Ingot to continue.")
+            .addButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot"))
+            .addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"))
+            .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"))
+            .onSubmit((pl, response) -> {
+                pl.sendMessage("You have clicked the " + response.button().text());
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+
+// Remove the Netherite Ingot after 3 seconds open
+Server.getInstance().getScheduler().scheduleDelayedTask(() -> {
+    if (form.isViewer(player)) {
+        form.removeElement(0);
+        form.sendUpdate(player);
+    }
+}, 3 * 20);
+```

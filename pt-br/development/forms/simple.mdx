@@ -1,0 +1,135 @@
+---
+title: SimpleForm
+icon: MousePointerClick
+description: "Um título, um pouco de texto e uma lista de botões. O formulário para menus e lojas."
+authors:
+  - PleaseInsertNameHere
+---
+
+<FormPreview type="simple" />
+
+## Título e conteúdo
+
+<Tabs items={["Construtor", "Só título", "Métodos"]}>
+  <Tab value="Construtor">
+```java
+// Setting the title and content within the constructor
+SimpleForm form = new SimpleForm("title", "content");
+```
+  </Tab>
+  <Tab value="Só título">
+```java
+// Only setting the title within the constructor
+SimpleForm form = new SimpleForm("title");
+```
+  </Tab>
+  <Tab value="Métodos">
+```java
+// Setting the title and content using methods
+SimpleForm form = new SimpleForm()
+                    .title("title")
+                    .content("content");
+```
+  </Tab>
+</Tabs>
+
+## Botões
+
+| Método | Adiciona |
+| :-- | :-- |
+| `addButton(ElementButton)` | Um elemento de botão completo. |
+| `addButton(ElementButton, Consumer<Player>)` | Um elemento de botão completo, com handler de clique. |
+| `addButton(String)` | Um botão só de texto. |
+| `addButton(String, Consumer<Player>)` | Um botão de texto, com handler de clique. |
+| `addButton(String, ButtonImage)` | Um botão com imagem. |
+| `addButton(String, ButtonImage, Consumer<Player>)` | Um botão com imagem e handler de clique. |
+
+A imagem de um botão vem do pacote de recursos (`ButtonImage.Type.PATH`) ou de uma URL (`ButtonImage.Type.URL`):
+
+```java
+ButtonImage emeraldItem = ButtonImage.Type.PATH.of("textures/ui/emerald");
+```
+
+## Tratar os cliques
+
+<Tabs items={["Por botão", "Formulário inteiro", "Evento"]}>
+  <Tab value="Por botão">
+Dê a cada botão o próprio handler. As chamadas se encadeiam:
+
+```java
+form.addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"), player -> player.sendMessage("You clicked the Emerald!"))
+    .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"), player -> player.sendMessage("You clicked the Diamond!")); // You can also chain methods!
+```
+  </Tab>
+  <Tab value="Formulário inteiro">
+Um handler para todos os botões, útil quando os botões vêm de uma lista:
+
+```java
+form.onSubmit((player, response) -> {
+    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
+    ElementButton button = response.button(); // The clicked button (null if invalid)
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+  </Tab>
+  <Tab value="Evento">
+Ou escute o `PlayerFormRespondedEvent`:
+
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a SimpleForm called 'Ingots' was closed
+    if (form instanceof SimpleForm && form.title().equals("Ingots")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted an ingot.");
+    }
+}
+```
+  </Tab>
+</Tabs>
+
+O envio funciona como em todo formulário: veja [Formulários](/docs/pt-br/development/forms#sending-a-form).
+
+## Atualizar um formulário aberto
+
+Você pode mudar os botões enquanto o jogador ainda está com o formulário aberto:
+
+```java
+ElementButton button = new ElementButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot", player -> player.sendMessage("You clicked the Netherite Ingot!")));
+form.updateElement(0, button); // We want to replace the first button (index 0) with the new one
+form.sendUpdate(player); // Send the update to the player
+```
+
+<Callout type="warn">
+  Evite em formulários grandes: uma atualização reinicia o que o jogador estava fazendo, como a posição de rolagem.
+</Callout>
+
+## Exemplo completo
+
+O formulário da imagem acima, que remove o primeiro botão depois de 3 segundos:
+
+```java
+SimpleForm form = new SimpleForm("Ingots", "Please select an Ingot to continue.")
+            .addButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot"))
+            .addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"))
+            .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"))
+            .onSubmit((pl, response) -> {
+                pl.sendMessage("You have clicked the " + response.button().text());
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+
+// Remove the Netherite Ingot after 3 seconds open
+Server.getInstance().getScheduler().scheduleDelayedTask(() -> {
+    if (form.isViewer(player)) {
+        form.removeElement(0);
+        form.sendUpdate(player);
+    }
+}, 3 * 20);
+```

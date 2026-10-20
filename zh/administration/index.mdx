@@ -1,0 +1,43 @@
+---
+title: "概览"
+description: "日常维护 PowerNukkitX 服务器：命令、玩家、世界、性能和备份。"
+icon: LayoutDashboard
+authors:
+  - PowerNukkitX
+---
+
+import { Archive, CheckCheck, Gauge, Map, SquareTerminal, Users } from "lucide-react";
+
+服务器安装并[配置](/docs/zh/configuration)好之后，接下来就是运营：日常维护，然后向公众开放。
+
+## 日常维护
+
+<Cards>
+  <Card icon={<SquareTerminal />} title="控制台与命令" href="/docs/zh/administration/commands">
+    在控制台和游戏中最常用的命令。
+  </Card>
+  <Card icon={<Users />} title="玩家" href="/docs/zh/administration/players">
+    管理员、白名单、踢出和封禁。
+  </Card>
+  <Card icon={<Map />} title="世界" href="/docs/zh/administration/worlds">
+    加载、导入和配置世界。
+  </Card>
+  <Card icon={<Gauge />} title="性能" href="/docs/zh/administration/performance">
+    内存、线程和视距。
+  </Card>
+  <Card icon={<Archive />} title="备份" href="/docs/zh/administration/backups">
+    保护你的世界和设置，并能恢复它们。
+  </Card>
+</Cards>
+
+## 正式上线
+
+<Cards>
+  <Card icon={<CheckCheck />} title="公开之前" href="/docs/zh/administration/go-live">
+    分享服务器地址前要逐项确认的清单。
+  </Card>
+</Cards>
+
+<Callout type="info">
+  大多数设置都在 `pnx.yml` 中。手动编辑前请先停止服务器：运行中的服务器会在关闭时把它写回，覆盖你的修改。
+</Callout>

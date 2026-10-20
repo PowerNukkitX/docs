@@ -1,0 +1,14 @@
+{
+  "title": "Desenvolvimento",
+  "description": "Documentação para criar plugins do PowerNukkitX.",
+  "icon": "Code",
+  "root": true,
+  "pages": [
+    "index",
+    "basics",
+    "customs",
+    "forms",
+    "---Referência---",
+    "external:[FileCode][Javadoc](https://powernukkitx.github.io/PowerNukkitX/)"
+  ]
+}

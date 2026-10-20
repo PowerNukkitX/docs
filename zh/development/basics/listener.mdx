@@ -1,0 +1,100 @@
+---
+title: 监听器
+icon: Ear
+description: "响应游戏中发生的事情：玩家加入、方块被破坏、实体受到伤害。"
+authors:
+  - tunikakeks
+---
+
+**监听器**是一个包含 `@EventHandler` 标记方法的类。服务器触发该类型的事件时，你的方法就会执行。
+
+<EventFlow />
+
+<Tabs items={["独立的监听器类", "在主类中"]}>
+  <Tab value="独立的监听器类">
+    除了非常小的插件，都推荐用这种整洁的方式：
+
+    ```java title="JoinListener.java"
+    package com.example.listener;
+
+    import org.powernukkitx.Player;
+    import org.powernukkitx.event.EventHandler;
+    import org.powernukkitx.event.Listener;
+    import org.powernukkitx.event.player.PlayerJoinEvent;
+
+    public class JoinListener implements Listener {
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            Player player = event.getPlayer();
+            player.sendMessage("Welcome, " + player.getName() + "!");
+        }
+    }
+    ```
+
+    在插件启用时注册它：
+
+    ```java
+    @Override
+    public void onEnable() {
+        this.getServer().getPluginManager().registerEvents(new JoinListener(), this);
+    }
+    ```
+
+    <Callout type="info">
+      也可以给类加上 `@EventListener`，让[注解处理器](/docs/zh/development/basics/annotations)来注册。
+    </Callout>
+  </Tab>
+  <Tab value="在主类中">
+    适合小插件：主类本身就是监听器。
+
+    ```java title="ExamplePlugin.java"
+    public class ExamplePlugin extends PluginBase implements Listener {
+        @Override
+        public void onEnable() {
+            this.getServer().getPluginManager().registerEvents(this, this);
+        }
+
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            Player player = event.getPlayer();
+            player.sendMessage("Welcome, " + player.getName() + "!");
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## 取消事件
+
+大多数事件都可以取消：取消后，服务器就不会执行该事件所代表的操作。下面的例子中，只有管理员可以破坏方块：
+
+```java
+@EventHandler
+public void onBreak(BlockBreakEvent event) {
+    if (!event.getPlayer().isOp()) {
+        event.setCancelled(true);
+    }
+}
+```
+
+如果事件类实现了 `Cancellable`，就可以取消，例如 `BlockBreakEvent` 和 `PlayerChatEvent`。
+
+## 顺序与优先级
+
+多个处理器监听同一个事件时，会按**优先级**从 `LOWEST` 到 `MONITOR` 依次执行。后执行的处理器拥有最终决定权，因为它可以推翻前面的决定。
+
+```java
+@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+public void onChat(PlayerChatEvent event) {
+    // runs after NORMAL handlers, and not at all if one of them cancelled the event
+}
+```
+
+| 设置 | 默认值 | 作用 |
+| :-- | :-- | :-- |
+| `priority` | `NORMAL` | `LOWEST`、`LOW`、`NORMAL`、`HIGH`、`HIGHEST`，最后是 `MONITOR`。 |
+| `ignoreCancelled` | `false` | 为 `true` 时，如果事件已被取消，就跳过该处理器。 |
+
+<Callout type="warn">
+  `MONITOR` 只用于观察最终结果，例如记录日志或统计。不要在这里修改事件：其他插件已经根据它做出了处理。
+</Callout>

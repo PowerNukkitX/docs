@@ -1,0 +1,192 @@
+---
+title: 命令
+icon: SquareTerminal
+description: "为插件添加命令，从简单的 onCommand 到带 Tab 补全的完整路由树。"
+authors:
+  - tunikakeks
+---
+
+添加命令有三种方式。选择能满足需求的最简单的一种。
+
+| 方式 | 适用于 |
+| :-- | :-- |
+| 主类中的 `onCommand` | 一两个简单命令。 |
+| `Command` 类 | 结构清晰、相互独立且带权限的命令。 |
+| 命令树 | 子命令和类型化参数，自动检查并支持 Tab 补全。 |
+
+## 1. `onCommand`
+
+在 `PluginBase` 中重写 `onCommand`，并在 `plugin.yml` 中声明命令：
+
+```java title="ExamplePlugin.java"
+public class ExamplePlugin extends PluginBase {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("greet")) {
+            sender.sendMessage(args.length > 0 ? "Hello, " + args[0] + "!" : "Hello!");
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+```yaml title="plugin.yml"
+name: ExamplePlugin
+main: com.example.ExamplePlugin
+version: 1.0.0
+commands:
+  greet:
+    description: Greet a player
+    usage: /greet [name]
+    permission: greet.permission
+```
+
+## 2. `Command` 类
+
+继承 `org.powernukkitx.command.Command`（或 `PluginCommand`）。可以用注解注册，也可以手动注册：
+
+<Tabs items={["使用 @CommandDefinition", "手动注册"]}>
+  <Tab value="使用 @CommandDefinition">
+    无需注册代码：由[注解处理器](/docs/zh/development/basics/annotations)完成。
+
+    ```java title="GreetCommand.java"
+    package org.example.command;
+
+    import org.powernukkitx.command.Command;
+    import org.powernukkitx.command.CommandSender;
+    import org.powernukkitx.plugin.annotation.CommandDefinition;
+    import org.powernukkitx.plugin.annotation.CommandDefinition.CommandMode;
+
+    @CommandDefinition(
+        name = "greet",
+        description = "Greet a player",
+        usage = "/greet [name]",
+        permission = "greet.permission",
+        commandMode = CommandMode.RAW // plain string arguments
+    )
+    public class GreetCommand extends Command {
+        @Override
+        public boolean execute(CommandSender sender, String label, String[] args) {
+            sender.sendMessage(args.length > 0 ? "Hello, " + args[0] + "!" : "Hello!");
+            return true;
+        }
+    }
+    ```
+  </Tab>
+  <Tab value="手动注册">
+    ```java title="GreetCommand.java"
+    package org.example.command;
+
+    import org.powernukkitx.command.Command;
+    import org.powernukkitx.command.CommandSender;
+
+    public class GreetCommand extends Command {
+        public GreetCommand() {
+            super("greet", "Greet a player", "/greet [name]");
+            this.setPermission("greet.permission");
+        }
+
+        @Override
+        public boolean execute(CommandSender sender, String label, String[] args) {
+            sender.sendMessage(args.length > 0 ? "Hello, " + args[0] + "!" : "Hello!");
+            return true;
+        }
+    }
+    ```
+
+    然后在 `onEnable()` 中注册：
+
+    ```java
+    @Override
+    public void onEnable() {
+        this.getServer().getCommandMap().register("myplugin", new GreetCommand());
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## 3. 命令树
+
+命令树是一套流式 API：你描述命令的结构（关键字和类型化参数），服务器负责 Tab 补全、权限、执行者限制和语法错误。
+
+<CommandTree />
+
+在构造函数中调用 `enableCommandTree()`，并在 `buildCommandTree` 中构建路由：
+
+```java title="MyCommand.java"
+package org.example.command;
+
+import org.powernukkitx.Player;
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandResult;
+import org.powernukkitx.command.route.RouteTree;
+import org.powernukkitx.command.route.node.RouteNode;
+import org.powernukkitx.command.tree.node.MessageStringNode;
+import org.powernukkitx.command.tree.node.PlayersNode;
+import java.util.List;
+
+public class MyCommand extends Command {
+    public MyCommand() {
+        super("mycommand", "An advanced CommandTree command");
+        this.enableCommandTree();
+    }
+
+    @Override
+    protected void buildCommandTree(RouteTree tree) {
+        // /mycommand info
+        tree.getRoot().then(
+            RouteNode.literal("info")
+                .exec(context -> {
+                    context.getSender().sendMessage("This command uses the PowerNukkitX CommandTree!");
+                    return CommandResult.success();
+                })
+        );
+
+        // /mycommand send <player> <message>
+        tree.getRoot().then(
+            RouteNode.literal("send").then(
+                RouteNode.argument("player", new PlayersNode()).then(
+                    RouteNode.argument("message", new MessageStringNode())
+                        .exec(context -> {
+                            List<Player> targets = context.getArg("player");
+                            String message = context.getArg("message");
+                            for (Player p : targets) {
+                                p.sendMessage("Message: " + message);
+                            }
+                            context.getSender().sendMessage("Message sent!");
+                            return CommandResult.success();
+                        })
+                )
+            )
+        );
+    }
+}
+```
+
+### 构建方法
+
+| 方法 | 作用 |
+| :-- | :-- |
+| `RouteNode.literal(name)` | 固定关键字，例如 `/mycommand info` 中的 `info`。 |
+| `RouteNode.argument(name, node)` | 类型化参数（`PlayersNode`、`IntNode`、`BlockNode`……）。用 `context.getArg(name)` 读取。 |
+| `.then(child)` | 添加下一个关键字或参数。 |
+| `.exec(context -> ...)` | 让节点可执行：输入在此结束时运行这段代码。 |
+| `.senderType(type)` | 谁可以执行：`SenderType.PLAYER`、`CONSOLE` 或 `ANY`。 |
+| `.permission(node)` | 要求某个权限。 |
+| `.optional(true)` | 让参数变为可选。 |
+| `.suggest(list)` | 替换 Tab 补全的建议。 |
+
+### 结果
+
+每个 `exec` 都返回一个 `CommandResult`：
+
+| 结果 | 含义 |
+| :-- | :-- |
+| `CommandResult.success()` | 执行成功。 |
+| `CommandResult.fail()` | 执行失败。 |
+| `CommandResult.fail("message")` | 执行失败，并向执行者显示该消息。 |
+
+<Callout type="info">
+  完整示例见 [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven)。有疑问？到 [Discord](https://discord.gg/powernukkitx) 提问。
+</Callout>

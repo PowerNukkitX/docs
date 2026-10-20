@@ -1,0 +1,97 @@
+---
+title: "Docker"
+description: "PowerNukkitX in einem Container mit Docker oder Docker Compose betreiben."
+icon: Container
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Das offizielle Image ist [`powernukkitx/server`](https://hub.docker.com/r/powernukkitx/server) auf Docker Hub.
+
+## Einen Container starten
+
+<Tabs items={["Docker Compose", "docker run"]}>
+  <Tab value="Docker Compose">
+    Lege in einem Ordner deiner Wahl eine `docker-compose.yml` an:
+
+    ```yaml title="docker-compose.yml"
+    services:
+      pnx-server:
+        image: powernukkitx/server:latest
+        container_name: pnx-server
+        ports:
+          - "19132:19132/udp"
+        volumes:
+          - ./data:/data
+        restart: unless-stopped
+    ```
+
+    Starte ihn dann im Hintergrund:
+
+    ```bash
+    docker compose up -d
+    ```
+  </Tab>
+  <Tab value="docker run">
+    ```bash
+    docker run -d \
+      --name pnx-server \
+      -p 19132:19132/udp \
+      -v /path/to/your/data:/data \
+      powernukkitx/server
+    ```
+
+    <Callout type="warn">
+      Ersetze `/path/to/your/data` durch einen absoluten Pfad auf deinem Rechner, sonst gehen deine Serverdaten verloren, wenn der Container ersetzt wird.
+    </Callout>
+  </Tab>
+</Tabs>
+
+## Wo die Daten liegen
+
+Das Volume `/data` enthält alles, was der Server schreibt:
+
+<Files>
+  <Folder name="data" defaultOpen>
+    <File name="pnx.yml" />
+    <Folder name="worlds" />
+    <Folder name="plugins" />
+    <Folder name="resource_packs" />
+    <Folder name="logs" />
+  </Folder>
+</Files>
+
+Ein zweites, optionales Volume, `/home/minecraft`, speichert den JLine-Cache der Konsole.
+
+## Die Konsole nutzen
+
+Der Server läuft im Hintergrund. Um Befehle wie `op` oder `stop` einzugeben, hänge dich an ihn an:
+
+```bash
+docker attach pnx-server
+```
+
+Um ihn zu verlassen, ohne den Server zu stoppen, drücke **Strg + P** und dann **Strg + Q**.
+
+## JVM-Optionen
+
+Standardmäßig startet das Image Java mit:
+
+- dem Garbage Collector ZGC: `-XX:+UseZGC`, `-XX:+ZGenerational`, `-XX:+UseStringDeduplication`;
+- den Reflection-Flags `--add-opens`;
+- `--skip-setup --accept-license --language eng`, die den Einrichtungsassistenten überspringen.
+
+Um sie zu ändern, zum Beispiel um dem Server 4 GB Heap zu geben, gib den vollständigen Befehl nach dem Image-Namen an:
+
+```bash
+docker run -d \
+  --name pnx-server \
+  -p 19132:19132/udp \
+  -v /path/to/your/data:/data \
+  powernukkitx/server \
+  -Xmx4G -Xms1G \
+  -cp /app/powernukkitx.jar:./libs/* \
+  org.powernukkitx.PowerNukkitX \
+  --skip-setup --accept-license --language eng
+```

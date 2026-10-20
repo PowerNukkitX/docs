@@ -1,0 +1,47 @@
+---
+title: 常见问题
+description: "关于 PowerNukkitX 最常见问题的简短回答。"
+icon: MessageCircleQuestion
+---
+
+最常见问题的简短回答。遇到错误和崩溃，请查看[故障排除](/docs/zh/faq/troubleshooting)。
+
+<Accordions type="single">
+  <Accordion title="PowerNukkitX 是什么？">
+    面向 Minecraft 基岩版的开源服务器软件。手机、主机和 Windows 上的玩家使用普通客户端即可加入，无需模组。
+  </Accordion>
+  <Accordion title="Java 版玩家可以加入吗？">
+    不可以。PowerNukkitX 使用基岩版协议，Java 版客户端无法使用。如果要服务 Java 版玩家，请运行 Paper、Purpur 等。
+  </Accordion>
+  <Accordion title="可以使用 Spigot、Paper 或 Purpur 插件吗？">
+    不可以。这些插件是为 Java 版服务器编写的，它们的 API 和协议完全不同。
+  </Accordion>
+  <Accordion title="支持资源包和行为包吗？">
+    资源包支持：把压缩后的资源包放进 `resource_packs/`。行为包不支持：PowerNukkitX 在服务器端用 Java 实现生物、方块和物品。
+  </Accordion>
+  <Accordion title="需要哪个 Java 版本？">
+    **Java 21 或更高版本**，64 位。Java 8、11、17 和 20 会导致类版本错误。参见[系统要求](/docs/zh/requirements)。
+  </Accordion>
+  <Accordion title="为什么启动时有反射警告？">
+    从 Java 9 起，反射默认受到限制，而 PowerNukkitX 需要用它来注册自定义物品和方块、加载插件。请用以下参数启动，或使用提供的启动脚本：
+
+    ```bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+  </Accordion>
+  <Accordion title="它和 Nukkit、PowerNukkit 有什么区别？">
+    PowerNukkitX 是现代且活跃的分支。它加入了自定义方块、物品和实体，接近原版的生物 AI，Terra 生成器，并用单个 `pnx.yml` 取代了 `server.properties` 和 `nukkit.yml`。
+  </Accordion>
+  <Accordion title="去哪里获取插件？">
+    在[插件中心](https://powernukkitx.org/plugins)。每个插件都链接到作者的 GitHub release：把 jar 放进 `plugins/` 然后重启。
+  </Accordion>
+  <Accordion title="如何发布自己的插件？">
+    基于 PowerNukkitX API 编写插件，发布带有 jar 的 GitHub release，然后登录插件中心并提交仓库。团队审核通过后才会上线。可以从[开发指南](/docs/zh/development)开始。
+  </Accordion>
+  <Accordion title="可以商用吗？">
+    可以。PowerNukkitX 采用 LGPL-3.0 许可：你可以商业运行和修改它，插件可以使用任意许可。对 PowerNukkitX 本身的修改仍须遵循 LGPL。
+  </Accordion>
+  <Accordion title="去哪里寻求帮助？">
+    快速求助请到 [Discord](https://discord.gg/powernukkitx)，报告 bug 请到 [GitHub Issues](https://github.com/PowerNukkitX/PowerNukkitX/issues)，较长的问题请到 [GitHub Discussions](https://github.com/PowerNukkitX/PowerNukkitX/discussions)。
+  </Accordion>
+</Accordions>

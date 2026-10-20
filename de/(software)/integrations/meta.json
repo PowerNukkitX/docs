@@ -1,0 +1,9 @@
+{
+  "title": "Integrationen",
+  "icon": "Puzzle",
+  "pages": [
+    "spark",
+    "terra",
+    "wdpe"
+  ]
+}

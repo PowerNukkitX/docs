@@ -1,0 +1,73 @@
+---
+title: "macOS"
+description: "Instala y ejecuta PowerNukkitX en macOS, Intel o Apple Silicon."
+icon: Apple
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+En macOS, instalas Java 21 con Homebrew y luego ejecutas el jar del servidor con un script de inicio. Los Mac Intel y Apple Silicon siguen los mismos pasos.
+
+## Instalación
+
+<Steps>
+  <Step>
+    ### Instalar Java 21
+
+    Instala Java con [Homebrew](https://brew.sh/). En Terminal:
+
+    ```bash
+    brew install openjdk@21
+    sudo ln -sfn /opt/homebrew/opt/openjdk@21/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+    ```
+
+    En un Mac Intel antiguo, sustituye `/opt/homebrew` por `/usr/local`. Comprueba con `java -version`: deberías ver la versión `21`.
+  </Step>
+  <Step>
+    ### Crear una carpeta para el servidor
+
+    ```bash
+    mkdir ~/pnx-server
+    cd ~/pnx-server
+    ```
+  </Step>
+  <Step>
+    ### Descargar el servidor
+
+    Descarga el último `powernukkitx.jar` desde las [releases de GitHub](https://github.com/PowerNukkitX/PowerNukkitX/releases) en `~/pnx-server`.
+  </Step>
+  <Step>
+    ### Crear el script de inicio
+
+    PowerNukkitX necesita flags de reflexión de Java para arrancar. Crea `start.sh`:
+
+    ```bash title="start.sh"
+    #!/bin/bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+
+    Después hazlo ejecutable:
+
+    ```bash
+    chmod +x start.sh
+    ```
+  </Step>
+  <Step>
+    ### Arrancar el servidor
+
+    ```bash
+    ./start.sh
+    ```
+
+    La primera vez, el asistente te pide aceptar la licencia (`y`), elegir un idioma (por ejemplo `spa`) e introducir el nombre del servidor (MOTD) y el puerto. Escribe `stop` para apagarlo correctamente.
+  </Step>
+</Steps>
+
+## Solución de problemas
+
+<Accordions>
+  <Accordion title="&quot;No se puede verificar el desarrollador&quot; o un aviso de Gatekeeper">
+    macOS puede bloquear Java o el lanzador. Abre **Ajustes del Sistema > Privacidad y seguridad**, baja hasta la sección de seguridad y pulsa **Permitir de todos modos** junto al elemento bloqueado.
+  </Accordion>
+</Accordions>

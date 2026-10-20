@@ -1,0 +1,99 @@
+---
+title: "配方"
+description: "注册有序、无序和熔炉配方，让玩家可以制作你的物品。"
+icon: BookOpen
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+和物品、方块一样，在 `onLoad()` 中注册配方。全部注册完成后，**重建配方数据包**：玩家加入时收到的就是它。
+
+```java
+import org.powernukkitx.registry.Registries;
+
+public static void registerAllRecipes() {
+    registerShapeless();
+    registerShaped();
+    registerFurnace();
+    
+    // CRITICAL: Rebuild the recipe package sent to players on login
+    Registries.RECIPE.rebuildPacket();
+}
+```
+
+<Tabs items={["有序", "无序", "熔炉"]}>
+  <Tab value="有序">
+物品必须按特定图案摆放在合成格中。形状中的每个字符代表一种物品：
+
+<RecipeGrid />
+
+```java
+import org.powernukkitx.item.Item;
+import org.powernukkitx.recipe.ShapedRecipe;
+import org.powernukkitx.registry.Registries;
+import java.util.List;
+import java.util.Map;
+
+private static void registerShaped() {
+    // Define item mappings (characters representing items)
+    Map<Character, Item> itemMapping = Map.of(
+            'a', Item.get(Item.AMETHYST_SHARD),
+            'b', Item.get(Item.STICK)
+    );
+
+    // Define the crafting shape pattern (up to 3x3)
+    String[] shape = new String[] {
+            "aaa", // Top row: 3 Amethyst Shards
+            " b ", // Middle row: 1 Stick in center
+            " b "  // Bottom row: 1 Stick in center
+    };
+
+    Item result = Item.get("powernukkitx:amethyst_pickaxe");
+
+    // Create and register shaped recipe
+    ShapedRecipe recipe = new ShapedRecipe(result, shape, itemMapping, List.of());
+    Registries.RECIPE.register(recipe);
+}
+```
+  </Tab>
+  <Tab value="无序">
+正确的物品放在合成格任意位置、任意排列即可。每种物品数量写为 1：
+
+```java
+import org.powernukkitx.item.Item;
+import org.powernukkitx.recipe.ShapelessRecipe;
+import org.powernukkitx.registry.Registries;
+import java.util.List;
+
+private static void registerShapeless() {
+    Item result = Item.get(Item.DIAMOND);
+    Item coal = Item.get(Item.COAL);
+
+    // Inputs: Three pieces of coal (specify items with count = 1 in the list)
+    List<Item> input = List.of(coal, coal, coal);
+
+    ShapelessRecipe recipe = new ShapelessRecipe(result, input);
+    Registries.RECIPE.register(recipe);
+}
+```
+  </Tab>
+  <Tab value="熔炉">
+在熔炉、高炉或烟熏炉中烧炼的物品：
+
+```java
+import org.powernukkitx.item.Item;
+import org.powernukkitx.recipe.FurnaceRecipe;
+import org.powernukkitx.registry.Registries;
+
+private static void registerFurnace() {
+    Item result = Item.get(Item.DIAMOND);
+    Item inputCoal = Item.get(Item.COAL);
+
+    // Input coal yields a diamond when smelted
+    FurnaceRecipe recipe = new FurnaceRecipe(result, inputCoal);
+    Registries.RECIPE.register(recipe);
+}
+```
+  </Tab>
+</Tabs>

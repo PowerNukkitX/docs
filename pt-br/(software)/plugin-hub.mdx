@@ -1,0 +1,67 @@
+---
+title: "Hub de plugins"
+description: "Encontre, instale e publique plugins no hub de plugins do PowerNukkitX."
+icon: Package
+---
+
+O [hub de plugins](https://powernukkitx.org/plugins) reúne os plugins da comunidade para o PowerNukkitX. Cada página e cada versão é **revisada** antes de ir ao ar, e cada jar é **analisado**.
+
+## Instalar um plugin
+
+<Steps>
+  <Step>
+    ### Encontrar
+
+    Busque por nome, repositório ou palavra-chave, ou navegue por categoria. Ordene por downloads, tendência, estrelas, avaliação ou última atualização, e filtre por versão do servidor ou publicador verificado. Prefere uma visão compacta? Mude para a visualização em **lista** ao lado da ordenação.
+  </Step>
+  <Step>
+    ### Baixar
+
+    Na página do plugin, **Como instalar** traz o jar da última versão aprovada, direto da release do GitHub do autor.
+  </Step>
+  <Step>
+    ### Instalar
+
+    Coloque o jar na pasta `plugins/` do servidor e reinicie o servidor.
+  </Step>
+</Steps>
+
+<Callout type="info">
+  Confira primeiro o cartão **Detalhes**: ele mostra do que o plugin precisa (dependências, versão da API) e avisa quando um plugin está há mais de um ano sem atualização.
+</Callout>
+
+## Publicar o seu plugin
+
+<Steps>
+  <Step>
+    ### Preparar o repositório
+
+    Seu plugin precisa estar em um **repositório público no GitHub** em que você possa dar push, com uma **release** contendo um `.jar`. Veja [Criar um plugin](/docs/pt-br/development/basics) para fazer um.
+  </Step>
+  <Step>
+    ### Enviar
+
+    Entre na sua conta e abra [Enviar um plugin](https://powernukkitx.org/dashboard/submit). Escolha o repositório, dê um nome, um resumo de uma linha e até três categorias, e se quiser uma cor de destaque. Uma prévia ao vivo mostra como vai ficar.
+  </Step>
+  <Step>
+    ### Aguardar a revisão
+
+    Um revisor confere a página e lê o jar mais recente. Você recebe uma notificação com a decisão; se for recusado, vê o motivo e pode enviar de novo.
+  </Step>
+  <Step>
+    ### Manter atualizado
+
+    Cada nova release do GitHub também é revisada antes que os jogadores possam baixá-la. Gerencie tudo em **Painel > Meus plugins**.
+  </Step>
+</Steps>
+
+## Deixe a página com a sua cara
+
+Na página de gerenciamento do plugin, em **Página**:
+
+| O quê | Como | Revisão |
+| :-- | :-- | :-- |
+| Nome, resumo, categorias | Editar a página | Revisado em uma página pública |
+| Ícone | `.jarbage/icon.png` no seu repositório, ou envie o arquivo | Revisado |
+| Cor de destaque | Uma das sete cores do site | Aplicado na hora |
+| Links | Site, documentação, Discord, relatório de bugs, suporte (só https) | Aplicado na hora |

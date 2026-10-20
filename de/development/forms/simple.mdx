@@ -1,0 +1,135 @@
+---
+title: SimpleForm
+icon: MousePointerClick
+description: "Ein Titel, etwas Text und eine Liste von Schaltflächen. Das Formular für Menüs und Shops."
+authors:
+  - PleaseInsertNameHere
+---
+
+<FormPreview type="simple" />
+
+## Titel und Inhalt
+
+<Tabs items={["Konstruktor", "Nur Titel", "Methoden"]}>
+  <Tab value="Konstruktor">
+```java
+// Setting the title and content within the constructor
+SimpleForm form = new SimpleForm("title", "content");
+```
+  </Tab>
+  <Tab value="Nur Titel">
+```java
+// Only setting the title within the constructor
+SimpleForm form = new SimpleForm("title");
+```
+  </Tab>
+  <Tab value="Methoden">
+```java
+// Setting the title and content using methods
+SimpleForm form = new SimpleForm()
+                    .title("title")
+                    .content("content");
+```
+  </Tab>
+</Tabs>
+
+## Schaltflächen
+
+| Methode | Fügt hinzu |
+| :-- | :-- |
+| `addButton(ElementButton)` | Ein vollständiges Schaltflächen-Element. |
+| `addButton(ElementButton, Consumer<Player>)` | Ein vollständiges Schaltflächen-Element, mit Klick-Handler. |
+| `addButton(String)` | Eine reine Textschaltfläche. |
+| `addButton(String, Consumer<Player>)` | Eine Textschaltfläche, mit Klick-Handler. |
+| `addButton(String, ButtonImage)` | Eine Schaltfläche mit Bild. |
+| `addButton(String, ButtonImage, Consumer<Player>)` | Eine Schaltfläche mit Bild und Klick-Handler. |
+
+Ein Schaltflächenbild kommt aus dem Ressourcenpaket (`ButtonImage.Type.PATH`) oder von einer URL (`ButtonImage.Type.URL`):
+
+```java
+ButtonImage emeraldItem = ButtonImage.Type.PATH.of("textures/ui/emerald");
+```
+
+## Klicks verarbeiten
+
+<Tabs items={["Pro Schaltfläche", "Ganzes Formular", "Ereignis"]}>
+  <Tab value="Pro Schaltfläche">
+Gib jeder Schaltfläche ihren eigenen Handler. Die Aufrufe lassen sich verketten:
+
+```java
+form.addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"), player -> player.sendMessage("You clicked the Emerald!"))
+    .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"), player -> player.sendMessage("You clicked the Diamond!")); // You can also chain methods!
+```
+  </Tab>
+  <Tab value="Ganzes Formular">
+Ein Handler für alle Schaltflächen, praktisch, wenn die Schaltflächen aus einer Liste kommen:
+
+```java
+form.onSubmit((player, response) -> {
+    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
+    ElementButton button = response.button(); // The clicked button (null if invalid)
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+  </Tab>
+  <Tab value="Ereignis">
+Oder höre auf `PlayerFormRespondedEvent`:
+
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a SimpleForm called 'Ingots' was closed
+    if (form instanceof SimpleForm && form.title().equals("Ingots")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted an ingot.");
+    }
+}
+```
+  </Tab>
+</Tabs>
+
+Das Senden funktioniert wie bei jedem Formular: siehe [Formulare](/docs/de/development/forms#sending-a-form).
+
+## Ein offenes Formular aktualisieren
+
+Du kannst Schaltflächen ändern, während der Spieler das Formular noch offen hat:
+
+```java
+ElementButton button = new ElementButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot", player -> player.sendMessage("You clicked the Netherite Ingot!")));
+form.updateElement(0, button); // We want to replace the first button (index 0) with the new one
+form.sendUpdate(player); // Send the update to the player
+```
+
+<Callout type="warn">
+  Vermeide das bei großen Formularen: Ein Update setzt zurück, was der Spieler gerade tat, etwa seine Scrollposition.
+</Callout>
+
+## Vollständiges Beispiel
+
+Das Formular aus dem Bild oben, das seine erste Schaltfläche nach 3 Sekunden entfernt:
+
+```java
+SimpleForm form = new SimpleForm("Ingots", "Please select an Ingot to continue.")
+            .addButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot"))
+            .addButton("Emerald", ButtonImage.Type.PATH.of("textures/ui/emerald"))
+            .addButton("Diamond", ButtonImage.Type.PATH.of("textures/ui/diamond"))
+            .onSubmit((pl, response) -> {
+                pl.sendMessage("You have clicked the " + response.button().text());
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+
+// Remove the Netherite Ingot after 3 seconds open
+Server.getInstance().getScheduler().scheduleDelayedTask(() -> {
+    if (form.isViewer(player)) {
+        form.removeElement(0);
+        form.sendUpdate(player);
+    }
+}, 3 * 20);
+```

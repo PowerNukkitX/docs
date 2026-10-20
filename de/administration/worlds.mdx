@@ -1,0 +1,54 @@
+---
+title: "Welten"
+description: "Wie PowerNukkitX Welten speichert, lädt und konfiguriert."
+icon: Map
+authors:
+  - PowerNukkitX
+---
+
+Jede Welt (ein *Level*) ist ein Ordner in `worlds/`. Die Standardwelt wird durch `defaultLevelName` in `pnx.yml` benannt (standardmäßig `world`) und beim Start geladen; dort erscheinen neue Spieler.
+
+## Die Standardwelt ändern
+
+```yaml title="pnx.yml"
+baseSettings:
+  defaultLevelName: world
+```
+
+<Callout type="warn">
+  Stoppe zuerst den Server: Ein laufender Server schreibt `pnx.yml` beim Herunterfahren aus dem Speicher neu.
+</Callout>
+
+## Eine Welt importieren
+
+PowerNukkitX liest das Bedrock-Format **LevelDB**, also funktionieren Welten von einem anderen Server oder aus dem Bedrock-Client exportierte Welten.
+
+<Steps>
+  <Step>Stoppe den Server.</Step>
+  <Step>Kopiere den Weltordner nach `worlds/`.</Step>
+  <Step>Setze `defaultLevelName` auf den Ordnernamen oder lade die Welt mit einem Multi-World-Plugin.</Step>
+  <Step>Starte den Server.</Step>
+</Steps>
+
+## Einstellungen pro Welt
+
+Schwierigkeit, Spawnpunkt und Spielregeln gehören zu jeder Welt und lassen sich zur Laufzeit ändern:
+
+```bash title="Console"
+difficulty normal
+setworldspawn
+gamerule keepInventory true
+```
+
+## Mehrere Welten gleichzeitig
+
+Der Kern lädt eine Standardwelt. Um mehrere zu betreiben und Spieler zwischen ihnen zu bewegen, installiere ein Multi-World-Plugin aus dem [Plugin-Hub](https://powernukkitx.org/plugins).
+
+## Spawn und Generierung
+
+| Einstellung | Wirkung |
+| :-- | :-- |
+| `playerSettings.spawnRadius` | Wie weit vom Welt-Spawn neue Spieler erscheinen. |
+| `gameplaySettings.spawnProtection` | Der Radius um den Spawn, den Nicht-Operatoren nicht bearbeiten können. |
+
+Gelände kann von [Terra](/docs/de/integrations/terra) erzeugt werden; die Chunk-Generierung läuft auf den Async-Worker-Threads (siehe [Leistung](/docs/de/administration/performance)).

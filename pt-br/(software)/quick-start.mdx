@@ -1,0 +1,59 @@
+---
+title: "Início rápido"
+description: "Do zero a um servidor em que você pode entrar, em uns cinco minutos."
+icon: Zap
+---
+
+O jeito mais rápido é a ferramenta de linha de comando `pnx`. Ela baixa a última versão estável e inicia o servidor para você.
+
+<Callout type="info" title="Você precisa de">
+  **Java 21** ou mais recente, **Node.js** (para o `npm`) e 2 GB de memória livre. Veja os [Requisitos](/docs/pt-br/requirements).
+</Callout>
+
+<Steps>
+  <Step>
+    ### Instalar a CLI
+
+    ```bash
+    npm i -g @powernukkitx/cli
+    ```
+
+    Sem instalação global? `npx @powernukkitx/cli init` também funciona.
+  </Step>
+  <Step>
+    ### Criar o servidor
+
+    Em uma pasta vazia:
+
+    ```bash
+    pnx init
+    ```
+  </Step>
+  <Step>
+    ### Iniciar
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    Rode `pnx` sem argumentos para abrir um menu interativo.
+  </Step>
+  <Step>
+    ### Entrar
+
+    No Minecraft Bedrock, abra **Jogar > Servidores > Adicionar servidor** e digite o endereço da sua máquina com a porta **19132**. No mesmo computador, use `127.0.0.1`.
+
+    <Callout type="tip" title="Jogadores em outro aparelho não conseguem entrar?">
+      O Bedrock usa **UDP**, não TCP. Libere a porta UDP `19132` no firewall e redirecione-a no roteador para jogadores de fora da sua rede. Mais em [Solução de problemas](/docs/pt-br/faq/troubleshooting).
+    </Callout>
+  </Step>
+</Steps>
+
+## Próximos passos
+
+<Cards>
+  <Card title="Configurar o servidor" href="/docs/pt-br/configuration">Nome, vagas, dificuldade e mais, no `pnx.yml`.</Card>
+  <Card title="Adicionar plugins" href="/docs/pt-br/plugin-hub">Encontre e instale plugins pelo hub.</Card>
+  <Card title="Proteger o servidor" href="/docs/pt-br/permissions">Operadores, permissões e a lista branca.</Card>
+  <Card title="Prefere Docker ou um jar?" href="/docs/pt-br/installation">Todas as outras formas de instalar.</Card>
+</Cards>

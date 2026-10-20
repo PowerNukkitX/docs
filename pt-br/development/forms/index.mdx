@@ -1,0 +1,113 @@
+---
+title: Formulários
+icon: PanelTop
+description: "Mostre aos jogadores menus, perguntas e telas de configuração, e leia as respostas."
+authors:
+  - PleaseInsertNameHere
+---
+
+import { MousePointerClick, MessageSquare, SlidersHorizontal, LayoutTemplate } from "lucide-react";
+
+Um formulário é uma janela na tela do jogador. Há três tipos, mais um reativo experimental:
+
+<FormTypes />
+
+<Cards>
+  <Card icon={<MousePointerClick />} title="SimpleForm" href="/docs/pt-br/development/forms/simple">
+    Uma lista de botões. Menus, lojas, listas de teleporte.
+  </Card>
+  <Card icon={<MessageSquare />} title="ModalForm" href="/docs/pt-br/development/forms/modal">
+    Uma pergunta, duas respostas. Confirmações.
+  </Card>
+  <Card icon={<SlidersHorizontal />} title="CustomForm" href="/docs/pt-br/development/forms/custom">
+    Campos, interruptores, controles deslizantes, listas. Telas de configuração.
+  </Card>
+  <Card icon={<LayoutTemplate />} title="Data-Driven UI" href="/docs/pt-br/development/forms/ddui">
+    Experimental: telas que se atualizam enquanto continuam abertas.
+  </Card>
+</Cards>
+
+O que vem a seguir funciona igual para todos os tipos de formulário.
+
+## Título [#title]
+
+Defina-o no construtor ou com um método:
+
+```java
+// Using the constructor
+CustomForm custom = new CustomForm("title");
+ModalForm modal = new ModalForm("title");
+SimpleForm simple = new SimpleForm("title");
+
+// Using the method
+custom.title("other title");
+modal.title("other title");
+simple.title("other title");
+```
+
+## Ouvir as respostas
+
+Cada formulário roda um callback quando o jogador o envia, e outro quando ele o fecha:
+
+```java
+form.onSubmit((player, response) -> {
+    /*
+
+    Handle the form response here,
+    the object depends on the form you've created.
+    For details, check out the specific form documentation.
+
+    */
+})
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+
+## Enviar um formulário [#sending-a-form]
+
+```java
+form.send(player);
+```
+
+Você também pode passar um id, embora não seja recomendado:
+
+```java
+form.send(player, 123);
+```
+
+## Metadados
+
+Anexe o que quiser a um formulário, por exemplo para reconhecê-lo depois ou atualizá-lo:
+
+```java
+// Example: Saving an entity
+Entity entity = ...;
+
+form.putMeta("form-type", "manage-entity")
+    .putMeta("entity", entity);
+```
+
+Leia de volta com `getMeta`:
+
+```java
+Entity entity = form.getMeta("entity");
+```
+
+Com um valor padrão caso a chave possa faltar:
+
+```java
+Entity entity = form.getMeta("entity", backupEntity);
+```
+
+## Quem está com ele aberto
+
+Um formulário pode ser mostrado a vários jogadores ao mesmo tempo (um seletor de times, por exemplo). Liste-os:
+
+```java
+ObjectArraySet<Player> viewers = form.viewers();
+```
+
+Ou verifique um jogador:
+
+```java
+boolean isViewer = form.isViewer(player);
+```

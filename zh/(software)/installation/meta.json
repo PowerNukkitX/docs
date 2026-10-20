@@ -1,0 +1,11 @@
+{
+  "title": "安装",
+  "icon": "Download",
+  "pages": [
+    "index",
+    "windows",
+    "macos",
+    "linux",
+    "docker"
+  ]
+}

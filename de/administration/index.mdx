@@ -1,0 +1,43 @@
+---
+title: "Überblick"
+description: "Einen PowerNukkitX-Server im Alltag betreuen: Befehle, Spieler, Welten, Leistung und Backups."
+icon: LayoutDashboard
+authors:
+  - PowerNukkitX
+---
+
+import { Archive, CheckCheck, Gauge, Map, SquareTerminal, Users } from "lucide-react";
+
+Ist der Server installiert und [konfiguriert](/docs/de/configuration), geht es ums Betreiben: ihn im Alltag pflegen und dann für die Öffentlichkeit öffnen.
+
+## Im Alltag
+
+<Cards>
+  <Card icon={<SquareTerminal />} title="Konsole & Befehle" href="/docs/de/administration/commands">
+    Die Befehle, die du am häufigsten nutzt, in der Konsole und im Spiel.
+  </Card>
+  <Card icon={<Users />} title="Spieler" href="/docs/de/administration/players">
+    Operatoren, Whitelist, Kicks und Banns.
+  </Card>
+  <Card icon={<Map />} title="Welten" href="/docs/de/administration/worlds">
+    Welten laden, importieren und konfigurieren.
+  </Card>
+  <Card icon={<Gauge />} title="Leistung" href="/docs/de/administration/performance">
+    Speicher, Threads und Sichtweite.
+  </Card>
+  <Card icon={<Archive />} title="Backups" href="/docs/de/administration/backups">
+    Welten und Einstellungen sichern und wiederherstellen.
+  </Card>
+</Cards>
+
+## Online gehen
+
+<Cards>
+  <Card icon={<CheckCheck />} title="Bevor du öffentlich wirst" href="/docs/de/administration/go-live">
+    Eine Checkliste, bevor du die Adresse teilst.
+  </Card>
+</Cards>
+
+<Callout type="info">
+  Die meisten Einstellungen stehen in `pnx.yml`. Stoppe den Server, bevor du sie von Hand bearbeitest: Ein laufender Server schreibt die Datei beim Herunterfahren zurück und überschreibt deine Änderungen.
+</Callout>

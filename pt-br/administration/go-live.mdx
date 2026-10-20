@@ -1,0 +1,33 @@
+---
+title: "Antes de abrir ao público"
+description: "Um checklist para revisar antes de abrir o servidor para todo mundo."
+icon: ListChecks
+---
+
+Marque cada linha conforme avança. Suas marcações ficam salvas neste navegador, então você pode voltar depois.
+
+<Checklist
+  name="go-live"
+  items={[
+    { label: "Java 21 ou mais recente, 64 bits", detail: "Confira com java -version. Veja Requisitos." },
+    { label: "A autenticação Xbox está ligada", detail: "xboxAuth: true no pnx.yml, para ninguém entrar com o nome de outro." },
+    { label: "Só pessoas de confiança são operadores", detail: "Os demais recebem permissões por um plugin de permissões." },
+    { label: "A lista branca está ligada, se o servidor for privado", detail: "allowList: true, depois whitelist add <player>." },
+    { label: "A porta UDP 19132 está aberta", detail: "No firewall e redirecionada no roteador." },
+    { label: "Os backups rodam em agenda", detail: "Para outro disco ou máquina, mantendo várias cópias." },
+    { label: "A distância de visão combina com a sua máquina", detail: "Diminua gameplaySettings.viewDistance se um servidor cheio sofrer." },
+    { label: "Os plugins são da sua versão do PowerNukkitX", detail: "Confira o cartão Detalhes de cada plugin no hub." },
+    { label: "Os pacotes de recursos estão em resource_packs/", detail: "Necessários se um plugin adiciona blocos, itens ou entidades personalizados." },
+  ]}
+/>
+
+## Onde cada ponto é explicado
+
+<Cards>
+  <Card title="Requisitos" href="/docs/pt-br/requirements">Java e hardware.</Card>
+  <Card title="Permissões e segurança" href="/docs/pt-br/permissions">Operadores, nós e plugins de permissões.</Card>
+  <Card title="Jogadores" href="/docs/pt-br/administration/players">Lista branca, expulsões e banimentos.</Card>
+  <Card title="Backups" href="/docs/pt-br/administration/backups">O que salvar e como automatizar.</Card>
+  <Card title="Desempenho" href="/docs/pt-br/administration/performance">Memória, threads e distância de visão.</Card>
+  <Card title="Pacotes de recursos" href="/docs/pt-br/development/customs/resource-packs">Enviar as texturas do conteúdo personalizado.</Card>
+</Cards>

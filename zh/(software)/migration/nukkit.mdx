@@ -1,0 +1,71 @@
+---
+title: "从 Nukkit / PowerNukkit 迁移"
+description: "把 Nukkit 或 PowerNukkit 服务器升级到 PowerNukkitX。配置会自动转换。"
+icon: Hammer
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+这是最简单的迁移：PowerNukkitX 会在首次启动时读取并转换你的旧配置。
+
+<CarryOver
+  items={[
+    { label: "世界", note: "区域格式相同，可以直接加载", status: "yes" },
+    { label: "配置", note: "自动转换为 pnx.yml", status: "yes" },
+    { label: "简单插件", note: "很多可以继续使用", status: "yes" },
+    { label: "复杂插件", note: "涉及方块、物品或实体注册表的插件需要更新", status: "manual" },
+  ]}
+/>
+
+## 步骤
+
+<Steps>
+  <Step>
+    ### 备份
+
+    把整个服务器文件夹复制到安全的地方。
+  </Step>
+  <Step>
+    ### 替换文件
+
+    1. 从 [releases](https://github.com/PowerNukkitX/PowerNukkitX/releases) 下载最新的 `powernukkitx.jar`。
+    2. 从 [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts) 下载适合你系统的启动脚本（`start.bat` 或 `start.sh`）。
+    3. 用 `powernukkitx.jar` 替换旧的 jar。暂时**保留** `nukkit.yml` 和 `server.properties`。
+  </Step>
+  <Step>
+    ### 启动服务器
+
+    PowerNukkitX 会找到 `nukkit.yml` 和 `server.properties` 并迁移它们：
+
+    - 把这两个文件复制到新的 `backup/` 文件夹；
+    - 读取其中的每一项设置并写入 `pnx.yml`；
+    - 删除旧文件，然后继续启动。
+  </Step>
+</Steps>
+
+## 每项设置的去向
+
+| 旧设置 | 旧文件 | `pnx.yml` 分区 | `pnx.yml` 键 |
+| :-- | :-- | :-- | :-- |
+| `server-ip` | `server.properties` | `baseSettings` | `ip` |
+| `server-port` | `server.properties` | `baseSettings` | `port` |
+| `max-players` | `server.properties` | `baseSettings` | `maxPlayers` |
+| `level-name` | `server.properties` | `baseSettings` | `defaultLevelName` |
+| `white-list` | `server.properties` | `baseSettings` | `allowList` |
+| `xbox-auth` | `server.properties` | `baseSettings` | `xboxAuth` |
+| `gamemode` | `server.properties` | `gameplaySettings` | `gamemode` |
+| `difficulty` | `server.properties` | `gameplaySettings` | `difficulty` |
+| `view-distance` | `server.properties` | `gameplaySettings` | `viewDistance` |
+| `language` | `nukkit.yml` | `baseSettings` | `language` |
+| `autosave` | `nukkit.yml` | `baseSettings` | `autosaveDelay` |
+| `save-player-data` | `nukkit.yml` | `playerSettings` | `savePlayerData` |
+
+## 插件
+
+基础的 Nukkit 插件通常可以继续使用，但使用**方块、物品或实体注册表**的插件会失效：为了支持基岩版的自定义内容，PowerNukkitX 用动态系统替换了这些注册表。
+
+<Steps>
+  <Step>在[插件中心](https://powernukkitx.org/plugins)中查找每个插件的 PowerNukkitX 版本。</Step>
+  <Step>如果没有，就需要更新该插件，或基于 PowerNukkitX API 重新编译。</Step>
+</Steps>

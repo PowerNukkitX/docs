@@ -1,0 +1,49 @@
+---
+title: "WaterdogPE 代理"
+description: "把多个 PowerNukkitX 服务器连接到 WaterdogPE 代理之后。"
+icon: Link
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+代理可以让玩家在多个服务器（大厅、生存、创造……）之间切换而不断开连接。PowerNukkitX 支持 [WaterdogPE](https://github.com/WaterdogPE/WaterdogPE)，包括 IP 转发和会话转移。
+
+<ProxyNetwork />
+
+## 配置每个子服
+
+<Steps>
+  <Step>
+    ### 停止子服
+
+    只在服务器停止时编辑 `pnx.yml`。
+  </Step>
+  <Step>
+    ### 启用代理模式
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      waterdogpe: true
+      xboxAuth: false
+    ```
+
+    代理负责验证玩家，所以子服不应再次检查 Xbox Live：子服上的 `xboxAuth` 为 `false`。
+  </Step>
+  <Step>
+    ### 在代理中注册
+
+    在 WaterdogPE 的 `config.yml` 中添加每个子服的地址和 UDP 端口，并让代理的 IP 转发模式与之匹配。
+  </Step>
+  <Step>
+    ### 重启
+
+    重启每个子服以应用设置。
+  </Step>
+</Steps>
+
+![WaterdogPE 配置](../../../assets/proxy-config-waterdogpe.png)
+
+<Callout type="warn" title="转移前先关闭背包">
+  通过代码或命令把玩家转移到其他服务器时，请先关闭他打开的容器（箱子、表单）。否则他在目标服务器上的背包可能会不同步。
+</Callout>

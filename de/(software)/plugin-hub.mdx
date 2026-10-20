@@ -1,0 +1,67 @@
+---
+title: "Plugin-Hub"
+description: "Plugins im PowerNukkitX-Plugin-Hub finden, installieren und veröffentlichen."
+icon: Package
+---
+
+Der [Plugin-Hub](https://powernukkitx.org/plugins) listet Community-Plugins für PowerNukkitX. Jeder Eintrag und jedes Release wird vor der Veröffentlichung **geprüft**, und jede Jar wird **gescannt**.
+
+## Ein Plugin installieren
+
+<Steps>
+  <Step>
+    ### Finden
+
+    Suche nach Name, Repository oder Stichwort, oder stöbere nach Kategorie. Sortiere nach Downloads, Trend, Sternen, Bewertung oder letztem Update, und filtere nach Serverversion oder verifiziertem Herausgeber. Lieber kompakt? Wechsle neben der Sortierung zur **Listenansicht**.
+  </Step>
+  <Step>
+    ### Herunterladen
+
+    Auf der Seite des Plugins liefert **Installation** die Jar des neuesten freigegebenen Releases, direkt aus dem GitHub-Release des Autors.
+  </Step>
+  <Step>
+    ### Installieren
+
+    Lege die Jar in den Ordner `plugins/` deines Servers und starte den Server neu.
+  </Step>
+</Steps>
+
+<Callout type="info">
+  Sieh dir zuerst die Karte **Details** an: Sie zeigt, was das Plugin braucht (Abhängigkeiten, API-Version), und warnt, wenn ein Plugin seit über einem Jahr nicht aktualisiert wurde.
+</Callout>
+
+## Dein Plugin veröffentlichen
+
+<Steps>
+  <Step>
+    ### Das Repository vorbereiten
+
+    Dein Plugin muss in einem **öffentlichen GitHub-Repository** liegen, in das du pushen kannst, mit einem **Release**, das eine `.jar` enthält. Wie du eins baust, steht unter [Ein Plugin erstellen](/docs/de/development/basics).
+  </Step>
+  <Step>
+    ### Einreichen
+
+    Melde dich an und öffne [Plugin einreichen](https://powernukkitx.org/dashboard/submit). Wähle das Repository, gib ihm einen Namen, eine einzeilige Zusammenfassung und bis zu drei Kategorien, optional eine Akzentfarbe. Eine Live-Vorschau zeigt, wie es aussehen wird.
+  </Step>
+  <Step>
+    ### Auf die Prüfung warten
+
+    Ein Prüfer sieht sich den Eintrag an und liest die neueste Jar. Du bekommst eine Benachrichtigung mit der Entscheidung; wird es abgelehnt, siehst du den Grund und kannst es erneut einreichen.
+  </Step>
+  <Step>
+    ### Aktuell halten
+
+    Jedes neue GitHub-Release wird ebenfalls geprüft, bevor Spieler es herunterladen können. Verwalte alles unter **Dashboard > Meine Plugins**.
+  </Step>
+</Steps>
+
+## Deine Seite anpassen
+
+Auf der Verwaltungsseite deines Plugins, unter **Eintrag**:
+
+| Was | Wie | Prüfung |
+| :-- | :-- | :-- |
+| Name, Zusammenfassung, Kategorien | Den Eintrag bearbeiten | Bei öffentlichen Einträgen geprüft |
+| Icon | `.jarbage/icon.png` in deinem Repository, oder hochladen | Geprüft |
+| Akzentfarbe | Eine der sieben Farben der Seite | Sofort übernommen |
+| Links | Website, Doku, Discord, Fehlerberichte, Support (nur https) | Sofort übernommen |

@@ -1,0 +1,28 @@
+---
+title: "Überblick"
+description: "Einen bestehenden Bedrock-Server samt Welten und Einstellungen auf PowerNukkitX umziehen."
+icon: ArrowRightLeft
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Hammer, CircleAlert, Server } from "lucide-react";
+
+Du kommst von einem anderen Bedrock-Server? Deine Welten, Einstellungen und Ressourcenpakete können meist mitkommen. Wähle die Software, die du verlässt:
+
+<Cards>
+  <Card icon={<Hammer />} title="Nukkit oder PowerNukkit" href="/docs/de/migration/nukkit">
+    Größtenteils automatisch: PowerNukkitX wandelt deine alte Konfiguration beim ersten Start um.
+  </Card>
+  <Card icon={<Server />} title="Bedrock Dedicated Server" href="/docs/de/migration/bds">
+    Mojangs offizieller Server. Welten und Ressourcenpakete kommen mit; Einstellungen überträgst du von Hand.
+  </Card>
+  <Card icon={<CircleAlert />} title="PocketMine-MP" href="/docs/de/migration/pocketmine">
+    Ein PHP-Server. Welten kommen mit, Plugins müssen ersetzt werden.
+  </Card>
+</Cards>
+
+<Callout type="warn" title="Zuerst sichern">
+  Kopiere deinen ganzen Serverordner an einen sicheren Ort, bevor du anfängst, egal von welcher Software du umziehst.
+</Callout>

@@ -1,0 +1,64 @@
+---
+title: "备份"
+description: "安全地备份和恢复 PowerNukkitX 服务器。"
+icon: Archive
+authors:
+  - PowerNukkitX
+---
+
+有了备份，崩溃只是一次小挫折，而不是几周的心血白费。服务器所需的一切都在它的文件夹里，所以备份就是在正确的时机复制正确的文件。
+
+## 需要备份什么
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="worlds" />
+    <Folder name="players" />
+    <Folder name="plugins" />
+    <File name="pnx.yml" />
+    <File name="ops.txt" />
+    <File name="white-list.txt" />
+    <File name="banned-players.txt" />
+    <File name="banned-ips.txt" />
+  </Folder>
+</Files>
+
+| 路径 | 内容 |
+| :-- | :-- |
+| `worlds/` | 地形、方块和实体。 |
+| `players/` | 背包、位置和统计数据（开启 `savePlayerData` 时）。 |
+| `plugins/` | 插件 jar，以及每个插件的数据文件夹。 |
+| `pnx.yml` | 全部服务器设置。 |
+| `ops.txt`、`white-list.txt`、`banned-*.txt` | 管理员、白名单和封禁。 |
+
+## 做一次干净的备份
+
+在写入过程中复制的世界可能会损坏。
+
+<Steps>
+  <Step>运行 `save-all`，把世界写入磁盘。</Step>
+  <Step>如果要确保备份完全干净，就用 `stop` 停止服务器。</Step>
+  <Step>把上面的文件复制到别处，然后重新启动服务器。</Step>
+</Steps>
+
+```bash title="Linux / macOS"
+tar -czf backups/pnx-$(date +%F).tar.gz worlds/ players/ pnx.yml plugins/ ops.txt white-list.txt
+```
+
+<Callout type="info">
+  把备份放在**另一块磁盘或另一台机器**上。和服务器一起损坏的备份等于没有备份。
+</Callout>
+
+## 自动化
+
+- 用 `cron`（Linux、macOS）或任务计划程序（Windows）在空闲时段定时运行该命令。
+- 保留多份副本，例如最近 7 天，这样可以回退到比最新一份更早的状态。
+- [插件中心](https://powernukkitx.org/plugins)中的备份插件可以定时为世界做快照，无需停止服务器。
+
+## 恢复
+
+<Steps>
+  <Step>停止服务器。</Step>
+  <Step>用备份中的副本替换当前的世界和设置。</Step>
+  <Step>启动服务器，然后用 `status` 并亲自进入游戏来检查。</Step>
+</Steps>

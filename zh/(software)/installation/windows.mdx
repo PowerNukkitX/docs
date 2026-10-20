@@ -1,0 +1,96 @@
+---
+title: "Windows"
+description: "在 Windows 10 或 11 上一步步安装并运行 PowerNukkitX。"
+icon: Monitor
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+在 Windows 10 或 11 上，先安装 Java 21，再把服务器 jar 放进一个文件夹，然后用 `start.bat` 脚本启动。
+
+## 安装
+
+<Steps>
+  <Step>
+    ### 安装 Java 21
+
+    从 [Adoptium](https://adoptium.net/temurin/releases/?version=21&os=windows) 下载 **Eclipse Temurin JDK 21** 的 Windows **MSI** 安装包并运行。安装过程中勾选 **Set JAVA_HOME variable** 和 **Associate .jar files**。
+
+    然后打开一个新的命令提示符检查：
+
+    ```bat
+    java -version
+    ```
+
+    应该显示版本 `21`，例如 `openjdk version "21.x.x"`。
+  </Step>
+  <Step>
+    ### 创建服务器文件夹
+
+    为服务器创建一个文件夹，例如 `C:\PNX-Server`。
+
+    <Callout type="warn">
+      不要放在 `C:\Program Files` 或 `C:\Windows` 中：Windows 可能会阻止 PowerNukkitX 在那里创建世界、配置和日志。
+    </Callout>
+  </Step>
+  <Step>
+    ### 下载服务器
+
+    从 [GitHub releases](https://github.com/PowerNukkitX/PowerNukkitX/releases) 下载最新的 `powernukkitx.jar`，放进你的文件夹。
+  </Step>
+  <Step>
+    ### 创建启动脚本
+
+    PowerNukkitX 需要 Java 反射参数（`--add-opens`）来加载注册表和插件，所以要用脚本启动，而不是双击 jar。在文件夹中创建 `start.bat`：
+
+    ```bat title="start.bat"
+    @echo off
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    pause
+    ```
+
+    <Callout type="info">
+      先创建一个文本文件，再重命名。在文件资源管理器中打开 **查看 > 显示 > 文件扩展名**，确保文件确实以 `.bat` 结尾，而不是 `.bat.txt`。
+    </Callout>
+  </Step>
+  <Step>
+    ### 启动服务器
+
+    双击 `start.bat`。第一次启动时，设置向导会让你：
+
+    - 输入 `y` 接受许可协议；
+    - 选择语言，例如 `chs`；
+    - 输入服务器名称（MOTD）和端口（默认 `19132`）。
+
+    之后服务器会创建 `pnx.yml` 和默认世界。输入 `stop` 可以正常关闭。
+  </Step>
+</Steps>
+
+现在你的文件夹是这样的：
+
+<Files>
+  <Folder name="PNX-Server" defaultOpen>
+    <File name="powernukkitx.jar" />
+    <File name="start.bat" />
+    <File name="pnx.yml" />
+    <Folder name="worlds" />
+    <Folder name="plugins" />
+  </Folder>
+</Files>
+
+## 故障排除
+
+<Accordions>
+  <Accordion title="提示 'java' 不是内部或外部命令">
+    Windows 找不到 Java。如果已经安装了 Java 21：
+
+    1. 在开始菜单中搜索 **编辑系统环境变量**，然后点击 **环境变量...**。
+    2. 在 *系统变量* 中，确认 `JAVA_HOME` 指向 JDK 21 文件夹，例如 `C:\Program Files\Eclipse Adoptium\jdk-21.x.x\`。
+    3. 编辑 `Path`，确保其中包含 `%JAVA_HOME%\bin`。
+    4. 打开新的命令提示符，或重启电脑。
+  </Accordion>
+  <Accordion title="BindException: Address already in use">
+    另一个程序或另一份服务器已经占用了端口 `19132`。关闭另一个服务器窗口，或在 `pnx.yml` 中修改 `port`（例如改为 `19133`）。
+  </Accordion>
+</Accordions>

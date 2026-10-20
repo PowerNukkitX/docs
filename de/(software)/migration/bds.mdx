@@ -1,0 +1,70 @@
+---
+title: "Vom Bedrock Dedicated Server"
+description: "Von Mojangs offiziellem Bedrock Dedicated Server (BDS) zu PowerNukkitX wechseln."
+icon: Server
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Deine Welten und Ressourcenpakete behältst du. Einstellungen überträgst du von Hand, und Verhaltenspakete müssen durch Plugins ersetzt werden.
+
+<CarryOver
+  items={[
+    { label: "Welten", note: "LevelDB-Welten lassen sich direkt kopieren", status: "yes" },
+    { label: "Ressourcenpakete", note: "Nach resource_packs/ kopiert und den Spielern angeboten", status: "yes" },
+    { label: "server.properties", note: "Von Hand nach pnx.yml übertragen", status: "manual" },
+    { label: "Verhaltenspakete", note: "Nicht unterstützt: Spiellogik steckt in Java-Plugins", status: "no" },
+  ]}
+/>
+
+## Schritte
+
+<Steps>
+  <Step>
+    ### PowerNukkitX installieren
+
+    Folge der [Installationsanleitung](/docs/de/installation) für dein System, starte den Server einmal, damit er seine Dateien anlegt, und stoppe ihn dann.
+  </Step>
+  <Step>
+    ### Deine Welt kopieren
+
+    Kopiere deinen Weltordner aus `worlds/` von BDS (zum Beispiel `worlds/MyBedrockWorld`) nach `worlds/` von PowerNukkitX und mach ihn in `pnx.yml` zur Standardwelt:
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      defaultLevelName: "MyBedrockWorld"
+    ```
+  </Step>
+  <Step>
+    ### Deine Einstellungen übertragen
+
+    Übertrage die Werte aus der `server.properties` von BDS nach `pnx.yml`:
+
+    | BDS-Einstellung | Abschnitt in `pnx.yml` | Schlüssel in `pnx.yml` |
+    | :-- | :-- | :-- |
+    | `server-port` | `baseSettings` | `port` |
+    | `max-players` | `baseSettings` | `maxPlayers` |
+    | `online-mode` | `baseSettings` | `xboxAuth` |
+    | `allow-list` | `baseSettings` | `allowList` |
+    | `gamemode` | `gameplaySettings` | `gamemode` |
+    | `difficulty` | `gameplaySettings` | `difficulty` |
+    | `view-distance` | `gameplaySettings` | `viewDistance` |
+  </Step>
+  <Step>
+    ### Deine Ressourcenpakete kopieren
+
+    Kopiere die `.mcpack`- oder `.zip`-Dateien aus `resource_packs/` von BDS nach `resource_packs/` von PowerNukkitX. Sie werden den Spielern beim Verbinden angeboten.
+  </Step>
+</Steps>
+
+## Gut zu wissen
+
+<Accordions>
+  <Accordion title="Verhaltenspakete">
+    BDS führt Verhaltenspakete mit eigener Entitätslogik, Skripten und Animationen aus. PowerNukkitX nicht: Blöcke, Items, Entitäten und Spielmechanik werden serverseitig in Java geschrieben, mit der [Plugin-API](/docs/de/development).
+  </Accordion>
+  <Accordion title="Spielerdaten und Inventare">
+    BDS speichert Inventare und Positionen in der LevelDB-Datenbank der Welt, und PowerNukkitX kann normale Vanilla-Spielerprofile daraus lesen. Sichere zur Sicherheit `worlds/`, bevor die ersten Spieler beitreten, und lass `savePlayerData: true` in `playerSettings` stehen.
+  </Accordion>
+</Accordions>

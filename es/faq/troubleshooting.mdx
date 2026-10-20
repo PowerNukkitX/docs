@@ -1,0 +1,71 @@
+---
+title: Solución de problemas
+description: "Soluciones a los problemas más habituales al instalar y arrancar PowerNukkitX."
+icon: Wrench
+authors:
+  - PowerNukkitX
+---
+
+Empieza por la primera comprobación y luego abre el problema que coincida con lo que ves.
+
+<Callout type="info" title="Primero, comprueba Java">
+  Ejecuta `java -version`. Debe mostrar **21 o superior**: PowerNukkitX necesita Java 21+ (consulta los [Requisitos](/docs/es/requirements)).
+</Callout>
+
+## Java
+
+<Accordions>
+  <Accordion title="UnsupportedClassVersionError">
+    ```text
+    java.lang.UnsupportedClassVersionError: org.powernukkitx/Nukkit has been compiled by a more
+    recent version of the Java Runtime (class file version 65.0), this version of the Java
+    Runtime only recognizes class file versions up to ...
+    ```
+
+    Tu Java es demasiado antiguo: la versión de clase `65.0` es Java 21. Instala Java 21 o superior y comprueba con `java -version`.
+  </Accordion>
+  <Accordion title="Hay varias versiones de Java instaladas">
+    Probablemente la equivocada va primero. Puedes:
+
+    - definir `JAVA_HOME` apuntando a tu Java 21+ y poner su carpeta `bin` al principio del `PATH`;
+    - o arrancar el servidor con la ruta completa al Java correcto:
+
+    ```bash
+    /path/to/jdk-21/bin/java -jar powernukkitx.jar
+    ```
+
+    En Linux, cambia la versión por defecto con `sudo update-alternatives --config java`. En Windows, comprueba que `JAVA_HOME` en las variables de entorno del sistema apunta a una carpeta de JDK 21+.
+  </Accordion>
+  <Accordion title="Java de 32 bits">
+    PowerNukkitX necesita Java de **64 bits**: una JVM de 32 bits no puede usar suficiente memoria y se cae con carga. Si `java -version` menciona `Client VM` o `32-Bit`, instala el OpenJDK de 64 bits.
+  </Accordion>
+</Accordions>
+
+## Arranque
+
+<Accordions>
+  <Accordion title="BindException: Address already in use">
+    Otro programa ya usa el puerto del servidor (`19132/UDP` por defecto). Detén cualquier otro servidor Bedrock o cambia `port` en `baseSettings` de `pnx.yml`.
+  </Accordion>
+  <Accordion title="OutOfMemoryError, o el servidor se cierra al momento">
+    Puede que el servidor no tenga memoria suficiente. Arráncalo con límites explícitos, dejando sitio al sistema:
+
+    ```bash
+    java -Xms1G -Xmx2G -jar powernukkitx.jar
+    ```
+  </Accordion>
+  <Accordion title="Faltan archivos o hay errores de permisos en el primer arranque">
+    En el primer arranque, PowerNukkitX crea mundos y configuración en su carpeta. Ejecútalo desde una carpeta propia en la que se pueda escribir, no desde una del sistema o de solo lectura. En Linux y macOS, asegúrate de que tu usuario es dueño del jar y de la carpeta (`chown`, `chmod`).
+  </Accordion>
+  <Accordion title="El servidor arrancó, pero nadie puede conectarse">
+    - Comprueba que las versiones del cliente y del servidor coinciden.
+    - Abre o redirige el puerto UDP `19132` en tu cortafuegos y tu router.
+    - Desde la misma máquina, conéctate a `127.0.0.1` o `localhost`.
+  </Accordion>
+</Accordions>
+
+## ¿Sigues atascado?
+
+- Vuelve a leer [Requisitos](/docs/es/requirements) e [Instalación](/docs/es/installation).
+- Busca en los [issues de GitHub](https://github.com/PowerNukkitX/PowerNukkitX/issues).
+- Pregunta en [Discord](https://discord.gg/powernukkitx) con tu log completo de arranque y la salida de `java -version`.

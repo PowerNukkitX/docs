@@ -1,0 +1,42 @@
+---
+title: "Ressourcenpakete"
+description: "Eigene Inhalte sind ohne ihre Texturen unsichtbar. So lieferst du sie mit deinem Server aus."
+icon: Palette
+---
+
+Der Server entscheidet, was ein eigener Block, ein Item oder eine Entität **tut**. Wie es **aussieht**, kommt aus einem **Ressourcenpaket**, das Spieler beim Beitreten herunterladen. Ohne es sehen Spieler fehlende Texturen.
+
+## Woher jede Art ihr Aussehen bekommt
+
+| Eigener Inhalt | Was das Paket liefert | Gegenstück in deinem Code |
+| :-- | :-- | :-- |
+| [Block](/docs/de/development/customs/blocks) | Die Textur, eingetragen in `terrain_texture.json`, und bei geformten Blöcken die Geometrie | `.texture("name")`, `Geometry("geometry.name")` |
+| [Item](/docs/de/development/customs/items) | Die Textur, eingetragen in `item_texture.json` | `.texture("name")` |
+| [Entität](/docs/de/development/customs/entities) | Texturen, das Modell und die clientseitige Entitätsdefinition | der Identifier der Entität |
+
+<Callout type="warn" title="Namen müssen genau übereinstimmen">
+  Der Name, den du an `.texture(...)` übergibst, muss der Schlüssel in `terrain_texture.json` oder `item_texture.json` des Pakets sein. Ein Tippfehler zeigt sich als fehlende Textur, ohne Fehler auf dem Server.
+</Callout>
+
+## Das Paket mit deinem Server ausliefern
+
+<Steps>
+  <Step>Verpacke dein Paket als `.mcpack` oder `.zip`.</Step>
+  <Step>Lege es in den Ordner `resource_packs/` des Servers.</Step>
+  <Step>Starte den Server neu. Er bietet das Paket jedem Spieler beim Verbinden an.</Step>
+</Steps>
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="plugins" defaultOpen>
+      <File name="my-plugin.jar" />
+    </Folder>
+    <Folder name="resource_packs" defaultOpen>
+      <File name="my-plugin-pack.mcpack" />
+    </Folder>
+  </Folder>
+</Files>
+
+<Callout type="info">
+  Das Repository [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven) ist ein funktionierendes Plugin mit eigenen Blöcken, Items und Entitäten.
+</Callout>

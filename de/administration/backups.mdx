@@ -1,0 +1,64 @@
+---
+title: "Backups"
+description: "Einen PowerNukkitX-Server sicher sichern und wiederherstellen."
+icon: Archive
+authors:
+  - PowerNukkitX
+---
+
+Ein Backup macht aus einem Absturz einen kleinen Rückschlag statt Wochen verlorener Arbeit. Alles, was ein Server braucht, liegt in seinem Ordner, also heißt Sichern: die richtigen Dateien im richtigen Moment kopieren.
+
+## Was du sichern solltest
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="worlds" />
+    <Folder name="players" />
+    <Folder name="plugins" />
+    <File name="pnx.yml" />
+    <File name="ops.txt" />
+    <File name="white-list.txt" />
+    <File name="banned-players.txt" />
+    <File name="banned-ips.txt" />
+  </Folder>
+</Files>
+
+| Pfad | Enthält |
+| :-- | :-- |
+| `worlds/` | Gelände, Blöcke und Entitäten. |
+| `players/` | Inventare, Positionen und Statistiken (wenn `savePlayerData` an ist). |
+| `plugins/` | Plugin-Jars und den Datenordner jedes Plugins. |
+| `pnx.yml` | Alle Servereinstellungen. |
+| `ops.txt`, `white-list.txt`, `banned-*.txt` | Operatoren, Whitelist und Banns. |
+
+## Ein sauberes Backup machen
+
+Eine Welt, die kopiert wird, während sie geschrieben wird, kann beschädigt sein.
+
+<Steps>
+  <Step>Führe `save-all` aus, um die Welten auf die Festplatte zu schreiben.</Step>
+  <Step>Für eine garantiert saubere Kopie stoppst du den Server mit `stop`.</Step>
+  <Step>Kopiere die Dateien oben an einen anderen Ort und starte den Server dann wieder.</Step>
+</Steps>
+
+```bash title="Linux / macOS"
+tar -czf backups/pnx-$(date +%F).tar.gz worlds/ players/ pnx.yml plugins/ ops.txt white-list.txt
+```
+
+<Callout type="info">
+  Bewahre Backups auf **einer anderen Festplatte oder Maschine** auf. Ein Backup, das mit dem Server stirbt, hat nichts gerettet.
+</Callout>
+
+## Automatisieren
+
+- Plane den Befehl mit `cron` (Linux, macOS) oder der Aufgabenplanung (Windows) zu ruhigen Zeiten ein.
+- Behalte mehrere Kopien, zum Beispiel die letzten 7 Tage, damit du weiter zurückgehen kannst als bis zur letzten.
+- Backup-Plugins aus dem [Plugin-Hub](https://powernukkitx.org/plugins) können Welten zeitgesteuert sichern, ohne den Server zu stoppen.
+
+## Wiederherstellen
+
+<Steps>
+  <Step>Stoppe den Server.</Step>
+  <Step>Ersetze die aktuellen Welten und Einstellungen durch die Kopien aus dem Backup.</Step>
+  <Step>Starte den Server und prüfe mit `status` und indem du beitrittst.</Step>
+</Steps>

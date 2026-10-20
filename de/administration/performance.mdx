@@ -1,0 +1,47 @@
+---
+title: "Leistung"
+description: "Speicher, Threads und Sichtweite einstellen, um das Beste aus PowerNukkitX herauszuholen."
+icon: Gauge
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX ist von Haus aus schnell: Level ticken auf eigenen Threads, und häufig genutzte Daten werden zwischengespeichert. Ein paar Einstellungen zählen trotzdem, sobald echte Spieler online sind.
+
+<Callout type="info" title="Erst messen">
+  Wenn etwas langsam ist, profile es mit [Spark](/docs/de/integrations/spark), bevor du Einstellungen änderst. Es zeigt, welche Plugins, Entitäten oder Tasks die Tick-Zeit verbrauchen.
+</Callout>
+
+## Die vier Hebel
+
+<Accordions>
+  <Accordion title="Speicher">
+    Gib dem Server genug Heap, aber nicht den ganzen RAM der Maschine: Lass Platz für das System und Off-Heap-Speicher. Mit dem Kommandozeilen-Tool `pnx`:
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    2 GB sind ein vernünftiges Minimum, 4 GB oder mehr für einen gut besuchten Server. PowerNukkitX nutzt den generationalen Garbage Collector ZGC, der Pausen auch bei großem Heap kurz hält.
+  </Accordion>
+  <Accordion title="Sichtweite">
+    `gameplaySettings.viewDistance` (Standard `20` Chunks) ist der größte Hebel für CPU und Bandbreite: Jeder zusätzliche Chunk vervielfacht die Arbeit pro Spieler. Senke sie, wenn ein voller Server ins Straucheln kommt:
+
+    ```yaml title="pnx.yml"
+    gameplaySettings:
+      viewDistance: 12
+    ```
+  </Accordion>
+  <Accordion title="Async-Worker">
+    `performanceSettings.asyncWorkers` (Standard `4`) ist die Zahl der Hintergrund-Threads für Arbeit wie Chunk-Generierung. Auf einer Maschine mit mehr Kernen glättet ein höherer Wert Lag, wenn Spieler die Welt erkunden. Bleib bei oder unter deiner Kernzahl.
+
+    ```yaml title="pnx.yml"
+    performanceSettings:
+      asyncWorkers: 6
+      registryCacheEnabled: true
+    ```
+  </Accordion>
+  <Accordion title="Autosave">
+    `baseSettings.autosaveDelay` (Standard `6000` Ticks) legt fest, wie oft Welten gespeichert werden. Seltener speichern senkt die Plattenlast, verliert aber bei einem Absturz mehr: Stimme es mit deinen [Backups](/docs/de/administration/backups) ab.
+  </Accordion>
+</Accordions>

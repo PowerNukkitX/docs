@@ -1,0 +1,192 @@
+---
+title: Comandos
+icon: SquareTerminal
+description: "Añade comandos a tu plugin, desde un onCommand rápido hasta un árbol de rutas completo con autocompletado."
+authors:
+  - tunikakeks
+---
+
+Hay tres formas de añadir un comando. Elige la más sencilla que te sirva.
+
+| Forma | Ideal para |
+| :-- | :-- |
+| `onCommand` en tu clase principal | Uno o dos comandos rápidos. |
+| Una clase `Command` | Comandos limpios y separados, con permisos. |
+| Un árbol de comandos | Subcomandos y argumentos tipados, con comprobaciones automáticas y autocompletado. |
+
+## 1. `onCommand`
+
+Sobrescribe `onCommand` en tu `PluginBase` y declara el comando en `plugin.yml`:
+
+```java title="ExamplePlugin.java"
+public class ExamplePlugin extends PluginBase {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("greet")) {
+            sender.sendMessage(args.length > 0 ? "Hello, " + args[0] + "!" : "Hello!");
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+```yaml title="plugin.yml"
+name: ExamplePlugin
+main: com.example.ExamplePlugin
+version: 1.0.0
+commands:
+  greet:
+    description: Greet a player
+    usage: /greet [name]
+    permission: greet.permission
+```
+
+## 2. Una clase `Command`
+
+Extiende `org.powernukkitx.command.Command` (o `PluginCommand`). Regístrala con una anotación o a mano:
+
+<Tabs items={["Con @CommandDefinition", "A mano"]}>
+  <Tab value="Con @CommandDefinition">
+    No hace falta código de registro: lo hace el [procesador de anotaciones](/docs/es/development/basics/annotations).
+
+    ```java title="GreetCommand.java"
+    package org.example.command;
+
+    import org.powernukkitx.command.Command;
+    import org.powernukkitx.command.CommandSender;
+    import org.powernukkitx.plugin.annotation.CommandDefinition;
+    import org.powernukkitx.plugin.annotation.CommandDefinition.CommandMode;
+
+    @CommandDefinition(
+        name = "greet",
+        description = "Greet a player",
+        usage = "/greet [name]",
+        permission = "greet.permission",
+        commandMode = CommandMode.RAW // plain string arguments
+    )
+    public class GreetCommand extends Command {
+        @Override
+        public boolean execute(CommandSender sender, String label, String[] args) {
+            sender.sendMessage(args.length > 0 ? "Hello, " + args[0] + "!" : "Hello!");
+            return true;
+        }
+    }
+    ```
+  </Tab>
+  <Tab value="A mano">
+    ```java title="GreetCommand.java"
+    package org.example.command;
+
+    import org.powernukkitx.command.Command;
+    import org.powernukkitx.command.CommandSender;
+
+    public class GreetCommand extends Command {
+        public GreetCommand() {
+            super("greet", "Greet a player", "/greet [name]");
+            this.setPermission("greet.permission");
+        }
+
+        @Override
+        public boolean execute(CommandSender sender, String label, String[] args) {
+            sender.sendMessage(args.length > 0 ? "Hello, " + args[0] + "!" : "Hello!");
+            return true;
+        }
+    }
+    ```
+
+    Después regístrala en `onEnable()`:
+
+    ```java
+    @Override
+    public void onEnable() {
+        this.getServer().getCommandMap().register("myplugin", new GreetCommand());
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## 3. Un árbol de comandos
+
+El árbol de comandos es una API fluida: describes la forma del comando (palabras clave y argumentos tipados) y el servidor se encarga del autocompletado, los permisos, quién puede ejecutarlo y los errores de sintaxis.
+
+<CommandTree />
+
+Llama a `enableCommandTree()` en el constructor y construye las rutas en `buildCommandTree`:
+
+```java title="MyCommand.java"
+package org.example.command;
+
+import org.powernukkitx.Player;
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandResult;
+import org.powernukkitx.command.route.RouteTree;
+import org.powernukkitx.command.route.node.RouteNode;
+import org.powernukkitx.command.tree.node.MessageStringNode;
+import org.powernukkitx.command.tree.node.PlayersNode;
+import java.util.List;
+
+public class MyCommand extends Command {
+    public MyCommand() {
+        super("mycommand", "An advanced CommandTree command");
+        this.enableCommandTree();
+    }
+
+    @Override
+    protected void buildCommandTree(RouteTree tree) {
+        // /mycommand info
+        tree.getRoot().then(
+            RouteNode.literal("info")
+                .exec(context -> {
+                    context.getSender().sendMessage("This command uses the PowerNukkitX CommandTree!");
+                    return CommandResult.success();
+                })
+        );
+
+        // /mycommand send <player> <message>
+        tree.getRoot().then(
+            RouteNode.literal("send").then(
+                RouteNode.argument("player", new PlayersNode()).then(
+                    RouteNode.argument("message", new MessageStringNode())
+                        .exec(context -> {
+                            List<Player> targets = context.getArg("player");
+                            String message = context.getArg("message");
+                            for (Player p : targets) {
+                                p.sendMessage("Message: " + message);
+                            }
+                            context.getSender().sendMessage("Message sent!");
+                            return CommandResult.success();
+                        })
+                )
+            )
+        );
+    }
+}
+```
+
+### Piezas
+
+| Método | Qué hace |
+| :-- | :-- |
+| `RouteNode.literal(name)` | Una palabra clave fija, como `info` en `/mycommand info`. |
+| `RouteNode.argument(name, node)` | Un argumento tipado (`PlayersNode`, `IntNode`, `BlockNode`...). Léelo con `context.getArg(name)`. |
+| `.then(child)` | Añade la siguiente palabra clave o argumento. |
+| `.exec(context -> ...)` | Hace ejecutable el nodo: este código se ejecuta cuando la entrada termina aquí. |
+| `.senderType(type)` | Quién puede ejecutarlo: `SenderType.PLAYER`, `CONSOLE` o `ANY`. |
+| `.permission(node)` | Exige un permiso. |
+| `.optional(true)` | Hace el argumento opcional. |
+| `.suggest(list)` | Sustituye las sugerencias del autocompletado. |
+
+### Resultados
+
+Cada `exec` devuelve un `CommandResult`:
+
+| Resultado | Significado |
+| :-- | :-- |
+| `CommandResult.success()` | Ha funcionado. |
+| `CommandResult.fail()` | Ha fallado. |
+| `CommandResult.fail("message")` | Ha fallado, y quien lo ejecutó ve el mensaje. |
+
+<Callout type="info">
+  Hay un ejemplo completo en [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven). ¿Dudas? Pregunta en [Discord](https://discord.gg/powernukkitx).
+</Callout>

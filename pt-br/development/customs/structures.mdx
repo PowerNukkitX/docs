@@ -1,0 +1,106 @@
+---
+title: "API de estruturas"
+description: "Carregue, gire, espelhe e coloque estruturas do Bedrock e da Java Edition."
+icon: Home
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+A API de estruturas coloca estruturas prontas por código. Ela lê os dois formatos:
+
+| Formato | Arquivo | Classe |
+| :-- | :-- | :-- |
+| Bedrock | `.mcstructure`, da pasta `structures/` do servidor | `Structure`, via `StructureAPI` |
+| Java Edition | `.nbt`, muitas vezes incluído no jar do plugin | `JeStructure` |
+
+## Estruturas do Bedrock
+
+```java
+import org.powernukkitx.level.structure.Structure;
+import org.powernukkitx.level.structure.StructureAPI;
+import org.powernukkitx.level.Position;
+
+// Load a template named "structures/my_house.mcstructure"
+Structure house = StructureAPI.load("my_house");
+
+if (house != null) {
+    // Place at the position (defaults to including entities and creating a BlockManager)
+    Position target = new Position(100, 64, 100, player.getLevel());
+    house.place(target);
+}
+```
+
+| Método | |
+| :-- | :-- |
+| `StructureAPI.exists(name)` | Existe um arquivo de estrutura com esse nome? |
+| `StructureAPI.save(structure, name)` | Salva uma estrutura em um arquivo `.mcstructure`. |
+| `StructureAPI.delete(name)` | Apaga um arquivo de estrutura. |
+
+## Estruturas da Java Edition
+
+Leia o `.nbt` do seu jar com um `InputStream` e depois monte uma `JeStructure`:
+
+```java
+import org.powernukkitx.level.structure.JeStructure;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.powernukkitx.level.Position;
+import org.cloudburstmc.nbt.NBTInputStream;
+import org.cloudburstmc.nbt.NbtMap;
+import org.cloudburstmc.nbt.NbtUtils;
+import java.io.InputStream;
+
+public void placeJavaStructure(Position position) {
+    try (InputStream stream = getClass().getClassLoader().getResourceAsStream("structures/village_house.nbt")) {
+        if (stream != null) {
+            try (NBTInputStream nbtReader = NbtUtils.createReader(stream)) {
+                // Parse the CompoundTag from the NBT input stream
+                CompoundTag tag = CompoundTag.fromNetwork((NbtMap) nbtReader.readTag());
+                
+                // Construct the JeStructure instance
+                JeStructure villageHouse = JeStructure.fromNbt(tag);
+                
+                // Place the structure
+                villageHouse.place(position);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+## Girar e espelhar
+
+Os dois tipos herdam de `AbstractStructure`, então ambos podem ser girados antes de colocar:
+
+```java
+import org.cloudburstmc.protocol.bedrock.data.structure.Mirror;
+import org.cloudburstmc.protocol.bedrock.data.structure.Rotation;
+import org.powernukkitx.level.structure.AbstractStructure;
+
+// Rotate 90 degrees clockwise
+AbstractStructure rotated = structure.rotate(Rotation.ROTATE_90);
+
+// Mirror along the Z axis
+AbstractStructure mirrored = structure.mirror(Mirror.Z);
+
+// Place the transformed structure
+mirrored.place(targetPos);
+```
+
+## Estruturas grandes: `BlockManager`
+
+Para estruturas grandes ou durante a geração do mundo, passe um `BlockManager` para agrupar as alterações de blocos e escolher se entidades aparecem:
+
+```java
+import org.powernukkitx.level.generator.object.BlockManager;
+
+BlockManager blockManager = new BlockManager(level);
+boolean includeEntities = true;
+
+structure.place(position, includeEntities, blockManager);
+
+// Apply subchunk updates to send changes to clients
+blockManager.applySubChunkUpdate();
+```

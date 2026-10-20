@@ -1,0 +1,188 @@
+---
+title: "实体"
+description: "创建自定义生物和可骑乘的坐骑，并生成它们。"
+icon: Skull
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+自定义实体由一个 Java 类，以及资源包中的材质、模型和客户端实体定义组成。
+
+## 在 `onLoad()` 中注册
+
+注册之后，重建实体标签注册表，让服务器知道这个新类型：
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.ENTITY.registerCustomEntity(this, MyPig.class);
+        // Rebuild the NBT tags so the server registers the custom entity type
+        Registries.ENTITY.rebuildTag();
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## 定义实体
+
+继承 `Entity`，实现 `CustomEntity`，并在静态方法 `definition()` 中返回 `CustomEntityDefinition`：生命值、攻击力、速度、碰撞箱、刷怪蛋，以及能否用 `/summon` 生成。
+
+```java filename="MyPig.java"
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.entity.custom.CustomEntity;
+import org.powernukkitx.entity.custom.CustomEntityDefinition;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+
+public class MyPig extends Entity implements CustomEntity {
+    public static final String IDENTIFIER = "powernukkitx:boar";
+
+    public MyPig(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return "boar";
+    }
+
+    // This method returns the client-facing definition properties of the entity
+    public static CustomEntityDefinition definition() {
+        return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
+                .eid(IDENTIFIER)
+                .hasSpawnEgg(true) // Generates a creative inventory spawn egg
+                .isSummonable(true) // Allows spawning via /summon command
+                .originalName("Feral Boar")
+                .health(20) // Maximum health points
+                .attack(3) // Melee attack damage
+                .movement(0.2f) // Speed modifier
+                .typeFamily("mob", "pig") // Entity classification family
+                .collisionBox(0.9f, 0.9f) // Width and height collision boundaries
+                .knockbackResistance(0.2f)
+                .isPersistent(true) // Keeps the mob loaded at distance
+                .build();
+    }
+}
+```
+
+## 玩家可以骑乘的坐骑
+
+给定义添加一个 `RideableComponent`，即基岩版的 `minecraft:rideable`，并设置一个或多个座位。每个座位决定它在实体上的位置、可容纳的骑乘者数量以及相机距离。
+
+```java filename="RideableBoar.java"
+package org.example.entity;
+
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.entity.custom.CustomEntity;
+import org.powernukkitx.entity.custom.CustomEntityDefinition;
+import org.powernukkitx.entity.components.RideableComponent;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.math.Vector3f;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+import java.util.List;
+import java.util.Set;
+
+public class RideableBoar extends Entity implements CustomEntity {
+    public static final String IDENTIFIER = "powernukkitx:rideable_boar";
+
+    public RideableBoar(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return "rideable_boar";
+    }
+
+    public static CustomEntityDefinition definition() {
+        // Define seat positions relative to the entity pivot point (X, Y, Z coordinates)
+        List<RideableComponent.Seat> seats = List.of(
+            new RideableComponent.Seat(
+                1,                      // Minimum rider count
+                1,                      // Maximum rider count
+                new Vector3f(0f, 1.2f, -0.2f), // Physical coordinate offset of the seat
+                null,                   // Lock rider rotation (null to allow rotation)
+                null,                   // Rotate rider by degrees (null for default)
+                3.0f,                   // Third-person camera distance/radius multiplier
+                null                    // Camera smoothing
+            )
+        );
+
+        // Build the rideable component
+        RideableComponent rideable = new RideableComponent(
+            0,                          // Controlling seat index
+            true,                       // Crouching players skip mounting interaction
+            RideableComponent.DismountMode.DEFAULT,
+            Set.of("player"),           // Entity families allowed to ride
+            "action.interact.ride",     // Localization text string shown to Bedrock players
+            0f,                         // Passenger max width boundary (0 for unlimited)
+            false,                      // Pull in nearby entities automatically
+            true,                       // Riders can interact with chests/world while riding
+            1,                          // Seat count
+            seats                       // Seat configurations
+        );
+
+        return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
+                .eid(IDENTIFIER)
+                .hasSpawnEgg(true)
+                .isSummonable(true)
+                .originalName("Rideable Boar")
+                .health(30)
+                .collisionBox(0.9f, 0.9f)
+                .rideable(rideable) // Bind the rideable component
+                .build();
+    }
+}
+```
+
+## 生成实体
+
+注册之后，实体可以通过以下方式出现：
+
+- 使用 `/summon`，前提是 `.isSummonable(true)`；
+- 通过创造模式物品栏中的刷怪蛋，前提是 `.hasSpawnEgg(true)`；
+- 通过代码，例如下面这个在玩家位置生成实体的命令：
+
+```java
+import org.powernukkitx.Player;
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandSender;
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.nbt.tag.CompoundTag;
+
+@Override
+public boolean execute(CommandSender sender, String label, String[] args) {
+    if (sender instanceof Player player) {
+        // Construct default NBT tags for coordinates
+        CompoundTag nbt = Entity.getDefaultNBT(player.getPosition());
+        
+        // Create the entity
+        RideableBoar boar = new RideableBoar(player.getChunk(), nbt);
+        
+        // Spawn for everyone
+        boar.spawnToAll();
+        
+        player.sendMessage("Spawned a rideable boar!");
+        return true;
+    }
+    return false;
+}
+```

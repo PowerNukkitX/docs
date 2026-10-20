@@ -1,0 +1,11 @@
+{
+  "title": "Formularios",
+  "icon": "PanelsTopLeft",
+  "pages": [
+    "index",
+    "simple",
+    "custom",
+    "modal",
+    "ddui"
+  ]
+}

@@ -1,0 +1,184 @@
+---
+title: CustomForm
+icon: SlidersHorizontal
+description: "Un formulario de campos, interruptores, deslizadores y listas que devuelve cada valor. El formulario para ajustes."
+authors:
+  - PleaseInsertNameHere
+---
+
+<FormPreview type="custom" />
+
+El título funciona como en todos los formularios: consulta [Formularios](/docs/es/development/forms#title). El resto son **elementos**, añadidos en orden:
+
+```java
+CustomForm form = ...;
+
+form.addElement(element); // Add your element
+```
+
+## Elementos
+
+<Tabs items={["Lista desplegable", "Campo de texto", "Etiqueta", "Deslizador", "Deslizador por pasos", "Interruptor"]}>
+  <Tab value="Lista desplegable">
+Elige un elemento de una lista.
+
+```java
+List<String> options = ...;
+
+ElementDropdown dropdown = new ElementDropdown("Choose an option", options);
+```
+
+Con una opción por defecto:
+
+```java
+// Second element will be selected when opening the form
+ElementDropdown dropdown = new ElementDropdown("Choose an option", options, 1);
+```
+
+Cada parámetro tiene también un método:
+
+```java
+// Changing the element's text
+dropdown.text("Choose your favorite option");
+```
+  </Tab>
+  <Tab value="Campo de texto">
+Texto libre, con un marcador y un valor por defecto opcionales:
+
+```java
+ElementInput input = new ElementInput("Change the status");
+ElementInput input = new ElementInput("Change the status", "PNX is great!"); // Optionally, add a placeholder
+ElementInput input = new ElementInput("Change the status", "PNX is great!", "I love PNX!"); // Optionally, add a default value
+```
+
+```java
+// Changing the element's placeholder
+input.placeholder("I love PNX!");
+```
+  </Tab>
+  <Tab value="Etiqueta">
+Texto simple, por ejemplo para explicar otro elemento:
+
+```java
+ElementLabel label = new ElementLabel("The status will be shown when you join the server.");
+```
+  </Tab>
+  <Tab value="Deslizador">
+Elige un número entre un mínimo y un máximo:
+
+```java
+float min = 0.0F;
+float max = 10.0F;
+int step = 1;
+float defaultValue = 2.0F;
+
+ElementSlider slider = new ElementSlider("Speed", min, max, step, defaultValue);
+```
+
+```java
+// Changing the element's default value
+slider.defaultValue(1.0F);
+```
+  </Tab>
+  <Tab value="Deslizador por pasos">
+Como una lista desplegable, pero las opciones se eligen deslizando en horizontal:
+
+```java
+List<String> steps = ...;
+
+ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps);
+```
+
+Con un paso por defecto:
+
+```java
+// Second element will be selected when opening the form
+ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps, 1);
+```
+
+```java
+// Adding an element (and optionally, setting it as default)
+stepSlider.addStep("Step 5", true);
+```
+  </Tab>
+  <Tab value="Interruptor">
+Un interruptor, para un ajuste de verdadero o falso:
+
+```java
+ElementToggle toggle = new ElementToggle("Enable Double Jump?");
+```
+
+Con un valor por defecto:
+
+```java
+ElementToggle toggle = new ElementToggle("Enable Double Jump?", true);
+```
+  </Tab>
+</Tabs>
+
+## Leer las respuestas
+
+<Tabs items={["Todo el formulario", "Evento"]}>
+  <Tab value="Todo el formulario">
+Lee cada valor por la posición del elemento en el formulario:
+
+```java
+form.onSubmit((player, response) -> {
+    ElementResponse dropdown = response.getDropdownResponse(0);
+    String input = response.getInputResponse(1);
+    String label = response.getLabelResponse(2);
+    float slider = response.getSliderResponse(3);
+    ElementResponse stepSlider = response.getStepSliderResponse(4);
+    boolean toggle = response.getToggleResponse(5);
+
+    // Handle response here
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+  </Tab>
+  <Tab value="Evento">
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a CustomForm called 'Settings' was closed
+    if (form instanceof CustomForm && form.title().equals("Settings")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted the settings.");
+    }
+}
+```
+  </Tab>
+</Tabs>
+
+El envío funciona como en todos los formularios: consulta [Formularios](/docs/es/development/forms#sending-a-form).
+
+## Ejemplo completo
+
+Una pantalla de apodo: un campo, una pista y lo que pasa al enviar y al cerrar.
+
+```java
+String displayName = player.getDisplayName(); // Used as an example
+
+CustomForm form = new CustomForm("Settings")
+            .addElement(new ElementInput("Change nickname", "Herobrine", displayName.isEmpty() ? "" : displayName))
+            .addElement(new ElementLabel("Leave empty to apply your real name again."))
+            .onSubmit((pl, response) -> {
+                String input = response.getInputResponse(0);
+                if (input.isEmpty()) {
+                    pl.setDisplayName(pl.getName());
+                    return;
+                }
+
+                // Input validation...
+
+                pl.setDisplayName(input);
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+```

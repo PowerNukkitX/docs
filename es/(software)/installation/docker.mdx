@@ -1,0 +1,97 @@
+---
+title: "Docker"
+description: "Ejecuta PowerNukkitX en un contenedor con Docker o Docker Compose."
+icon: Container
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+La imagen oficial es [`powernukkitx/server`](https://hub.docker.com/r/powernukkitx/server) en Docker Hub.
+
+## Arrancar un contenedor
+
+<Tabs items={["Docker Compose", "docker run"]}>
+  <Tab value="Docker Compose">
+    Crea un `docker-compose.yml` en la carpeta que quieras:
+
+    ```yaml title="docker-compose.yml"
+    services:
+      pnx-server:
+        image: powernukkitx/server:latest
+        container_name: pnx-server
+        ports:
+          - "19132:19132/udp"
+        volumes:
+          - ./data:/data
+        restart: unless-stopped
+    ```
+
+    Después arráncalo en segundo plano:
+
+    ```bash
+    docker compose up -d
+    ```
+  </Tab>
+  <Tab value="docker run">
+    ```bash
+    docker run -d \
+      --name pnx-server \
+      -p 19132:19132/udp \
+      -v /path/to/your/data:/data \
+      powernukkitx/server
+    ```
+
+    <Callout type="warn">
+      Sustituye `/path/to/your/data` por una ruta absoluta de tu máquina, o perderás los datos del servidor cuando se sustituya el contenedor.
+    </Callout>
+  </Tab>
+</Tabs>
+
+## Dónde están los datos
+
+El volumen `/data` contiene todo lo que escribe el servidor:
+
+<Files>
+  <Folder name="data" defaultOpen>
+    <File name="pnx.yml" />
+    <Folder name="worlds" />
+    <Folder name="plugins" />
+    <Folder name="resource_packs" />
+    <Folder name="logs" />
+  </Folder>
+</Files>
+
+Un segundo volumen opcional, `/home/minecraft`, guarda la caché JLine de la consola.
+
+## Usar la consola
+
+El servidor funciona en segundo plano. Para escribir comandos como `op` o `stop`, conéctate a él:
+
+```bash
+docker attach pnx-server
+```
+
+Para salir sin detener el servidor, pulsa **Ctrl + P** y luego **Ctrl + Q**.
+
+## Opciones de la JVM
+
+Por defecto, la imagen arranca Java con:
+
+- el recolector de basura ZGC: `-XX:+UseZGC`, `-XX:+ZGenerational`, `-XX:+UseStringDeduplication`;
+- los flags de reflexión `--add-opens`;
+- `--skip-setup --accept-license --language eng`, que saltan el asistente.
+
+Para cambiarlas, por ejemplo para dar al servidor 4 GB de heap, pasa el comando completo después del nombre de la imagen:
+
+```bash
+docker run -d \
+  --name pnx-server \
+  -p 19132:19132/udp \
+  -v /path/to/your/data:/data \
+  powernukkitx/server \
+  -Xmx4G -Xms1G \
+  -cp /app/powernukkitx.jar:./libs/* \
+  org.powernukkitx.PowerNukkitX \
+  --skip-setup --accept-license --language eng
+```

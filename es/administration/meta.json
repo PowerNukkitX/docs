@@ -1,0 +1,15 @@
+{
+  "title": "Administración",
+  "description": "Guías para hacer funcionar y gestionar un servidor PowerNukkitX en el día a día.",
+  "icon": "Cog",
+  "root": true,
+  "pages": [
+    "index",
+    "commands",
+    "worlds",
+    "players",
+    "backups",
+    "performance",
+    "go-live"
+  ]
+}

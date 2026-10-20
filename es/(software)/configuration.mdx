@@ -1,0 +1,80 @@
+---
+title: "Configuración"
+description: "Cada ajuste importante de pnx.yml, sección por sección."
+icon: Settings
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+PowerNukkitX guarda todos sus ajustes en **un solo archivo**, `pnx.yml`, en la raíz de la carpeta del servidor.
+
+<ConfigSections />
+
+<Callout type="error" title="Detén el servidor antes de editar pnx.yml">
+  Un servidor en marcha mantiene su configuración en memoria y la vuelve a escribir en `pnx.yml` al apagarse, lo que sobrescribe todo lo que hayas cambiado mientras tanto.
+</Callout>
+
+## Ajustes básicos
+
+`baseSettings`: cómo llegan los jugadores al servidor y qué ven en la lista de servidores.
+
+| Clave | Por defecto | Descripción |
+| :-- | :-- | :-- |
+| `ip` | `"0.0.0.0"` | La dirección en la que escucha el servidor. 0.0.0.0 escucha en todas las interfaces. |
+| `port` | `19132` | El puerto UDP al que se conectan los clientes de Bedrock. |
+| `maxPlayers` | `20` | Cuántos jugadores pueden estar conectados a la vez. |
+| `defaultLevelName` | `"world"` | El nombre de la carpeta del mundo por defecto. |
+| `allowList` | `false` | Solo pueden entrar los jugadores de white-list.txt. |
+| `allowListMessage` | `"Server is white-listed"` | El mensaje de expulsión para quien no está en la lista blanca. |
+| `motd` | `"PowerNukkitX Server"` | La línea principal en la lista de servidores. |
+| `subMotd` | `"powernukkitx.org"` | La segunda línea en la lista de servidores. |
+| `xboxAuth` | `true` | Autenticación de Xbox Live. false es el modo sin conexión. |
+| `autosaveDelay` | `6000` | Ticks entre guardados automáticos del mundo. |
+
+## Ajustes de jugadores
+
+`playerSettings`: qué se guarda de los jugadores y cómo se comprueban.
+
+| Clave | Por defecto | Descripción |
+| :-- | :-- | :-- |
+| `savePlayerData` | `true` | Guarda posición, inventario y estado cuando un jugador sale. |
+| `forceSkinTrusted` | `false` | Confía en todas las skins, lo que permite skins personalizadas y de terceros. |
+| `checkMovement` | `true` | Comprobación de movimiento en el servidor contra trampas simples de vuelo y velocidad. |
+| `spawnRadius` | `16` | A qué distancia del punto de aparición del mundo aparecen los jugadores nuevos. |
+
+## Ajustes de juego
+
+`gameplaySettings`: las reglas del juego.
+
+| Clave | Por defecto | Descripción |
+| :-- | :-- | :-- |
+| `gamemode` | `0` | Modo de juego por defecto. 0 Supervivencia, 1 Creativo, 2 Aventura, 3 Espectador. |
+| `difficulty` | `1` | Dificultad por defecto. 0 Pacífico, 1 Fácil, 2 Normal, 3 Difícil. |
+| `pvp` | `true` | Los jugadores pueden luchar entre sí. |
+| `allowFlight` | `false` | Los jugadores en supervivencia pueden volar. |
+| `viewDistance` | `20` | La distancia máxima, en chunks, que se envía a los jugadores. |
+| `allowNether` | `true` | Se permite viajar al Nether. |
+| `allowTheEnd` | `true` | Se permite viajar al End. |
+| `spawnProtection` | `16` | Radio alrededor del punto de aparición que los no operadores no pueden modificar. |
+
+## Ajustes de rendimiento
+
+`performanceSettings`: cómo usa el servidor tu máquina. Consulta [Ajuste del rendimiento](/docs/es/administration/performance) para consejos.
+
+| Clave | Por defecto | Descripción |
+| :-- | :-- | :-- |
+| `asyncWorkers` | `4` | Hilos en segundo plano para trabajo asíncrono, como la generación de chunks. |
+| `registryCacheEnabled` | `true` | Guarda en caché las entradas del registro para resolver bloques e items más rápido. |
+
+## Ejemplo
+
+```yaml title="pnx.yml"
+baseSettings:
+  port: 19132
+  maxPlayers: 50
+  motd: "My Server"
+gameplaySettings:
+  difficulty: 2
+  viewDistance: 12
+```

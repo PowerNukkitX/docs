@@ -1,0 +1,64 @@
+---
+title: "Copias de seguridad"
+description: "Haz y restaura copias de seguridad de un servidor PowerNukkitX con seguridad."
+icon: Archive
+authors:
+  - PowerNukkitX
+---
+
+Una copia de seguridad convierte un desastre en un contratiempo menor en lugar de semanas de trabajo perdido. Todo lo que necesita un servidor está en su carpeta, así que hacer una copia es copiar los archivos correctos en el momento correcto.
+
+## Qué copiar
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="worlds" />
+    <Folder name="players" />
+    <Folder name="plugins" />
+    <File name="pnx.yml" />
+    <File name="ops.txt" />
+    <File name="white-list.txt" />
+    <File name="banned-players.txt" />
+    <File name="banned-ips.txt" />
+  </Folder>
+</Files>
+
+| Ruta | Contiene |
+| :-- | :-- |
+| `worlds/` | Terreno, bloques y entidades. |
+| `players/` | Inventarios, posiciones y estadísticas (si `savePlayerData` está activado). |
+| `plugins/` | Los jars de los plugins y la carpeta de datos de cada uno. |
+| `pnx.yml` | Todos los ajustes del servidor. |
+| `ops.txt`, `white-list.txt`, `banned-*.txt` | Operadores, lista blanca y baneos. |
+
+## Hacer una copia limpia
+
+Un mundo copiado mientras se está escribiendo puede quedar dañado.
+
+<Steps>
+  <Step>Ejecuta `save-all` para escribir los mundos en disco.</Step>
+  <Step>Para una copia garantizada, detén el servidor con `stop`.</Step>
+  <Step>Copia los archivos de arriba en otro sitio y vuelve a arrancar el servidor.</Step>
+</Steps>
+
+```bash title="Linux / macOS"
+tar -czf backups/pnx-$(date +%F).tar.gz worlds/ players/ pnx.yml plugins/ ops.txt white-list.txt
+```
+
+<Callout type="info">
+  Guarda las copias en **otro disco u otra máquina**. Una copia que muere con el servidor no ha salvado nada.
+</Callout>
+
+## Automatizarlo
+
+- Programa el comando con `cron` (Linux, macOS) o el Programador de tareas (Windows), en horas tranquilas.
+- Conserva varias copias, por ejemplo los últimos 7 días, para poder volver más atrás que la última.
+- Los plugins de copias del [hub de plugins](https://powernukkitx.org/plugins) pueden guardar los mundos periódicamente sin detener el servidor.
+
+## Restaurar
+
+<Steps>
+  <Step>Detén el servidor.</Step>
+  <Step>Sustituye los mundos y ajustes actuales por los de la copia.</Step>
+  <Step>Arranca el servidor y compruébalo con `status` y entrando a jugar.</Step>
+</Steps>

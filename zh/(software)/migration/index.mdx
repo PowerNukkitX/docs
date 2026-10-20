@@ -1,0 +1,28 @@
+---
+title: "概览"
+description: "把现有的基岩版服务器连同世界和设置迁移到 PowerNukkitX。"
+icon: ArrowRightLeft
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Hammer, CircleAlert, Server } from "lucide-react";
+
+从其他基岩版服务器迁移过来？你的世界、设置和资源包通常都能一起带过来。选择你要离开的软件：
+
+<Cards>
+  <Card icon={<Hammer />} title="Nukkit 或 PowerNukkit" href="/docs/zh/migration/nukkit">
+    基本自动完成：PowerNukkitX 会在首次启动时转换你的旧配置。
+  </Card>
+  <Card icon={<Server />} title="Bedrock Dedicated Server" href="/docs/zh/migration/bds">
+    Mojang 的官方服务器。世界和资源包可以带过来，设置需要手动复制。
+  </Card>
+  <Card icon={<CircleAlert />} title="PocketMine-MP" href="/docs/zh/migration/pocketmine">
+    PHP 编写的服务器。世界可以带过来，但插件必须替换。
+  </Card>
+</Cards>
+
+<Callout type="warn" title="先备份">
+  无论从哪个软件迁移，开始之前都请把整个服务器文件夹复制到安全的地方。
+</Callout>

@@ -1,0 +1,59 @@
+---
+title: "系统要求"
+description: "PowerNukkitX 所需的硬件、Java 版本和操作系统。"
+icon: Shapes
+authors:
+  - AzaleeX
+---
+
+安装之前，请确认你的机器满足下面的硬件、Java 版本和系统要求。
+
+## 硬件
+
+<Tabs items={["最低配置", "推荐配置"]}>
+  <Tab value="最低配置">
+    足以运行玩家不多的小型服务器。实际性能取决于世界大小和插件。
+
+    | 组件 | 最低 |
+    | :-- | :-- |
+    | CPU | 2 核，2.5 GHz |
+    | 内存 | 2 GB |
+    | 存储 | 1 GB 可用空间 |
+    | Java | OpenJDK 21 或更高 |
+    | 系统 | Windows 10 / 11、Linux（Ubuntu 20.04+）、macOS |
+    | 网络 | 1 Mbps 上行 |
+  </Tab>
+  <Tab value="推荐配置">
+    适合有真实流量的服务器。超过 20 名玩家或有多个世界时，请增加 CPU、内存和带宽。
+
+    | 组件 | 推荐 |
+    | :-- | :-- |
+    | CPU | 4 核以上，3.0 GHz 以上 |
+    | 内存 | 4 GB 或更多 |
+    | 存储 | SSD，5 GB 可用空间 |
+    | Java | OpenJDK 21 或更高 |
+    | 系统 | Windows 10 / 11、Linux（Ubuntu 22.04+）、macOS |
+    | 网络 | 10 Mbps 以上上行 |
+  </Tab>
+</Tabs>
+
+## Java
+
+PowerNukkitX 需要 **Java 21 或更高版本**，64 位。
+
+<Steps>
+  <Step>安装 **64 位** Java 21 运行环境。推荐使用 OpenJDK。</Step>
+  <Step>把环境变量 `JAVA_HOME` 设置为该安装目录。</Step>
+  <Step>把 Java 的 `bin` 文件夹加入 `PATH`，然后用 `java -version` 检查。</Step>
+</Steps>
+
+<Callout type="warn">
+  旧版本的 Java（20 及以下）会导致崩溃或插件错误。如果 `java -version` 显示的版本不对，请参见[故障排除](/docs/zh/faq/troubleshooting)。
+</Callout>
+
+## 好习惯
+
+- **定期备份** `worlds/` 文件夹和 `pnx.yml`。参见[备份](/docs/zh/administration/backups)。
+- **保留 20% 的磁盘空间**，用于日志和不断变大的世界。
+- **只安装**为你的 PowerNukkitX 版本构建的插件。
+- **关注 CPU 和内存**，Linux 上用 `htop`，Windows 上用任务管理器。

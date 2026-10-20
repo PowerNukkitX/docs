@@ -1,0 +1,11 @@
+{
+  "title": "Instalação",
+  "icon": "Download",
+  "pages": [
+    "index",
+    "windows",
+    "macos",
+    "linux",
+    "docker"
+  ]
+}

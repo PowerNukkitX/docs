@@ -1,0 +1,11 @@
+{
+  "title": "Conceptos básicos",
+  "icon": "GraduationCap",
+  "pages": [
+    "index",
+    "annotations",
+    "commands",
+    "listener",
+    "tasks"
+  ]
+}

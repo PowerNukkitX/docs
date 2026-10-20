@@ -1,0 +1,50 @@
+---
+title: "Konsole & Befehle"
+description: "Die Befehle, die du zum Betrieb eines PowerNukkitX-Servers am häufigsten nutzt."
+icon: SquareTerminal
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX hat den vollständigen Vanilla-Befehlssatz von Bedrock plus Serverbefehle. In der **Konsole** tippst du Befehle ohne Schrägstrich, **im Spiel** als Operator mit.
+
+<Tabs items={["Server", "Spieler", "Welt"]}>
+  <Tab value="Server">
+    | Befehl | Was er macht |
+    | :-- | :-- |
+    | `stop` | Speichert alles und fährt sauber herunter. Nutze ihn immer, statt den Prozess abzuschießen. |
+    | `save-all` | Schreibt sofort alle geladenen Welten auf die Festplatte. |
+    | `reload` | Lädt Plugins und Konfiguration neu. Ein vollständiger Neustart ist sicherer. |
+    | `version` / `plugins` | Die Serverversion und die geladenen Plugins. |
+    | `status` | Laufzeit, TPS, Speicher sowie geladene Welten und Entitäten. |
+  </Tab>
+  <Tab value="Spieler">
+    | Befehl | Was er macht |
+    | :-- | :-- |
+    | `list` | Listet die Spieler, die online sind. |
+    | `kick <player> [reason]` | Trennt einen Spieler. |
+    | `tp <player> <target>` | Teleportiert einen Spieler zu einem anderen Spieler oder zu Koordinaten. |
+    | `gamemode <mode> [player]` | Setzt den Spielmodus: `survival`, `creative`, `adventure`, `spectator`. |
+    | `give <player> <item> [amount]` | Gibt Items. |
+    | `xp <amount> [player]` | Gibt Erfahrung. |
+
+    Operatoren, Banns und die Whitelist findest du unter [Spieler](/docs/de/administration/players).
+  </Tab>
+  <Tab value="Welt">
+    | Befehl | Was er macht |
+    | :-- | :-- |
+    | `time set <value>` | Setzt die Zeit: `day`, `night` oder eine Anzahl Ticks. |
+    | `weather <clear\|rain\|thunder>` | Ändert das Wetter. |
+    | `difficulty <0-3>` | Friedlich, einfach, normal oder schwer. |
+    | `gamerule <rule> <value>` | Ändert eine Spielregel wie `doDaylightCycle` oder `keepInventory`. |
+    | `setworldspawn` / `spawnpoint` | Setzt den Welt-Spawn oder den Spawnpunkt eines Spielers. |
+  </Tab>
+</Tabs>
+
+<Callout type="error" title="Den Prozess niemals abschießen">
+  Wenn du das Terminal schließt oder Java beendest, können Welt- und Spielerdaten verloren gehen. Nutze `stop`, damit vorher alles auf die Festplatte geschrieben wird.
+</Callout>
+
+## Hilfe
+
+`help` listet seitenweise jeden Befehl, den du ausführen darfst; `help <command>` zeigt, wie einer benutzt wird. Was ein Spieler ausführen kann, hängt von seinen [Berechtigungen](/docs/de/permissions) ab.

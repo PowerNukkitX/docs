@@ -1,0 +1,11 @@
+{
+  "title": "Fundamentos",
+  "icon": "GraduationCap",
+  "pages": [
+    "index",
+    "annotations",
+    "commands",
+    "listener",
+    "tasks"
+  ]
+}

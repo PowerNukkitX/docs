@@ -1,0 +1,45 @@
+---
+title: "Spark 性能分析器"
+description: "用 Spark 性能分析器找出拖慢服务器的原因，一行配置即可开启。"
+icon: Activity
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+[Spark](https://spark.lucko.me/) 是一款性能分析器。它会显示 CPU 时间和内存花在了哪里，帮你找到卡顿的真正原因。
+
+## 开启
+
+<Steps>
+  <Step>
+    ### 停止服务器
+
+    运行中的服务器会在关闭时覆盖 `pnx.yml`，所以请在停止状态下编辑。
+  </Step>
+  <Step>
+    ### 启用 Spark
+
+    ```yaml title="pnx.yml"
+    miscSettings:
+      installSpark: true
+    ```
+  </Step>
+  <Step>
+    ### 启动服务器
+
+    PowerNukkitX 会把对应版本的 Spark jar 下载到 `plugins/` 并加载。之后 Spark 会在后台监视所有服务器线程。
+  </Step>
+</Steps>
+
+## 使用
+
+在控制台中运行这些命令，或以管理员身份在游戏中运行：
+
+| 命令 | 作用 |
+| :-- | :-- |
+| `/spark profiler start` | 开始记录。在有玩家在线时让它运行几分钟。 |
+| `/spark profiler stop` | 停止记录，并输出一个调用树查看器的链接，带有 CPU 和内存图表。 |
+| `/spark health` | 显示当前的 TPS、内存和 CPU。 |
+
+其他内容请参见 [Spark 文档](https://spark.lucko.me/docs)。

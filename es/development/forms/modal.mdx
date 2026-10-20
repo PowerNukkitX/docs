@@ -1,0 +1,117 @@
+---
+title: ModalForm
+icon: MessageSquare
+description: "Una pregunta, dos respuestas: sí o no. El formulario para confirmaciones."
+authors:
+  - PleaseInsertNameHere
+---
+
+<FormPreview type="modal" />
+
+## Título y contenido
+
+<Tabs items={["Constructor", "Solo título", "Métodos"]}>
+  <Tab value="Constructor">
+```java
+// Setting the title and content within the constructor
+ModalForm form = new ModalForm("title", "content");
+```
+  </Tab>
+  <Tab value="Solo título">
+```java
+// Only setting the title within the constructor
+ModalForm form = new ModalForm("title");
+```
+  </Tab>
+  <Tab value="Métodos">
+```java
+// Setting the title and content using methods
+ModalForm form = new ModalForm()
+                    .title("title")
+                    .content("content");
+```
+  </Tab>
+</Tabs>
+
+## Los dos botones
+
+Define en una sola llamada el texto de cada botón y lo que pasa al hacer clic:
+
+```java
+form.yes("Yes!", player -> player.sendMessage("You said yes!"))
+    .no("No!", player -> player.sendMessage("You said no!"))
+```
+
+O cambia solo el texto:
+
+```java
+// Both buttons
+form.text("Yes!", "No!");
+
+// Only the 'yes'-button
+form.yesText("Yes!!");
+
+// Only the 'no'-button
+form.noText("No!!");
+```
+
+## Gestionar la respuesta
+
+<Tabs items={["Por botón", "Todo el formulario", "Evento"]}>
+  <Tab value="Por botón">
+```java
+form.onYes(player -> player.sendMessage("You said yes!!"))
+    .onNo(player -> player.sendMessage("You said no!!"))
+```
+  </Tab>
+  <Tab value="Todo el formulario">
+`buttonId()` vale `0` para sí y `1` para no; `yes()` es `true` cuando se pulsó sí.
+
+```java
+form.onSubmit((player, response) -> {
+    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
+    // buttonId returns 0 if 'yes' was clicked, 1 if 'no' was clicked
+    boolean yes = response.yes(); // Returns true if 'yes' was clicked
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+  </Tab>
+  <Tab value="Evento">
+O escucha `PlayerFormRespondedEvent`. La comprobación `instanceof` también te indica que el formulario no se cerró sin más:
+
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // The player who submitted the form
+    Form<?> form = event.getWindow(); // The window which has been responded to
+    Response response = event.getResponse(); // The response; null if closed
+
+    // Example: Check if a ModalForm called 'Ingots' was accepted
+    if (form.title().equals("Ingots") && response instanceof ModalResponse modalResponse) { // Using instanceof, we also make sure it wasn't closed
+        boolean yes = modalResponse.yes();
+
+        player.sendMessage(yes ? "You accepted the ingot." : "You rejected the ingot.");
+    }
+}
+```
+  </Tab>
+</Tabs>
+
+El envío funciona como en todos los formularios: consulta [Formularios](/docs/es/development/forms#sending-a-form).
+
+## Ejemplo completo
+
+El formulario de la imagen de arriba:
+
+```java
+ModalForm form = new ModalForm("Ingots", "Do you want to buy 1x Netherite Ingot for $1000?")
+            .yes("Yes, I want to!", pl -> pl.sendMessage("You accepted the offer!"))
+            .no("No, I don't want to!", pl -> pl.sendMessage("You rejected the offer."))
+            .onSubmit((pl, response) -> {
+                boolean yes = response.yes();
+                pl.sendMessage("You have clicked " + (yes ? "yes" : "no"));
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+```

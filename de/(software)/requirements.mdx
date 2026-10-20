@@ -1,0 +1,59 @@
+---
+title: "Voraussetzungen"
+description: "Die Hardware, Java-Version und das System, die PowerNukkitX braucht."
+icon: Shapes
+authors:
+  - AzaleeX
+---
+
+Prüfe vor der Installation, ob dein Rechner die folgende Hardware, Java-Version und das passende System hat.
+
+## Hardware
+
+<Tabs items={["Minimum", "Empfohlen"]}>
+  <Tab value="Minimum">
+    Genug für einen kleinen Server mit wenigen Spielern. Die Leistung hängt von der Weltgröße und den Plugins ab.
+
+    | Komponente | Minimum |
+    | :-- | :-- |
+    | CPU | 2 Kerne, 2,5 GHz |
+    | RAM | 2 GB |
+    | Speicher | 1 GB frei |
+    | Java | OpenJDK 21 oder neuer |
+    | System | Windows 10 / 11, Linux (Ubuntu 20.04+), macOS |
+    | Netzwerk | 1 Mbit/s Upload |
+  </Tab>
+  <Tab value="Empfohlen">
+    Für einen Server mit echtem Betrieb. Ab 20 Spielern oder mit mehreren Welten brauchst du mehr CPU, RAM und Bandbreite.
+
+    | Komponente | Empfohlen |
+    | :-- | :-- |
+    | CPU | 4+ Kerne, 3,0 GHz+ |
+    | RAM | 4 GB oder mehr |
+    | Speicher | SSD mit 5 GB frei |
+    | Java | OpenJDK 21 oder neuer |
+    | System | Windows 10 / 11, Linux (Ubuntu 22.04+), macOS |
+    | Netzwerk | 10 Mbit/s+ Upload |
+  </Tab>
+</Tabs>
+
+## Java
+
+PowerNukkitX braucht **Java 21 oder neuer**, 64-Bit.
+
+<Steps>
+  <Step>Installiere eine **64-Bit**-Java-21-Laufzeit. OpenJDK wird empfohlen.</Step>
+  <Step>Setze die Umgebungsvariable `JAVA_HOME` auf diese Installation.</Step>
+  <Step>Nimm den `bin`-Ordner von Java in deinen `PATH` auf und prüfe mit `java -version`.</Step>
+</Steps>
+
+<Callout type="warn">
+  Ältere Java-Versionen (20 und darunter) führen zu Abstürzen oder Plugin-Fehlern. Sieh unter [Fehlerbehebung](/docs/de/faq/troubleshooting) nach, wenn `java -version` die falsche anzeigt.
+</Callout>
+
+## Gute Gewohnheiten
+
+- **Sichere** deinen Ordner `worlds/` und `pnx.yml` regelmäßig. Siehe [Backups](/docs/de/administration/backups).
+- **Halte 20 % der Festplatte frei** für Logs und wachsende Welten.
+- **Installiere nur Plugins**, die für deine PowerNukkitX-Version gebaut sind.
+- **Behalte CPU und Speicher im Blick**, mit `htop` unter Linux oder dem Task-Manager unter Windows.

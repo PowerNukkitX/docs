@@ -1,0 +1,11 @@
+{
+  "title": "表单",
+  "icon": "PanelsTopLeft",
+  "pages": [
+    "index",
+    "simple",
+    "custom",
+    "modal",
+    "ddui"
+  ]
+}

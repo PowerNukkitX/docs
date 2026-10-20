@@ -1,0 +1,62 @@
+---
+title: "Jugadores"
+description: "Operadores, lista blanca, expulsiones y baneos en un servidor PowerNukkitX."
+icon: Users
+authors:
+  - PowerNukkitX
+---
+
+Quién puede hacer qué en tu servidor: operadores, lista blanca, expulsiones y baneos, y lo que cambia el modo sin conexión.
+
+## Operadores
+
+Los operadores se saltan las comprobaciones de permisos y pueden ejecutar cualquier comando.
+
+```bash title="Console"
+op <player>
+deop <player>
+```
+
+Se guardan en `ops.txt`, un nombre por línea, que puedes editar con el servidor detenido. Más allá de un par de administradores de confianza, usa un plugin de permisos: consulta [Permisos y seguridad](/docs/es/permissions).
+
+## Lista blanca
+
+Deja entrar solo a los jugadores aprobados. Actívala en `pnx.yml`:
+
+```yaml title="pnx.yml"
+baseSettings:
+  allowList: true
+  allowListMessage: Server is white-listed
+```
+
+Entonces solo pueden entrar los jugadores de `white-list.txt`; al resto se le expulsa con `allowListMessage`. Gestiónala con:
+
+```bash title="Console"
+whitelist add <player>
+whitelist remove <player>
+whitelist list
+```
+
+<Callout type="info">
+  Con `xboxAuth` activado (por defecto), los jugadores se identifican por su cuenta de Xbox, así que cambiar el nombre visible no permite saltarse la lista blanca.
+</Callout>
+
+## Expulsiones y baneos
+
+| Comando | Efecto |
+| :-- | :-- |
+| `kick <player> [reason]` | Desconecta a un jugador al momento. Puede volver. |
+| `ban <player> [reason]` | Banea a un jugador por su nombre. |
+| `pardon <player>` | Levanta un baneo por nombre. |
+| `ban-ip <address\|player>` | Banea una dirección IP. |
+| `pardon-ip <address>` | Levanta un baneo de IP. |
+
+Los baneos se guardan en `banned-players.txt` y `banned-ips.txt`.
+
+## Modo sin conexión
+
+Poner `baseSettings.xboxAuth` en `false` desactiva la autenticación de Xbox.
+
+<Callout type="error" title="Solo en redes de confianza">
+  Sin autenticación, cualquiera puede entrar con cualquier nombre, y la lista blanca y los baneos se vuelven fáciles de saltar. Usa el modo sin conexión solo en una red local, o detrás de un proxy que autentique a los jugadores (consulta [WaterdogPE](/docs/es/integrations/wdpe)).
+</Callout>

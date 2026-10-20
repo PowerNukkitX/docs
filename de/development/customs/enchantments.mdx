@@ -1,0 +1,70 @@
+---
+title: "Verzauberungen"
+description: "Neue Verzauberungen mit eigener Seltenheit, eigenen Ziel-Items und Stufen erstellen."
+icon: Sparkles
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Eine eigene Verzauberung ist eine Java-Klasse, die du wie alle eigenen Inhalte in `onLoad()` registrierst, bevor die Welten geladen werden.
+
+## In `onLoad()` registrieren
+
+```java
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onLoad() {
+    try {
+        Enchantment.register(new MyEnchantment());
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## Definieren
+
+Erweitere `Enchantment` und übergib dem Konstruktor eine ID, einen Anzeigenamen, eine Seltenheit und die Art von Item, für die sie gilt. Lege dann die Höchststufe und den Verzauberbarkeitsbereich fest.
+
+```java filename="MyEnchantment.java"
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.item.enchantment.EnchantmentType;
+import org.powernukkitx.utils.Identifier;
+
+public class MyEnchantment extends Enchantment {
+    public MyEnchantment() {
+        super(
+            new Identifier("powernukkitx:lucky_strike"), // Unique identifier namespace:name
+            "Lucky Strike",                              // Display name
+            Rarity.RARE,                                 // Rarity (COMMON, UNCOMMON, RARE, VERY_RARE)
+            EnchantmentType.WEAPON                       // Applicable items (ARMOR, WEAPON, DIGGER, ALL, etc.)
+        );
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3; // Maximum level of the enchantment
+    }
+
+    @Override
+    public int getMinEnchantability(int level) {
+        return 1 + level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level) {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    // You can override additional handlers such as:
+    // - getDamageBonus(int level, Entity target) for custom weapon damage modifiers.
+    // - getDamageProtection(int level, DamageSource source) for custom protection modifiers.
+}
+```
+
+<Callout type="info" title="Die Wirkung schreibst du selbst">
+  Eine Verzauberung zu registrieren lässt sie existieren; was sie tut, liegt bei dir. Prüfe in deinen Listenern auf sie, zum Beispiel in `EntityDamageByEntityEvent` oder `BlockBreakEvent`, und wende dort die Wirkung an.
+</Callout>

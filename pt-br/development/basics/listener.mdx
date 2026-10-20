@@ -1,0 +1,100 @@
+---
+title: Listeners
+icon: Ear
+description: "Reaja ao que acontece no jogo: um jogador entra, um bloco quebra, uma entidade leva dano."
+authors:
+  - tunikakeks
+---
+
+Um **listener** é uma classe com métodos marcados com `@EventHandler`. Quando o servidor dispara um evento desse tipo, seu método roda.
+
+<EventFlow />
+
+<Tabs items={["Uma classe listener", "Na classe principal"]}>
+  <Tab value="Uma classe listener">
+    O jeito organizado para qualquer coisa além de um plugin minúsculo:
+
+    ```java title="JoinListener.java"
+    package com.example.listener;
+
+    import org.powernukkitx.Player;
+    import org.powernukkitx.event.EventHandler;
+    import org.powernukkitx.event.Listener;
+    import org.powernukkitx.event.player.PlayerJoinEvent;
+
+    public class JoinListener implements Listener {
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            Player player = event.getPlayer();
+            player.sendMessage("Welcome, " + player.getName() + "!");
+        }
+    }
+    ```
+
+    Registre-a quando o plugin for ativado:
+
+    ```java
+    @Override
+    public void onEnable() {
+        this.getServer().getPluginManager().registerEvents(new JoinListener(), this);
+    }
+    ```
+
+    <Callout type="info">
+      Ou adicione `@EventListener` à classe e deixe o [processador de anotações](/docs/pt-br/development/basics/annotations) registrá-la.
+    </Callout>
+  </Tab>
+  <Tab value="Na classe principal">
+    Serve para um plugin pequeno: a classe principal é o próprio listener.
+
+    ```java title="ExamplePlugin.java"
+    public class ExamplePlugin extends PluginBase implements Listener {
+        @Override
+        public void onEnable() {
+            this.getServer().getPluginManager().registerEvents(this, this);
+        }
+
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            Player player = event.getPlayer();
+            player.sendMessage("Welcome, " + player.getName() + "!");
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Cancelar um evento
+
+A maioria dos eventos pode ser cancelada: o servidor então não faz o que o evento anunciava. Aqui, só operadores podem quebrar blocos:
+
+```java
+@EventHandler
+public void onBreak(BlockBreakEvent event) {
+    if (!event.getPlayer().isOp()) {
+        event.setCancelled(true);
+    }
+}
+```
+
+Um evento pode ser cancelado se a classe dele implementa `Cancellable`, como `BlockBreakEvent` e `PlayerChatEvent`.
+
+## Ordem e prioridade
+
+Quando vários handlers escutam o mesmo evento, eles rodam por **prioridade**, de `LOWEST` a `MONITOR`. O que roda depois tem a palavra final, porque pode desfazer o que um anterior decidiu.
+
+```java
+@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+public void onChat(PlayerChatEvent event) {
+    // runs after NORMAL handlers, and not at all if one of them cancelled the event
+}
+```
+
+| Configuração | Padrão | O que faz |
+| :-- | :-- | :-- |
+| `priority` | `NORMAL` | `LOWEST`, `LOW`, `NORMAL`, `HIGH`, `HIGHEST` e depois `MONITOR`. |
+| `ignoreCancelled` | `false` | Se `true`, o handler é pulado quando o evento já está cancelado. |
+
+<Callout type="warn">
+  Use `MONITOR` só para observar o resultado final, para logs ou estatísticas. Não altere o evento ali: outros plugins já agiram com base nele.
+</Callout>

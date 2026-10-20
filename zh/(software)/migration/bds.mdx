@@ -1,0 +1,70 @@
+---
+title: "从 Bedrock Dedicated Server 迁移"
+description: "从 Mojang 官方的 Bedrock Dedicated Server（BDS）迁移到 PowerNukkitX。"
+icon: Server
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+世界和资源包可以保留。设置需要手动复制，行为包则必须用插件代替。
+
+<CarryOver
+  items={[
+    { label: "世界", note: "LevelDB 世界可以直接复制", status: "yes" },
+    { label: "资源包", note: "复制到 resource_packs/ 并提供给玩家", status: "yes" },
+    { label: "server.properties", note: "手动复制到 pnx.yml", status: "manual" },
+    { label: "行为包", note: "不支持：游戏逻辑写在 Java 插件中", status: "no" },
+  ]}
+/>
+
+## 步骤
+
+<Steps>
+  <Step>
+    ### 安装 PowerNukkitX
+
+    按照适合你系统的[安装指南](/docs/zh/installation)操作，先启动一次服务器让它生成文件，然后停止。
+  </Step>
+  <Step>
+    ### 复制世界
+
+    把 BDS 的 `worlds/` 中的世界文件夹（例如 `worlds/MyBedrockWorld`）复制到 PowerNukkitX 的 `worlds/`，然后在 `pnx.yml` 中设为默认世界：
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      defaultLevelName: "MyBedrockWorld"
+    ```
+  </Step>
+  <Step>
+    ### 复制设置
+
+    把 BDS 的 `server.properties` 中的值复制到 `pnx.yml`：
+
+    | BDS 设置 | `pnx.yml` 分区 | `pnx.yml` 键 |
+    | :-- | :-- | :-- |
+    | `server-port` | `baseSettings` | `port` |
+    | `max-players` | `baseSettings` | `maxPlayers` |
+    | `online-mode` | `baseSettings` | `xboxAuth` |
+    | `allow-list` | `baseSettings` | `allowList` |
+    | `gamemode` | `gameplaySettings` | `gamemode` |
+    | `difficulty` | `gameplaySettings` | `difficulty` |
+    | `view-distance` | `gameplaySettings` | `viewDistance` |
+  </Step>
+  <Step>
+    ### 复制资源包
+
+    把 BDS 的 `resource_packs/` 中的 `.mcpack` 或 `.zip` 文件复制到 PowerNukkitX 的 `resource_packs/`。玩家连接时会收到这些资源包。
+  </Step>
+</Steps>
+
+## 须知
+
+<Accordions>
+  <Accordion title="行为包">
+    BDS 运行带有自定义实体逻辑、脚本和动画的行为包。PowerNukkitX 不支持：方块、物品、实体和玩法都在服务器端用 Java 编写，使用[插件 API](/docs/zh/development)。
+  </Accordion>
+  <Accordion title="玩家数据和背包">
+    BDS 把背包和位置保存在世界的 LevelDB 数据库中，PowerNukkitX 可以从中读取标准的原版玩家档案。为保险起见，请在第一批玩家加入前备份 `worlds/`，并在 `playerSettings` 中保持 `savePlayerData: true`。
+  </Accordion>
+</Accordions>

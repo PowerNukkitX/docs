@@ -1,0 +1,35 @@
+---
+title: "Überblick"
+description: "Wähle die Installationsanleitung für dein System."
+icon: AppWindow
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Monitor, Apple, Terminal, Container } from "lucide-react";
+
+Für PowerNukkitX brauchst du Java 21 und die Server-Jar. Die Schritte sind überall gleich; nur die Befehle ändern sich.
+
+<InstallRoutes />
+
+## Wähle dein System
+
+<Cards>
+  <Card icon={<Monitor />} title="Windows" href="/docs/de/installation/windows">
+    Windows 10 oder 11, mit einem `start.bat`-Skript.
+  </Card>
+  <Card icon={<Apple />} title="macOS" href="/docs/de/installation/macos">
+    Java über Homebrew, Intel oder Apple Silicon.
+  </Card>
+  <Card icon={<Terminal />} title="Linux" href="/docs/de/installation/linux">
+    Ubuntu, Debian, CentOS oder RHEL, als systemd-Dienst.
+  </Card>
+  <Card icon={<Container />} title="Docker" href="/docs/de/installation/docker">
+    Das offizielle Image, mit Docker oder Docker Compose.
+  </Card>
+</Cards>
+
+<Callout type="info">
+  Lieber mit einem einzigen Befehl einrichten? Die [Installationsseite](https://powernukkitx.org/install) erklärt auch das Kommandozeilen-Tool `pnx`.
+</Callout>

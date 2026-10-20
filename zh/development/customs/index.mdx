@@ -1,0 +1,52 @@
+---
+title: "概览"
+description: "添加你自己的方块、物品、实体、附魔、配方和世界生成。"
+icon: Shapes
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Hammer, Sword, Skull, Sparkles, BookOpen, Cpu, Globe, Home, Shirt } from "lucide-react";
+
+PowerNukkitX 为自定义内容提供了**注册表**。你在插件中注册方块、物品或实体，服务器就会把它们提供给基岩版客户端，材质和模型则来自资源包。
+
+## 在 `onLoad()` 中注册，而不是 `onEnable()`
+
+<PluginLifecycle highlight="onLoad" />
+
+<Callout type="error" title="最常见的错误">
+  服务器会在加载插件**之后**、启用插件**之前**读取世界及其中的方块、物品和实体。请在 `onLoad()` 中注册自定义方块、物品、实体和附魔：如果在 `onEnable()` 中注册，加载世界时它们还是未知的，会导致加载错误或数据丢失。
+</Callout>
+
+## 指南
+
+<Cards>
+  <Card icon={<Hammer />} title="方块" href="/docs/zh/development/customs/blocks">
+    属性、几何模型、状态和排列。
+  </Card>
+  <Card icon={<Cpu />} title="方块实体" href="/docs/zh/development/customs/block-entities">
+    为已放置的方块添加额外数据和刻更新。
+  </Card>
+  <Card icon={<Sword />} title="物品" href="/docs/zh/development/customs/items">
+    普通物品、工具、武器和盔甲。
+  </Card>
+  <Card icon={<Skull />} title="实体" href="/docs/zh/development/customs/entities">
+    生物，以及玩家可以骑乘的坐骑。
+  </Card>
+  <Card icon={<Sparkles />} title="附魔" href="/docs/zh/development/customs/enchantments">
+    拥有自己等级和稀有度的新附魔。
+  </Card>
+  <Card icon={<Shirt />} title="盔甲纹饰" href="/docs/zh/development/customs/trims">
+    用于锻造台的纹饰样式和材料。
+  </Card>
+  <Card icon={<BookOpen />} title="配方" href="/docs/zh/development/customs/recipes">
+    有序配方、无序配方和熔炉配方。
+  </Card>
+  <Card icon={<Globe />} title="生成器" href="/docs/zh/development/customs/generators">
+    自定义世界生成，以及在原版世界中生成结构。
+  </Card>
+  <Card icon={<Home />} title="结构" href="/docs/zh/development/customs/structures">
+    加载、旋转和放置基岩版与 Java 版结构。
+  </Card>
+</Cards>

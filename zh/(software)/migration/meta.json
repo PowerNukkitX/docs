@@ -1,0 +1,10 @@
+{
+  "title": "迁移",
+  "icon": "ArrowRightLeft",
+  "pages": [
+    "index",
+    "nukkit",
+    "bds",
+    "pocketmine"
+  ]
+}

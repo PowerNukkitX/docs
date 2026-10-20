@@ -1,0 +1,50 @@
+---
+title: "Consola y comandos"
+description: "Los comandos que más usarás para llevar un servidor PowerNukkitX."
+icon: SquareTerminal
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX tiene todos los comandos vanilla de Bedrock más los comandos del servidor. En la **consola**, escribe los comandos sin barra; **en el juego**, como operador, con ella.
+
+<Tabs items={["Servidor", "Jugadores", "Mundo"]}>
+  <Tab value="Servidor">
+    | Comando | Qué hace |
+    | :-- | :-- |
+    | `stop` | Guarda todo y apaga correctamente. Úsalo siempre en vez de matar el proceso. |
+    | `save-all` | Escribe ahora en disco todos los mundos cargados. |
+    | `reload` | Recarga plugins y configuración. Un reinicio completo es más seguro. |
+    | `version` / `plugins` | La versión del servidor y los plugins cargados. |
+    | `status` | Tiempo encendido, TPS, memoria, y mundos y entidades cargados. |
+  </Tab>
+  <Tab value="Jugadores">
+    | Comando | Qué hace |
+    | :-- | :-- |
+    | `list` | Lista los jugadores conectados. |
+    | `kick <player> [reason]` | Desconecta a un jugador. |
+    | `tp <player> <target>` | Teletransporta a un jugador hasta otro jugador o unas coordenadas. |
+    | `gamemode <mode> [player]` | Cambia el modo de juego: `survival`, `creative`, `adventure`, `spectator`. |
+    | `give <player> <item> [amount]` | Da items. |
+    | `xp <amount> [player]` | Da experiencia. |
+
+    Los operadores, los baneos y la lista blanca están en [Jugadores](/docs/es/administration/players).
+  </Tab>
+  <Tab value="Mundo">
+    | Comando | Qué hace |
+    | :-- | :-- |
+    | `time set <value>` | Cambia la hora: `day`, `night` o un número de ticks. |
+    | `weather <clear\|rain\|thunder>` | Cambia el tiempo. |
+    | `difficulty <0-3>` | Pacífico, fácil, normal o difícil. |
+    | `gamerule <rule> <value>` | Cambia una regla de juego como `doDaylightCycle` o `keepInventory`. |
+    | `setworldspawn` / `spawnpoint` | Define el punto de aparición del mundo o el de un jugador. |
+  </Tab>
+</Tabs>
+
+<Callout type="error" title="Nunca mates el proceso">
+  Cerrar la terminal o matar Java puede hacer perder datos del mundo y de los jugadores. Usa `stop` para que todo se escriba antes en disco.
+</Callout>
+
+## Ayuda
+
+`help` lista, página a página, todos los comandos que puedes ejecutar; `help <command>` muestra cómo se usa uno. Lo que puede ejecutar un jugador depende de sus [permisos](/docs/es/permissions).

@@ -1,0 +1,235 @@
+---
+title: Criar um plugin
+icon: PackagePlus
+description: "Configure um projeto Maven ou Gradle, escreva uma classe principal e rode seu primeiro plugin."
+authors:
+  - tunikakeks
+---
+
+## Antes de começar
+
+- Um **JDK 21** ou mais recente
+- Um pouco de Java
+- Um servidor PowerNukkitX para testar
+- Uma IDE: IntelliJ IDEA, Eclipse ou VS Code
+
+<Callout type="info" title="Pule a configuração">
+  O [template de plugin do PowerNukkitX](https://github.com/PowerNukkitX/PluginTemplate) é um projeto pronto, com tudo o que está abaixo já configurado.
+</Callout>
+
+Seu projeto vai ficar assim:
+
+<Files>
+  <Folder name="MyPlugin" defaultOpen>
+    <File name="pom.xml / build.gradle.kts" />
+    <Folder name="src/main" defaultOpen>
+      <Folder name="java/org/example" defaultOpen>
+        <File name="ExamplePlugin.java" />
+      </Folder>
+      <Folder name="resources" defaultOpen>
+        <File name="plugin.yml" />
+      </Folder>
+    </Folder>
+  </Folder>
+</Files>
+
+<Steps>
+  <Step>
+    ### Configurar o build
+
+    O build baixa a API do servidor do repositório do PowerNukkitX e empacota seu plugin como jar. O alvo é o **Java 21**.
+
+    <Tabs items={["Maven", "Gradle"]}>
+      <Tab value="Maven">
+        ```xml title="pom.xml"
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+
+            <groupId>org.example</groupId>
+            <artifactId>MyPlugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+
+            <properties>
+                <maven.compiler.source>21</maven.compiler.source>
+                <maven.compiler.target>21</maven.compiler.target>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2/</url>
+                </repository>
+                <repository>
+                    <id>PowerNukkitX-releases</id>
+                    <name>PowerNukkitX Repository</name>
+                    <url>https://repo.powernukkitx.org/releases</url>
+                </repository>
+            </repositories>
+
+            <dependencies>
+                <!-- "3.0.0-SNAPSHOT" is the current release; "nightly-SNAPSHOT" the latest
+                     development build, which may break the API. -->
+                <dependency>
+                    <groupId>org.powernukkitx</groupId>
+                    <artifactId>server</artifactId>
+                    <version>3.0.0-SNAPSHOT</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.11.0</version>
+                        <configuration>
+                            <source>21</source>
+                            <target>21</target>
+                        </configuration>
+                    </plugin>
+                    <!-- bundles your own dependencies into the jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </project>
+        ```
+      </Tab>
+      <Tab value="Gradle">
+        ```kotlin title="settings.gradle.kts"
+        rootProject.name = "MyPlugin"
+        ```
+
+        ```kotlin title="build.gradle.kts"
+        plugins {
+            java
+            id("com.github.johnrengelman.shadow") version "8.1.1"
+        }
+
+        group = "org.example"
+        version = "1.0.0-SNAPSHOT"
+
+        repositories {
+            mavenCentral()
+            maven { url = uri("https://repo.powernukkitx.org/releases") }
+        }
+
+        dependencies {
+            // "3.0.0-SNAPSHOT" is the current release; "nightly-SNAPSHOT" the latest
+            // development build, which may break the API.
+            compileOnly("org.powernukkitx:server:3.0.0-SNAPSHOT")
+        }
+
+        tasks.withType<JavaCompile> {
+            options.encoding = "UTF-8"
+            sourceCompatibility = "21"
+            targetCompatibility = "21"
+        }
+
+        tasks {
+            build { dependsOn(shadowJar) }
+        }
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step>
+    ### Descrever o plugin
+
+    O servidor lê um arquivo de metadados chamado `plugin.yml` (ou `powernukkitx.yml`) em `src/main/resources`:
+
+    ```yaml title="plugin.yml"
+    name: ExamplePlugin
+    main: org.example.ExamplePlugin
+    # version and api must be strings: keep the quotes
+    version: "1.0.0"
+    api: "2.0.0"
+    load: POSTWORLD
+    author: PowerNukkitX Team
+    # author and authors are merged into one list
+    authors: ["Example", "Another"]
+    description: Example plugin from the PNX documentation
+    website: https://docs.powernukkitx.org/
+    ```
+
+    <Callout type="info">
+      Com o [processador de anotações](/docs/pt-br/development/basics/annotations), este arquivo é gerado para você.
+    </Callout>
+  </Step>
+  <Step>
+    ### Escrever a classe principal
+
+    A classe principal estende `PluginBase`. O servidor chama seus três métodos em cada etapa da vida do plugin:
+
+    ```java title="ExamplePlugin.java"
+    package org.example;
+
+    import org.powernukkitx.plugin.PluginBase;
+    import org.powernukkitx.utils.TextFormat;
+
+    public class ExamplePlugin extends PluginBase {
+        @Override
+        public void onLoad() {
+            this.getLogger().info(TextFormat.WHITE + "Example plugin loaded!");
+        }
+
+        @Override
+        public void onEnable() {
+            this.getLogger().info(TextFormat.DARK_GREEN + "Example plugin enabled!");
+        }
+
+        @Override
+        public void onDisable() {
+            this.getLogger().info(TextFormat.DARK_RED + "Example plugin disabled!");
+        }
+    }
+    ```
+
+    <PluginLifecycle />
+  </Step>
+  <Step>
+    ### Compilar e instalar
+
+    <Tabs items={["Maven", "Gradle"]}>
+      <Tab value="Maven">
+        ```bash
+        mvn clean package
+        ```
+
+        O jar fica em `target/`.
+      </Tab>
+      <Tab value="Gradle">
+        ```bash
+        ./gradlew clean build
+        ```
+
+        O jar, com as bibliotecas incluídas, é `build/libs/MyPlugin-1.0.0-SNAPSHOT-all.jar`.
+      </Tab>
+    </Tabs>
+
+    Copie o jar para a pasta `plugins/` do servidor e reinicie o servidor. Suas mensagens aparecem no console.
+  </Step>
+</Steps>
+
+## Próximos passos
+
+<Cards>
+  <Card title="Comandos" href="/docs/pt-br/development/basics/commands">Deixe os jogadores digitarem `/greet`.</Card>
+  <Card title="Listeners" href="/docs/pt-br/development/basics/listener">Reaja a jogadores entrando, blocos quebrados...</Card>
+  <Card title="Tarefas" href="/docs/pt-br/development/basics/tasks">Rode código depois, ou em um temporizador.</Card>
+</Cards>

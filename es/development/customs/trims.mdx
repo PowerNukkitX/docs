@@ -1,0 +1,84 @@
+---
+title: "Adornos de armadura"
+description: "Añade patrones y materiales de adorno que los jugadores aplican en la mesa de herrería."
+icon: Shirt
+authors:
+  - PowerNukkitX
+---
+
+Un adorno tiene dos partes: un **patrón**, de la plantilla de herrería en la ranura de plantilla, y un **material**, del ingrediente en la ranura de material. Registra los tuyos y los jugadores los aplicarán en una mesa de herrería como los adornos vanilla. Viven en `TrimRegistry`, accesible mediante `Registries.TRIM`.
+
+<Steps>
+  <Step>
+    ### Registra patrones y materiales
+
+    Las dos llamadas lanzan `RegisterException` si el id del item ya está en uso:
+
+```java filename="MyPlugin.java"
+import org.powernukkitx.registry.Registries;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onEnable() {
+    try {
+        // A smithing template item -> the pattern id written into the trim NBT
+        Registries.TRIM.registerPattern("myplugin:cool_smithing_template", "cool");
+
+        // An ingredient item -> the material id + the hex tint used for the item name
+        Registries.TRIM.registerMaterial("minecraft:emerald", "emerald_special", "#17DD62");
+    } catch (RegisterException e) {
+        getLogger().error("Trim is already registered", e);
+    }
+}
+```
+
+    - `registerPattern(templateItemId, patternId)`: el item de plantilla y el id del patrón que se escribe en el NBT del adorno.
+    - `registerMaterial(ingredientItemId, materialId, color)`: el item ingrediente, el id del material y el color hexadecimal (con `#`) que tiñe el nombre del adorno.
+  </Step>
+  <Step>
+    ### Etiqueta los items
+
+    La mesa de herrería solo acepta items con la etiqueta correcta:
+
+```java
+import org.powernukkitx.item.ItemTags;
+import java.util.List;
+
+ItemTags.register("myplugin:cool_smithing_template", List.of("minecraft:trim_templates"));
+ItemTags.register("minecraft:emerald", List.of("minecraft:trim_materials"));
+```
+
+    <Callout type="info">
+      Los ids de los items deben existir. Usa ids vanilla o registra antes tus propios [items personalizados](/docs/es/development/customs/items).
+    </Callout>
+  </Step>
+  <Step>
+    ### Sincroniza a los jugadores ya conectados
+
+    Los jugadores reciben la lista de adornos al entrar. ¿Registras cuando ya están conectados? Envíales la nueva lista:
+
+```java
+Registries.TRIM.resyncOnlinePlayers();
+```
+  </Step>
+</Steps>
+
+## Quitar y consultar adornos
+
+```java
+// Remove a registered pattern or material
+Registries.TRIM.unregisterPattern("myplugin:cool_smithing_template");
+Registries.TRIM.unregisterMaterial("minecraft:emerald");
+
+// Look one up (returns an Optional)
+Registries.TRIM.getPattern("myplugin:cool_smithing_template");
+Registries.TRIM.getMaterial("minecraft:emerald");
+
+// Read-only views of everything registered
+Registries.TRIM.getPatterns();
+Registries.TRIM.getMaterials();
+```
+
+<Callout type="warn">
+  Registra cada id de plantilla e ingrediente una sola vez: un segundo `registerPattern` o `registerMaterial` para el mismo id lanza `RegisterException`.
+</Callout>

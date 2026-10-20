@@ -1,0 +1,62 @@
+---
+title: "玩家"
+description: "PowerNukkitX 服务器上的管理员、白名单、踢出和封禁。"
+icon: Users
+authors:
+  - PowerNukkitX
+---
+
+谁能在你的服务器上做什么：管理员、白名单、踢出与封禁，以及离线模式会带来什么变化。
+
+## 管理员
+
+管理员会跳过权限检查，可以执行任何命令。
+
+```bash title="Console"
+op <player>
+deop <player>
+```
+
+管理员保存在 `ops.txt` 中，每行一个名字，可以在服务器停止时编辑。除了少数几个可信的管理员，其他人请使用权限插件：参见[权限与安全](/docs/zh/permissions)。
+
+## 白名单
+
+只允许经过批准的玩家进入。在 `pnx.yml` 中开启：
+
+```yaml title="pnx.yml"
+baseSettings:
+  allowList: true
+  allowListMessage: Server is white-listed
+```
+
+这样只有 `white-list.txt` 中的玩家可以加入，其他人会收到 `allowListMessage` 并被踢出。用以下命令管理：
+
+```bash title="Console"
+whitelist add <player>
+whitelist remove <player>
+whitelist list
+```
+
+<Callout type="info">
+  开启 `xboxAuth`（默认）时，玩家通过 Xbox 账号识别，所以修改显示名称无法绕过白名单。
+</Callout>
+
+## 踢出与封禁
+
+| 命令 | 效果 |
+| :-- | :-- |
+| `kick <player> [reason]` | 立即断开玩家连接。玩家可以重新加入。 |
+| `ban <player> [reason]` | 按名字封禁玩家。 |
+| `pardon <player>` | 解除名字封禁。 |
+| `ban-ip <address\|player>` | 封禁一个 IP 地址。 |
+| `pardon-ip <address>` | 解除 IP 封禁。 |
+
+封禁记录保存在 `banned-players.txt` 和 `banned-ips.txt` 中。
+
+## 离线模式
+
+把 `baseSettings.xboxAuth` 设为 `false` 会关闭 Xbox 验证。
+
+<Callout type="error" title="仅限可信网络">
+  没有验证时，任何人都能用任何名字加入，白名单和封禁也很容易被绕过。离线模式只应在局域网中使用，或放在负责验证玩家的代理之后（参见 [WaterdogPE](/docs/zh/integrations/wdpe)）。
+</Callout>
