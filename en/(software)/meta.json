@@ -1,16 +1,19 @@
 {
-  "title": "Get started",
-  "description": "What PowerNukkitX is, how to install it, and how to move an existing server to it.",
-  "icon": "Rocket",
+  "title": "Software",
+  "description": "PowerNukkitX documentation covering the software overview, features, comparisons, and installation and configuration guides.",
+  "icon": "Server",
   "root": true,
   "pages": [
+    "---Introduction---",
     "index",
     "quick-start",
+    "comparisons",
     "requirements",
-    "---Install---",
     "installation",
     "migration",
-    "---Compare---",
-    "comparisons"
+    "permissions",
+    "configuration",
+    "plugin-hub",
+    "integrations"
   ]
 }

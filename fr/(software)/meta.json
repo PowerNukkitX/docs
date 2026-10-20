@@ -1,16 +1,19 @@
 {
-  "title": "Bien démarrer",
-  "description": "Ce qu'est PowerNukkitX, comment l'installer, et comment y passer depuis un autre serveur.",
-  "icon": "Rocket",
+  "title": "Logiciel",
+  "description": "Documentation PowerNukkitX : présentation du logiciel, fonctionnalités, comparaisons, installation et configuration.",
+  "icon": "Server",
   "root": true,
   "pages": [
+    "---Introduction---",
     "index",
     "quick-start",
+    "comparisons",
     "requirements",
-    "---Installer---",
     "installation",
     "migration",
-    "---Comparer---",
-    "comparisons"
+    "permissions",
+    "configuration",
+    "plugin-hub",
+    "integrations"
   ]
 }

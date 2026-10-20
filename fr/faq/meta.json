@@ -1,7 +1,7 @@
 {
-  "title": "Aide",
-  "description": "Réponses, solutions aux problèmes courants, et le vocabulaire de la documentation.",
-  "icon": "LifeBuoy",
+  "title": "FAQ",
+  "description": "Questions fréquentes.",
+  "icon": "CircleQuestionMark",
   "root": true,
   "pages": [
     "index",

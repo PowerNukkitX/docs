@@ -1,6 +1,6 @@
 {
-  "title": "Développer des plugins",
-  "description": "Écrire des plugins pour PowerNukkitX : événements, commandes, formulaires et contenu custom.",
+  "title": "Développement",
+  "description": "Documentation pour créer des plugins PowerNukkitX.",
   "icon": "Code",
   "root": true,
   "pages": [
