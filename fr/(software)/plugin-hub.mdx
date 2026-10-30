@@ -27,8 +27,17 @@ Le [hub de plugins](https://powernukkitx.org/plugins) recense les plugins de la 
 </Steps>
 
 <Callout type="info">
-  Regardez d'abord la carte **Details** : elle montre ce dont le plugin a besoin (dépendances, version d'API) et prévient quand un plugin n'a pas été mis à jour depuis plus d'un an.
+  Regardez d'abord la carte **Details** : elle montre ce dont le plugin a besoin (ses dépendances, et celles de ses dépendances), signale une dépendance visée par un avis de sécurité, et prévient quand un plugin n'a pas été mis à jour depuis plus d'un an.
 </Callout>
+
+### Ce que la page vérifie pour vous
+
+- **Server API check** : le hub lit le bytecode du dernier jar et cherche chaque classe et méthode PowerNukkitX qu'il utilise dans la dernière version stable du serveur. S'il en manque une, le plugin plantera en arrivant à cet appel. Rien n'est exécuté : les changements de comportement et la réflexion n'apparaissent pas.
+- **Attested build** : le jar a été construit et signé par GitHub Actions dans le dépôt du plugin lui-même, et la signature correspond exactement au fichier téléchargé. Filtrez le hub avec **Attested builds only**.
+
+### Quand quelque chose casse
+
+Collez le log du serveur dans l'[analyseur de logs](https://powernukkitx.org/logs). Il nomme le plugin en échec et la raison donnée par PowerNukkitX, et renvoie vers sa page et son suivi de bugs. Le log est lu dans votre navigateur ; seuls les noms de plugins et de packages sont envoyés.
 
 ## Publier votre plugin
 
@@ -65,3 +74,44 @@ Depuis la page de gestion du plugin, dans **Listing** :
 | Icône | `.jarbage/icon.png` dans le dépôt, ou en l'envoyant | Relue |
 | Couleur d'accent | Une des sept couleurs du site | Appliquée tout de suite |
 | Liens | Site, docs, Discord, bugs, soutien (https uniquement) | Appliqués tout de suite |
+
+## Attester vos builds
+
+Le badge **Attested build** indique aux joueurs que le jar de votre release vient du workflow de votre propre dépôt, et non de la machine de quelqu'un. Construisez le jar dans GitHub Actions et attestez-le avant de l'envoyer :
+
+```yaml title=".github/workflows/release.yml"
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write      # envoyer le jar sur la release
+  id-token: write      # signer l'attestation
+  attestations: write  # la stocker sur GitHub
+  artifact-metadata: write # la lier au jar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21 # la version visée par votre plugin
+      - run: ./gradlew build # ou : mvn -B package
+      - uses: actions/attest@v4
+        with:
+          subject-path: build/libs/*.jar # ou : target/*.jar
+      - run: gh release upload "${{ github.event.release.tag_name }}" build/libs/*.jar
+        env:
+          GH_TOKEN: ${{ github.token }}
+```
+
+Le hub vérifie l'attestation au scan d'une nouvelle release puis à l'approbation. Il cherche une signature d'un workflow de **votre** dépôt portant sur le sha256 exact approuvé ; une attestation venant d'un autre dépôt ne compte pas.
+
+<Callout type="info">
+  Chaque plugin publié est aussi comparé à la dernière version stable de PowerNukkitX. Si votre dernière release utilise une classe ou une méthode que le serveur n'a plus, vous recevez une notification **Server API check** avec les noms à corriger.
+</Callout>
