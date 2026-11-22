@@ -50,7 +50,7 @@ public class DDUIExample {
         Observable<String> ageGroup = new Observable<>("Adult");
         Observable<Long> difficulty = new Observable<>(3L);
 
-        // 2. Build the Form elements and bind them to the observables
+        // 2. Construire les éléments du formulaire et les lier aux observables
         CustomForm form = new CustomForm("My Interactive Form")
                 .label("Personal Information")
                 .textField("Name", name, TextFieldOptions.builder()
@@ -62,13 +62,13 @@ public class DDUIExample {
                 .slider("Age", 1L, 100L, age)
                 .textField("Age Group", ageGroup, TextFieldOptions.builder()
                         .description("Automatically set based on age")
-                        .disabled(true) // Read-only on the client side
+                        .disabled(true) // En lecture seule côté client
                         .build())
                 .slider("Difficulty", 1L, 5L, difficulty, SliderElementOptions.builder()
                         .description("1 = Peaceful - 5 = Hardcore")
                         .build())
                 
-                // Add a reset button that changes all values asynchronously
+                // Ajouter un bouton de réinitialisation qui change toutes les valeurs de façon asynchrone
                 .button("Reset", clickedPlayer -> CompletableFuture.runAsync(() -> {
                     name.setValue("");
                     bio.setValue("");
@@ -76,7 +76,7 @@ public class DDUIExample {
                     difficulty.setValue(3L);
                 }))
                 
-                // Add a confirmation button
+                // Ajouter un bouton de confirmation
                 .button("Confirm", clickedPlayer -> {
                     clickedPlayer.sendMessage("Confirmed successfully!");
                     clickedPlayer.sendMessage("Name: " + name.getValue());
@@ -84,14 +84,14 @@ public class DDUIExample {
                     clickedPlayer.sendMessage("Age: " + age.getValue() + " (" + ageGroup.getValue() + ")");
                     clickedPlayer.sendMessage("Difficulty: " + difficulty.getValue());
 
-                    // Close the screen for the player
+                    // Fermer l'écran pour le joueur
                     form.close(clickedPlayer);
                 })
                 .closeButton();
 
         // 3. Set up reactive validation listeners
         
-        // Truncate name input to a maximum of 10 characters reactively
+        // Tronquer le nom saisi à 10 caractères maximum, en réaction à la saisie
         name.subscribe(value -> {
             String normalized = value.length() > 10 ? value.substring(0, 10) : value;
             server.getScheduler().scheduleTask(InternalPlugin.INSTANCE, () -> {
@@ -102,7 +102,7 @@ public class DDUIExample {
             return null;
         });
 
-        // Compute and update the read-only 'Age Group' field dynamically based on age slider
+        // Calculer et mettre à jour le champ en lecture seule 'Age Group' selon le curseur d'âge
         age.subscribe(value -> {
             CompletableFuture.runAsync(() -> {
                 if (value <= 12) {
@@ -118,7 +118,7 @@ public class DDUIExample {
             return null;
         });
 
-        // 4. Present the screen to the player
+        // 4. Afficher l'écran au joueur
         form.show(player);
     }
 }

@@ -7,22 +7,22 @@ authors:
   - PowerNukkitX
 ---
 
-On macOS, you install Java 21 with Homebrew, then run the server jar from a start script. Intel and Apple Silicon Macs follow the same steps.
+On macOS, you install Java 25 with Homebrew, then run the server jar from a start script. Intel and Apple Silicon Macs follow the same steps.
 
 ## Install
 
 <Steps>
   <Step>
-    ### Install Java 21
+    ### Install Java 25
 
     Install Java with [Homebrew](https://brew.sh/). In Terminal:
 
     ```bash
-    brew install openjdk@21
-    sudo ln -sfn /opt/homebrew/opt/openjdk@21/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+    brew install openjdk@25
+    sudo ln -sfn /opt/homebrew/opt/openjdk@25/OpenJDK.jdk /Library/Java/JavaVirtualMachines/openjdk-25.jdk
     ```
 
-    On an older Intel Mac, replace `/opt/homebrew` with `/usr/local`. Check with `java -version`: you should see version `21`.
+    On an older Intel Mac, replace `/opt/homebrew` with `/usr/local`. Check with `java -version`: you should see version `25`.
   </Step>
   <Step>
     ### Create a server folder

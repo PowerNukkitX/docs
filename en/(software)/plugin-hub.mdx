@@ -4,7 +4,7 @@ description: "Find, install and publish plugins on the PowerNukkitX plugin hub."
 icon: Package
 ---
 
-The [plugin hub](https://powernukkitx.org/plugins) lists community plugins for PowerNukkitX. Every listing and every release is **reviewed** before it goes live, and each jar is **scanned**.
+The [plugin hub](/plugins) lists community plugins for PowerNukkitX. Every listing and every release is **reviewed** before it goes live, and each jar is **scanned**.
 
 ## Install a plugin
 
@@ -37,7 +37,7 @@ The [plugin hub](https://powernukkitx.org/plugins) lists community plugins for P
 
 ### When something breaks
 
-Paste your server log into the [log analyser](https://powernukkitx.org/logs). It names the plugin that failed and the reason PowerNukkitX gave, and links its page and issue tracker. The log is read in your browser; only plugin and package names are sent.
+Paste your server log into the [log analyser](/logs). It names the plugin that failed and the reason PowerNukkitX gave, and links its page and issue tracker. The log is read in your browser; only plugin and package names are sent.
 
 ## Publish your plugin
 
@@ -50,7 +50,7 @@ Paste your server log into the [log analyser](https://powernukkitx.org/logs). It
   <Step>
     ### Submit it
 
-    Sign in and open [Submit a plugin](https://powernukkitx.org/dashboard/submit). Pick the repository, give it a name, a one-line summary and up to three categories, and optionally an accent colour. A live preview shows how it will look.
+    Sign in and open [Submit a plugin](/dashboard/submit). Pick the repository, give it a name, a one-line summary and up to three categories, and optionally an accent colour. A live preview shows how it will look.
   </Step>
   <Step>
     ### Wait for review
@@ -100,7 +100,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21 # the version your plugin targets
+          java-version: 25 # the version your plugin targets
       - run: ./gradlew build # or: mvn -B package
       - uses: actions/attest@v4
         with:

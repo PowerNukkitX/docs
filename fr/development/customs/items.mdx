@@ -61,7 +61,7 @@ public class MyItem extends Item implements CustomItem {
                 .name("My Custom Item")
                 .allowOffHand(true)
                 .handEquipped(false)
-                .foil(false) // Set true to show the enchanted glow/glint effect
+                .foil(false) // true pour afficher l'effet brillant d'enchantement
                 .build();
     }
 }
@@ -102,12 +102,12 @@ public class MyPickaxe extends ItemCustomTool {
 
     @Override
     public boolean isPickaxe() {
-        return true; // Mark as a pickaxe so it works with block breaking speed mechanics
+        return true; // Marquer comme pioche pour profiter de la vitesse de minage
     }
 
     @Override
     public int getAttackDamage() {
-        return 5; // Melee attack damage
+        return 5; // Dégâts d'attaque au corps à corps
     }
 
     @Override
@@ -150,7 +150,7 @@ public class MyArmor extends ItemCustomArmor {
 
     @Override
     public boolean isChestplate() {
-        return true; // Marks the item as a chestplate armor type
+        return true; // Marque l'objet comme un plastron
     }
 
     @Override
@@ -170,7 +170,7 @@ public class MyArmor extends ItemCustomArmor {
 
     @Override
     public int getArmorPoints() {
-        return 8; // Armor defense points (half-shields on player bar)
+        return 8; // Points d'armure (demi-boucliers sur la barre du joueur)
     }
 }
 ```

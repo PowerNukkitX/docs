@@ -7,15 +7,15 @@ authors:
   - PowerNukkitX
 ---
 
-Sous Windows 10 ou 11, vous installez Java 21, placez le jar du serveur dans un dossier, puis le lancez avec un script `start.bat`.
+Sous Windows 10 ou 11, vous installez Java 25, placez le jar du serveur dans un dossier, puis le lancez avec un script `start.bat`.
 
 ## Installation
 
 <Steps>
   <Step>
-    ### Installer Java 21
+    ### Installer Java 25
 
-    Téléchargez l'installeur **MSI** Windows d'**Eclipse Temurin JDK 21** sur [Adoptium](https://adoptium.net/temurin/releases/?version=21&os=windows) et lancez-le. Pendant l'installation, cochez **Set JAVA_HOME variable** et **Associate .jar files**.
+    Téléchargez l'installeur **MSI** Windows d'**Eclipse Temurin JDK 25** sur [Adoptium](https://adoptium.net/temurin/releases/?version=25&os=windows) et lancez-le. Pendant l'installation, cochez **Set JAVA_HOME variable** et **Associate .jar files**.
 
     Ouvrez ensuite une nouvelle invite de commandes et vérifiez :
 
@@ -23,7 +23,7 @@ Sous Windows 10 ou 11, vous installez Java 21, placez le jar du serveur dans un 
     java -version
     ```
 
-    Vous devez voir la version `21`, par exemple `openjdk version "21.x.x"`.
+    Vous devez voir la version `25`, par exemple `openjdk version "25.x.x"`.
   </Step>
   <Step>
     ### Créer un dossier pour le serveur
@@ -83,10 +83,10 @@ Votre dossier ressemble maintenant à ceci :
 
 <Accordions>
   <Accordion title="« java » n'est pas reconnu">
-    Windows ne trouve pas Java. Si Java 21 est installé :
+    Windows ne trouve pas Java. Si Java 25 est installé :
 
     1. Cherchez **Modifier les variables d'environnement système** dans le menu Démarrer, puis cliquez sur **Variables d'environnement...**.
-    2. Dans *Variables système*, vérifiez que `JAVA_HOME` pointe vers votre dossier JDK 21, par exemple `C:\Program Files\Eclipse Adoptium\jdk-21.x.x\`.
+    2. Dans *Variables système*, vérifiez que `JAVA_HOME` pointe vers votre dossier JDK 25, par exemple `C:\Program Files\Eclipse Adoptium\jdk-25.x.x\`.
     3. Modifiez `Path` et vérifiez qu'il contient `%JAVA_HOME%\bin`.
     4. Ouvrez une nouvelle invite de commandes, ou redémarrez le PC.
   </Accordion>

@@ -13,7 +13,7 @@ Le titre fonctionne comme pour tous les formulaires : voir [Formulaires](/docs/f
 ```java
 CustomForm form = ...;
 
-form.addElement(element); // Add your element
+form.addElement(element); // Ajoutez votre élément
 ```
 
 ## Éléments
@@ -31,14 +31,14 @@ ElementDropdown dropdown = new ElementDropdown("Choose an option", options);
 Avec un choix par défaut :
 
 ```java
-// Second element will be selected when opening the form
+// Le deuxième élément sera sélectionné à l'ouverture du formulaire
 ElementDropdown dropdown = new ElementDropdown("Choose an option", options, 1);
 ```
 
 Chaque paramètre a aussi une méthode :
 
 ```java
-// Changing the element's text
+// Changer le texte de l'élément
 dropdown.text("Choose your favorite option");
 ```
   </Tab>
@@ -47,12 +47,12 @@ Du texte libre, avec un texte indicatif et une valeur par défaut facultatifs :
 
 ```java
 ElementInput input = new ElementInput("Change the status");
-ElementInput input = new ElementInput("Change the status", "PNX is great!"); // Optionally, add a placeholder
-ElementInput input = new ElementInput("Change the status", "PNX is great!", "I love PNX!"); // Optionally, add a default value
+ElementInput input = new ElementInput("Change the status", "PNX is great!"); // Facultatif : ajouter un texte indicatif
+ElementInput input = new ElementInput("Change the status", "PNX is great!", "I love PNX!"); // Facultatif : ajouter une valeur par défaut
 ```
 
 ```java
-// Changing the element's placeholder
+// Changer le texte indicatif de l'élément
 input.placeholder("I love PNX!");
 ```
   </Tab>
@@ -76,7 +76,7 @@ ElementSlider slider = new ElementSlider("Speed", min, max, step, defaultValue);
 ```
 
 ```java
-// Changing the element's default value
+// Changer la valeur par défaut de l'élément
 slider.defaultValue(1.0F);
 ```
   </Tab>
@@ -92,12 +92,12 @@ ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps);
 Avec un cran par défaut :
 
 ```java
-// Second element will be selected when opening the form
+// Le deuxième élément sera sélectionné à l'ouverture du formulaire
 ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps, 1);
 ```
 
 ```java
-// Adding an element (and optionally, setting it as default)
+// Ajouter un élément (et, si besoin, le choisir par défaut)
 stepSlider.addStep("Step 5", true);
 ```
   </Tab>
@@ -141,11 +141,11 @@ form.onClose(player -> player.sendMessage("You have closed the form!"));
 ```java
 @EventHandler
 public void on(PlayerFormRespondedEvent event) {
-    Player player = event.getPlayer(); // The player who submitted the form
-    Form<?> form = event.getWindow(); // The window which has been responded to
-    Response response = event.getResponse(); // The response; null if closed
+    Player player = event.getPlayer(); // Le joueur qui a envoyé le formulaire
+    Form<?> form = event.getWindow(); // La fenêtre à laquelle il a répondu
+    Response response = event.getResponse(); // La réponse ; null si la fenêtre a été fermée
 
-    // Example: Check if a CustomForm called 'Settings' was closed
+    // Exemple : vérifier si un CustomForm nommé 'Settings' a été fermé
     if (form instanceof CustomForm && form.title().equals("Settings")) {
         boolean closed = response == null;
 
@@ -163,7 +163,7 @@ L'envoi fonctionne comme pour tous les formulaires : voir [Formulaires](/docs/fr
 Un écran de pseudo : un champ, une indication, et ce qui se passe à la validation et à la fermeture.
 
 ```java
-String displayName = player.getDisplayName(); // Used as an example
+String displayName = player.getDisplayName(); // Utilisé comme exemple
 
 CustomForm form = new CustomForm("Settings")
             .addElement(new ElementInput("Change nickname", "Herobrine", displayName.isEmpty() ? "" : displayName))

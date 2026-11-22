@@ -30,13 +30,13 @@ import java.util.Map;
 public class MyFlatGenerator extends Generator {
 
     public MyFlatGenerator(DimensionData dimensionData, Map<String, Object> options) {
-        // Enforce dimension data (e.g. Overworld) and configurations options
+        // Imposer les données de dimension (par exemple l'Overworld) et les options de configuration
         super(DimensionEnum.OVERWORLD.getDimensionData(), options);
     }
 
     @Override
     public void stages(GenerateStage.Builder builder) {
-        // Configure the stage pipeline (e.g. initial generation stage, lighting, finalization)
+        // Configurer la chaîne d'étapes (génération initiale, éclairage, finalisation...)
         builder.start(Registries.GENERATE_STAGE.get("MyCustomStage"))
                .next(Registries.GENERATE_STAGE.get(LightPopulationStage.NAME))
                .next(Registries.GENERATE_STAGE.get(FinishedStage.NAME));
@@ -100,7 +100,7 @@ public class BalloonPopulator extends Populator {
         int chunkZ = chunk.getZ();
         Level level = chunk.getLevel();
         
-        // Seed the randomizer for this chunk
+        // Initialiser l'aléatoire pour ce chunk
         this.random.setSeed(level.getSeed() ^ Level.chunkHash(chunkX, chunkZ) | chunkZ);
         
         // Custom generation probability boundary checks
@@ -109,7 +109,7 @@ public class BalloonPopulator extends Populator {
         int x = (chunkX << 4) + 7;
         int z = (chunkZ << 4) + 7;
         int highest = chunk.getLevel().getHighestBlockAt(x, z);
-        int y = highest + 30; // Spawn 30 blocks above the ground
+        int y = highest + 30; // Apparaître 30 blocs au-dessus du sol
 
         if (balloonStructure == null) {
             balloonStructure = StructureAPI.load("balloon_white");
@@ -117,7 +117,7 @@ public class BalloonPopulator extends Populator {
 
         if (balloonStructure != null) {
             BlockManager manager = new BlockManager(level);
-            // Prepare structural coordinates and place
+            // Préparer les coordonnées de la structure et la placer
             balloonStructure.preparePlace(new Position(x, y, z, level), manager);
             manager.generateChunks();
             queueObject(chunk, manager);
@@ -148,7 +148,7 @@ public class BalloonPopulatorStage extends PopulatorStage {
 
     @Override
     public ObjectArraySet<String> populators() {
-        // Return a set containing the registered names of populators to run in this stage
+        // Renvoyer l'ensemble des noms de populators enregistrés à lancer à cette étape
         return new ObjectArraySet<>(new String[]{ BalloonPopulator.NAME });
     }
 
@@ -169,13 +169,13 @@ import org.powernukkitx.registry.Registries;
 @Override
 public void onLoad() {
     try {
-        // 1. Register the generator itself
+        // 1. Enregistrer le générateur lui-même
         Registries.GENERATOR.register("my_flat_generator", MyFlatGenerator.class);
         
-        // 2. Register the custom populator
+        // 2. Enregistrer le populator personnalisé
         Registries.POPULATOR.register(BalloonPopulator.NAME, BalloonPopulator.class);
         
-        // 3. Register the custom populator stage
+        // 3. Enregistrer l'étape du populator personnalisé
         Registries.GENERATE_STAGE.register(BalloonPopulatorStage.NAME, BalloonPopulatorStage.class);
     } catch (RegisterException e) {
         throw new RuntimeException(e);
@@ -209,10 +209,10 @@ import org.powernukkitx.registry.Registries;
 @Override
 public void onLoad() {
     try {
-        // 1. Register the custom populator in the registry
+        // 1. Enregistrer le populator personnalisé dans le registre
         Registries.POPULATOR.register(BalloonPopulator.NAME, BalloonPopulator.class);
         
-        // 2. Inject it directly into the vanilla Overworld populator stage list
+        // 2. L'injecter directement dans la liste d'étapes des populators de l'Overworld vanilla
         NormalPopulatorStage.POPULATORS.add(BalloonPopulator.NAME);
     } catch (RegisterException e) {
         throw new RuntimeException(e);

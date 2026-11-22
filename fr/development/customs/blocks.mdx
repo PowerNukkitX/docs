@@ -51,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MyBlock extends Block implements CustomBlock {
-    // Define a unique identifier (namespace:name)
+    // Définissez un identifiant unique (namespace:nom)
     public static final BlockProperties PROPERTIES = new BlockProperties("powernukkitx:redstoneluckyblock");
 
     public MyBlock() {
@@ -71,12 +71,12 @@ public class MyBlock extends Block implements CustomBlock {
     public CustomBlockDefinition getDefinition() {
         return CustomBlockDefinition
                 .builder(this)
-                .texture("redstoneluckyblock") // Must match terrain_texture.json entry
-                .breakTime(3) // Mining/break time
+                .texture("redstoneluckyblock") // Doit correspondre à l'entrée de terrain_texture.json
+                .breakTime(3) // Temps de minage / de casse
                 .build();
     }
 
-    // You can override physics/behavior settings here:
+    // Vous pouvez redéfinir ici la physique et le comportement :
     @Override
     public double getFrictionFactor() { return 0.6; }
 
@@ -112,11 +112,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MySlab extends BlockTransparent implements CustomBlock {
-    // Define custom boolean block properties
+    // Définissez des propriétés de bloc booléennes personnalisées
     public static final BooleanPropertyType BRIDGE_TOP_SLOT_BIT = BooleanPropertyType.of("bridge:top_slot_bit", false);
     public static final BooleanPropertyType BRIDGE_IS_FULL_BIT = BooleanPropertyType.of("bridge:is_full_bit", false);
     
-    // Register the properties in BlockProperties
+    // Enregistrez les propriétés dans BlockProperties
     public static final BlockProperties PROPERTIES = new BlockProperties(
             "powernukkitx:blue_mahoe_slab", 
             BRIDGE_TOP_SLOT_BIT, 
@@ -142,13 +142,13 @@ public class MySlab extends BlockTransparent implements CustomBlock {
         return CustomBlockDefinition
                 .builder(this)
                 .texture("blue_mahoe_planks")
-                // Define default base geometry
+                // Géométrie de base par défaut
                 .geometry(new Geometry("geometry.custom_slab")
                         .boneVisibility("lower", true)
                         .boneVisibility("upper", false))
-                // Define permutations using Molang query checks on block states
+                // Permutations définies par des requêtes Molang sur les états du bloc
                 .permutations(
-                        // 1. Lower Slab Permutation
+                        // 1. Permutation de la dalle basse
                         new Permutation(Component.builder()
                                 .collisionBox(new CollisionBox(-8, 0, -8, 16, 8, 16))
                                 .selectionBox(new SelectionBox(-8, 0, -8, 16, 8, 16))
@@ -158,7 +158,7 @@ public class MySlab extends BlockTransparent implements CustomBlock {
                                 .build(),
                                 "q.block_state('bridge:top_slot_bit') == false && q.block_state('bridge:is_full_bit') == false"),
                         
-                        // 2. Upper Slab Permutation
+                        // 2. Permutation de la dalle haute
                         new Permutation(Component.builder()
                                 .collisionBox(new CollisionBox(-8, 8, -8, 16, 16, 16))
                                 .selectionBox(new SelectionBox(-8, 8, -8, 16, 16, 16))
@@ -168,7 +168,7 @@ public class MySlab extends BlockTransparent implements CustomBlock {
                                 .build(),
                                 "q.block_state('bridge:top_slot_bit') == true && q.block_state('bridge:is_full_bit') == false"),
                         
-                        // 3. Full Slab Block Permutation
+                        // 3. Permutation du bloc de dalle complet
                         new Permutation(Component.builder()
                                 .collisionBox(new CollisionBox(-8, 0, -8, 16, 16, 16))
                                 .selectionBox(new SelectionBox(-8, 0, -8, 16, 16, 16))
@@ -181,7 +181,7 @@ public class MySlab extends BlockTransparent implements CustomBlock {
                 .build();
     }
 
-    // Overriding place() method allows you to change block states when placing or stacking slabs:
+    // Redéfinir place() permet de changer l'état du bloc quand on pose ou empile des dalles :
     @Override
     public boolean place(@NotNull Item item, @NotNull Block block, @NotNull Block target, @NotNull BlockFace face, double fx, double fy, double fz, @Nullable Player player) {
         setPropertyValue(BRIDGE_IS_FULL_BIT, false);

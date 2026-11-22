@@ -4,7 +4,7 @@ description: "Trouver, installer et publier des plugins sur le hub de plugins Po
 icon: Package
 ---
 
-Le [hub de plugins](https://powernukkitx.org/plugins) recense les plugins de la communauté pour PowerNukkitX. Chaque fiche et chaque release sont **relues** avant leur mise en ligne, et chaque jar est **analysé**.
+Le [hub de plugins](/plugins) recense les plugins de la communauté pour PowerNukkitX. Chaque fiche et chaque release sont **relues** avant leur mise en ligne, et chaque jar est **analysé**.
 
 ## Installer un plugin
 
@@ -37,7 +37,7 @@ Le [hub de plugins](https://powernukkitx.org/plugins) recense les plugins de la 
 
 ### Quand quelque chose casse
 
-Collez le log du serveur dans l'[analyseur de logs](https://powernukkitx.org/logs). Il nomme le plugin en échec et la raison donnée par PowerNukkitX, et renvoie vers sa page et son suivi de bugs. Le log est lu dans votre navigateur ; seuls les noms de plugins et de packages sont envoyés.
+Collez le log du serveur dans l'[analyseur de logs](/logs). Il nomme le plugin en échec et la raison donnée par PowerNukkitX, et renvoie vers sa page et son suivi de bugs. Le log est lu dans votre navigateur ; seuls les noms de plugins et de packages sont envoyés.
 
 ## Publier votre plugin
 
@@ -50,7 +50,7 @@ Collez le log du serveur dans l'[analyseur de logs](https://powernukkitx.org/log
   <Step>
     ### Le soumettre
 
-    Connectez-vous et ouvrez [Submit a plugin](https://powernukkitx.org/dashboard/submit). Choisissez le dépôt, donnez un nom, un résumé d'une ligne et jusqu'à trois catégories, et si vous voulez une couleur d'accent. Un aperçu en direct montre le rendu.
+    Connectez-vous et ouvrez [Submit a plugin](/dashboard/submit). Choisissez le dépôt, donnez un nom, un résumé d'une ligne et jusqu'à trois catégories, et si vous voulez une couleur d'accent. Un aperçu en direct montre le rendu.
   </Step>
   <Step>
     ### Attendre la relecture
@@ -100,7 +100,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21 # la version visée par votre plugin
+          java-version: 25 # la version visée par votre plugin
       - run: ./gradlew build # ou : mvn -B package
       - uses: actions/attest@v4
         with:

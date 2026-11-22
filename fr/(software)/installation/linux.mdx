@@ -7,24 +7,24 @@ authors:
   - PowerNukkitX
 ---
 
-Sous Linux, vous installez Java 21 depuis les paquets de votre distribution, lancez le serveur avec un script, puis le faites tourner comme service systemd pour qu'il démarre tout seul.
+Sous Linux, vous installez Java 25 depuis les paquets de votre distribution, lancez le serveur avec un script, puis le faites tourner comme service systemd pour qu'il démarre tout seul.
 
 ## Installer le serveur
 
 <Steps>
   <Step>
-    ### Installer Java 21
+    ### Installer Java 25
 
     <Tabs items={["Ubuntu / Debian", "CentOS / RHEL / Rocky"]}>
       <Tab value="Ubuntu / Debian">
         ```bash
         sudo apt update
-        sudo apt install -y openjdk-21-jre-headless wget
+        sudo apt install -y openjdk-25-jre-headless wget
         ```
       </Tab>
       <Tab value="CentOS / RHEL / Rocky">
         ```bash
-        sudo dnf install -y java-21-openjdk-headless wget
+        sudo dnf install -y java-25-openjdk-headless wget
         ```
       </Tab>
     </Tabs>

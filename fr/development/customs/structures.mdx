@@ -21,11 +21,11 @@ import org.powernukkitx.level.structure.Structure;
 import org.powernukkitx.level.structure.StructureAPI;
 import org.powernukkitx.level.Position;
 
-// Load a template named "structures/my_house.mcstructure"
+// Charger un modèle nommé "structures/my_house.mcstructure"
 Structure house = StructureAPI.load("my_house");
 
 if (house != null) {
-    // Place at the position (defaults to including entities and creating a BlockManager)
+    // Placer à la position (par défaut avec les entités et un BlockManager créé)
     Position target = new Position(100, 64, 100, player.getLevel());
     house.place(target);
 }
@@ -54,13 +54,13 @@ public void placeJavaStructure(Position position) {
     try (InputStream stream = getClass().getClassLoader().getResourceAsStream("structures/village_house.nbt")) {
         if (stream != null) {
             try (NBTInputStream nbtReader = NbtUtils.createReader(stream)) {
-                // Parse the CompoundTag from the NBT input stream
+                // Lire le CompoundTag depuis le flux NBT
                 CompoundTag tag = CompoundTag.fromNetwork((NbtMap) nbtReader.readTag());
                 
-                // Construct the JeStructure instance
+                // Construire l'instance de JeStructure
                 JeStructure villageHouse = JeStructure.fromNbt(tag);
                 
-                // Place the structure
+                // Placer la structure
                 villageHouse.place(position);
             }
         }
@@ -82,10 +82,10 @@ import org.powernukkitx.level.structure.AbstractStructure;
 // Rotate 90 degrees clockwise
 AbstractStructure rotated = structure.rotate(Rotation.ROTATE_90);
 
-// Mirror along the Z axis
+// Symétrie selon l'axe Z
 AbstractStructure mirrored = structure.mirror(Mirror.Z);
 
-// Place the transformed structure
+// Placer la structure transformée
 mirrored.place(targetPos);
 ```
 
@@ -101,6 +101,6 @@ boolean includeEntities = true;
 
 structure.place(position, includeEntities, blockManager);
 
-// Apply subchunk updates to send changes to clients
+// Appliquer les mises à jour de sous-chunks pour envoyer les changements aux clients
 blockManager.applySubChunkUpdate();
 ```

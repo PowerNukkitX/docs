@@ -17,7 +17,7 @@ public static void registerAllRecipes() {
     registerShaped();
     registerFurnace();
     
-    // CRITICAL: Rebuild the recipe package sent to players on login
+    // IMPORTANT : reconstruire le paquet de recettes envoyé aux joueurs à la connexion
     Registries.RECIPE.rebuildPacket();
 }
 ```
@@ -42,16 +42,16 @@ private static void registerShaped() {
             'b', Item.get(Item.STICK)
     );
 
-    // Define the crafting shape pattern (up to 3x3)
+    // Définir la forme de fabrication (jusqu'à 3x3)
     String[] shape = new String[] {
             "aaa", // Top row: 3 Amethyst Shards
-            " b ", // Middle row: 1 Stick in center
-            " b "  // Bottom row: 1 Stick in center
+            " b ", // Ligne du milieu : 1 bâton au centre
+            " b "  // Ligne du bas : 1 bâton au centre
     };
 
     Item result = Item.get("powernukkitx:amethyst_pickaxe");
 
-    // Create and register shaped recipe
+    // Créer et enregistrer la recette avec forme
     ShapedRecipe recipe = new ShapedRecipe(result, shape, itemMapping, List.of());
     Registries.RECIPE.register(recipe);
 }
@@ -70,7 +70,7 @@ private static void registerShapeless() {
     Item result = Item.get(Item.DIAMOND);
     Item coal = Item.get(Item.COAL);
 
-    // Inputs: Three pieces of coal (specify items with count = 1 in the list)
+    // Entrées : trois charbons (indiquer chaque objet avec count = 1 dans la liste)
     List<Item> input = List.of(coal, coal, coal);
 
     ShapelessRecipe recipe = new ShapelessRecipe(result, input);
@@ -90,7 +90,7 @@ private static void registerFurnace() {
     Item result = Item.get(Item.DIAMOND);
     Item inputCoal = Item.get(Item.COAL);
 
-    // Input coal yields a diamond when smelted
+    // Le charbon donne un diamant une fois cuit
     FurnaceRecipe recipe = new FurnaceRecipe(result, inputCoal);
     Registries.RECIPE.register(recipe);
 }

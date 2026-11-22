@@ -30,22 +30,22 @@ public class MyMachineEntity extends BlockEntity {
 
     @Override
     public boolean isBlockEntityValid() {
-        // Return true if the block entity matches the block type at its coordinates
+        // Renvoie true si l'entité de bloc correspond au type de bloc à ses coordonnées
         return this.getLevel().getBlock(this).getId().equals("powernukkitx:my_machine");
     }
 
     @Override
     public void saveNBT() {
         super.saveNBT();
-        // Save any custom properties to NBT here
+        // Enregistrez ici vos propriétés personnalisées dans le NBT
         this.namedTag.putInt("energy", 100);
     }
 
-    // Override onUpdate() if your block entity needs to run tick updates
+    // Redéfinissez onUpdate() si votre entité de bloc doit s'exécuter à chaque tick
     @Override
     public boolean onUpdate() {
-        // Run tick logic here
-        return false; // Return true if the block entity needs to keep ticking
+        // Logique exécutée à chaque tick
+        return false; // Renvoie true si l'entité de bloc doit continuer à tourner
     }
 }
 ```
@@ -114,7 +114,7 @@ public class MyMachineBlock extends Block implements CustomBlock, BlockEntityHol
                 .build();
     }
 
-    // --- BlockEntityHolder Implementation ---
+    // --- Implémentation de BlockEntityHolder ---
 
     @Override
     public @NotNull Class<MyMachineEntity> getBlockEntityClass() {
@@ -123,13 +123,13 @@ public class MyMachineBlock extends Block implements CustomBlock, BlockEntityHol
 
     @Override
     public @NotNull String getBlockEntityType() {
-        return "MyMachine"; // Must match registered BlockEntity name
+        return "MyMachine"; // Doit correspondre au nom de BlockEntity enregistré
     }
 
-    // Place the block and create the corresponding block entity
+    // Pose le bloc et crée l'entité de bloc correspondante
     @Override
     public boolean place(@NotNull Item item, @NotNull Block block, @NotNull Block target, @NotNull BlockFace face, double fx, double fy, double fz, @Nullable Player player) {
-        // Sets block state on the level and instantiates the block entity automatically
+        // Place l'état du bloc dans le monde et instancie l'entité de bloc automatiquement
         return BlockEntityHolder.setBlockAndCreateEntity(this) != null;
     }
 }

@@ -9,7 +9,7 @@ authors:
 Commencez par la première vérification, puis ouvrez le problème qui correspond à ce que vous voyez.
 
 <Callout type="info" title="D'abord, vérifiez Java">
-  Lancez `java -version`. Il doit afficher **21 ou plus** : PowerNukkitX demande Java 21+ (voir [Configuration requise](/docs/fr/requirements)).
+  Lancez `java -version`. Il doit afficher **25 ou plus** : PowerNukkitX demande Java 25+ (voir [Configuration requise](/docs/fr/requirements)).
 </Callout>
 
 ## Java
@@ -18,23 +18,23 @@ Commencez par la première vérification, puis ouvrez le problème qui correspon
   <Accordion title="UnsupportedClassVersionError">
     ```text
     java.lang.UnsupportedClassVersionError: org.powernukkitx/Nukkit has been compiled by a more
-    recent version of the Java Runtime (class file version 65.0), this version of the Java
+    recent version of the Java Runtime (class file version 69.0), this version of the Java
     Runtime only recognizes class file versions up to ...
     ```
 
-    Votre Java est trop ancien : la version de classe `65.0` correspond à Java 21. Installez Java 21 ou plus récent et vérifiez avec `java -version`.
+    Votre Java est trop ancien : la version de classe `69.0` correspond à Java 25. Installez Java 25 ou plus récent et vérifiez avec `java -version`.
   </Accordion>
   <Accordion title="Plusieurs versions de Java sont installées">
     La mauvaise passe sans doute en premier. Au choix :
 
-    - définissez `JAVA_HOME` sur votre Java 21+ et placez son dossier `bin` en tête de votre `PATH` ;
+    - définissez `JAVA_HOME` sur votre Java 25+ et placez son dossier `bin` en tête de votre `PATH` ;
     - ou lancez le serveur avec le chemin complet du bon Java :
 
     ```bash
-    /chemin/vers/jdk-21/bin/java -jar powernukkitx.jar
+    /chemin/vers/jdk-25/bin/java -jar powernukkitx.jar
     ```
 
-    Sous Linux, changez la version par défaut avec `sudo update-alternatives --config java`. Sous Windows, vérifiez que `JAVA_HOME` dans les variables d'environnement système pointe vers un dossier JDK 21+.
+    Sous Linux, changez la version par défaut avec `sudo update-alternatives --config java`. Sous Windows, vérifiez que `JAVA_HOME` dans les variables d'environnement système pointe vers un dossier JDK 25+.
   </Accordion>
   <Accordion title="Java 32 bits">
     PowerNukkitX demande Java **64 bits** : une JVM 32 bits ne peut pas utiliser assez de mémoire et plante sous charge. Si `java -version` mentionne `Client VM` ou `32-Bit`, installez l'OpenJDK 64 bits.

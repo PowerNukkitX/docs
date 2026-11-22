@@ -9,7 +9,7 @@ authors:
 Start with the first check, then open the problem that matches what you see.
 
 <Callout type="info" title="First, check Java">
-  Run `java -version`. It must show **21 or higher**: PowerNukkitX needs Java 21+ (see [Requirements](/docs/requirements)).
+  Run `java -version`. It must show **25 or higher**: PowerNukkitX needs Java 25+ (see [Requirements](/docs/requirements)).
 </Callout>
 
 ## Java
@@ -18,23 +18,23 @@ Start with the first check, then open the problem that matches what you see.
   <Accordion title="UnsupportedClassVersionError">
     ```text
     java.lang.UnsupportedClassVersionError: org.powernukkitx/Nukkit has been compiled by a more
-    recent version of the Java Runtime (class file version 65.0), this version of the Java
+    recent version of the Java Runtime (class file version 69.0), this version of the Java
     Runtime only recognizes class file versions up to ...
     ```
 
-    Your Java is too old: class file version `65.0` is Java 21. Install Java 21 or newer and check with `java -version`.
+    Your Java is too old: class file version `69.0` is Java 25. Install Java 25 or newer and check with `java -version`.
   </Accordion>
   <Accordion title="Several Java versions are installed">
     The wrong one is probably first. Either:
 
-    - set `JAVA_HOME` to your Java 21+ installation and put its `bin` folder first on your `PATH`;
+    - set `JAVA_HOME` to your Java 25+ installation and put its `bin` folder first on your `PATH`;
     - or start the server with the full path to the right Java:
 
     ```bash
-    /path/to/jdk-21/bin/java -jar powernukkitx.jar
+    /path/to/jdk-25/bin/java -jar powernukkitx.jar
     ```
 
-    On Linux, switch the default with `sudo update-alternatives --config java`. On Windows, check that `JAVA_HOME` in the system environment variables points to a JDK 21+ folder.
+    On Linux, switch the default with `sudo update-alternatives --config java`. On Windows, check that `JAVA_HOME` in the system environment variables points to a JDK 25+ folder.
   </Accordion>
   <Accordion title="32-bit Java">
     PowerNukkitX needs **64-bit** Java: a 32-bit JVM cannot use enough memory and crashes under load. If `java -version` mentions `Client VM` or `32-Bit`, install the 64-bit OpenJDK.

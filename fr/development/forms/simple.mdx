@@ -13,19 +13,19 @@ authors:
 <Tabs items={["Constructeur", "Titre seul", "Méthodes"]}>
   <Tab value="Constructeur">
 ```java
-// Setting the title and content within the constructor
+// Titre et contenu définis dans le constructeur
 SimpleForm form = new SimpleForm("title", "content");
 ```
   </Tab>
   <Tab value="Titre seul">
 ```java
-// Only setting the title within the constructor
+// Seul le titre est défini dans le constructeur
 SimpleForm form = new SimpleForm("title");
 ```
   </Tab>
   <Tab value="Méthodes">
 ```java
-// Setting the title and content using methods
+// Titre et contenu définis avec des méthodes
 SimpleForm form = new SimpleForm()
                     .title("title")
                     .content("content");
@@ -66,8 +66,8 @@ Une seule action pour tous les boutons, pratique quand ils viennent d'une liste 
 
 ```java
 form.onSubmit((player, response) -> {
-    int buttonId = response.buttonId(); // The ordinal of the clicked button (-1 if invalid)
-    ElementButton button = response.button(); // The clicked button (null if invalid)
+    int buttonId = response.buttonId(); // Le rang du bouton cliqué (-1 si invalide)
+    ElementButton button = response.button(); // Le bouton cliqué (null si invalide)
 });
 
 form.onClose(player -> player.sendMessage("You have closed the form!"));
@@ -79,11 +79,11 @@ Ou écoutez `PlayerFormRespondedEvent` :
 ```java
 @EventHandler
 public void on(PlayerFormRespondedEvent event) {
-    Player player = event.getPlayer(); // The player who submitted the form
-    Form<?> form = event.getWindow(); // The window which has been responded to
-    Response response = event.getResponse(); // The response; null if closed
+    Player player = event.getPlayer(); // Le joueur qui a envoyé le formulaire
+    Form<?> form = event.getWindow(); // La fenêtre à laquelle il a répondu
+    Response response = event.getResponse(); // La réponse ; null si la fenêtre a été fermée
 
-    // Example: Check if a SimpleForm called 'Ingots' was closed
+    // Exemple : vérifier si un SimpleForm nommé 'Ingots' a été fermé
     if (form instanceof SimpleForm && form.title().equals("Ingots")) {
         boolean closed = response == null;
 
@@ -102,8 +102,8 @@ Vous pouvez changer les boutons pendant que le joueur a encore le formulaire ouv
 
 ```java
 ElementButton button = new ElementButton("Netherite Ingot", ButtonImage.Type.PATH.of("textures/ui/netherite_ingot", player -> player.sendMessage("You clicked the Netherite Ingot!")));
-form.updateElement(0, button); // We want to replace the first button (index 0) with the new one
-form.sendUpdate(player); // Send the update to the player
+form.updateElement(0, button); // On remplace le premier bouton (index 0) par le nouveau
+form.sendUpdate(player); // Envoyer la mise à jour au joueur
 ```
 
 <Callout type="warn">
@@ -125,7 +125,7 @@ SimpleForm form = new SimpleForm("Ingots", "Please select an Ingot to continue."
             .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
             .send(player);
 
-// Remove the Netherite Ingot after 3 seconds open
+// Retirer le lingot de Netherite après 3 secondes d'ouverture
 Server.getInstance().getScheduler().scheduleDelayedTask(() -> {
     if (form.isViewer(player)) {
         form.removeElement(0);

@@ -21,10 +21,10 @@ import org.powernukkitx.registry.RegisterException;
 @Override
 public void onEnable() {
     try {
-        // A smithing template item -> the pattern id written into the trim NBT
+        // Un modèle de forge -> l'id de motif écrit dans le NBT de la garniture
         Registries.TRIM.registerPattern("myplugin:cool_smithing_template", "cool");
 
-        // An ingredient item -> the material id + the hex tint used for the item name
+        // Un ingrédient -> l'id de matériau + la teinte hexadécimale du nom de l'objet
         Registries.TRIM.registerMaterial("minecraft:emerald", "emerald_special", "#17DD62");
     } catch (RegisterException e) {
         getLogger().error("Trim is already registered", e);
@@ -66,15 +66,15 @@ Registries.TRIM.resyncOnlinePlayers();
 ## Retirer et consulter des garnitures
 
 ```java
-// Remove a registered pattern or material
+// Retirer un motif ou un matériau enregistré
 Registries.TRIM.unregisterPattern("myplugin:cool_smithing_template");
 Registries.TRIM.unregisterMaterial("minecraft:emerald");
 
-// Look one up (returns an Optional)
+// En chercher un (renvoie un Optional)
 Registries.TRIM.getPattern("myplugin:cool_smithing_template");
 Registries.TRIM.getMaterial("minecraft:emerald");
 
-// Read-only views of everything registered
+// Vues en lecture seule de tout ce qui est enregistré
 Registries.TRIM.getPatterns();
 Registries.TRIM.getMaterials();
 ```

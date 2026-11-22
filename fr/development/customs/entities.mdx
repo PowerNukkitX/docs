@@ -21,7 +21,7 @@ import org.powernukkitx.registry.Registries;
 public void onLoad() {
     try {
         Registries.ENTITY.registerCustomEntity(this, MyPig.class);
-        // Rebuild the NBT tags so the server registers the custom entity type
+        // Reconstruire les tags NBT pour que le serveur enregistre le type d'entité personnalisé
         Registries.ENTITY.rebuildTag();
     } catch (RegisterException e) {
         throw new RuntimeException(e);
@@ -58,20 +58,20 @@ public class MyPig extends Entity implements CustomEntity {
         return "boar";
     }
 
-    // This method returns the client-facing definition properties of the entity
+    // Cette méthode renvoie les propriétés de définition de l'entité envoyées au client
     public static CustomEntityDefinition definition() {
         return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
                 .eid(IDENTIFIER)
-                .hasSpawnEgg(true) // Generates a creative inventory spawn egg
-                .isSummonable(true) // Allows spawning via /summon command
+                .hasSpawnEgg(true) // Génère un oeuf d'apparition dans l'inventaire créatif
+                .isSummonable(true) // Permet l'apparition avec la commande /summon
                 .originalName("Feral Boar")
-                .health(20) // Maximum health points
-                .attack(3) // Melee attack damage
-                .movement(0.2f) // Speed modifier
-                .typeFamily("mob", "pig") // Entity classification family
-                .collisionBox(0.9f, 0.9f) // Width and height collision boundaries
+                .health(20) // Points de vie maximum
+                .attack(3) // Dégâts d'attaque au corps à corps
+                .movement(0.2f) // Modificateur de vitesse
+                .typeFamily("mob", "pig") // Famille de classement de l'entité
+                .collisionBox(0.9f, 0.9f) // Largeur et hauteur de la zone de collision
                 .knockbackResistance(0.2f)
-                .isPersistent(true) // Keeps the mob loaded at distance
+                .isPersistent(true) // Garde le mob chargé à distance
                 .build();
     }
 }
@@ -113,31 +113,31 @@ public class RideableBoar extends Entity implements CustomEntity {
     }
 
     public static CustomEntityDefinition definition() {
-        // Define seat positions relative to the entity pivot point (X, Y, Z coordinates)
+        // Positions des places par rapport au pivot de l'entité (coordonnées X, Y, Z)
         List<RideableComponent.Seat> seats = List.of(
             new RideableComponent.Seat(
-                1,                      // Minimum rider count
-                1,                      // Maximum rider count
-                new Vector3f(0f, 1.2f, -0.2f), // Physical coordinate offset of the seat
-                null,                   // Lock rider rotation (null to allow rotation)
-                null,                   // Rotate rider by degrees (null for default)
-                3.0f,                   // Third-person camera distance/radius multiplier
-                null                    // Camera smoothing
+                1,                      // Nombre minimum de passagers
+                1,                      // Nombre maximum de passagers
+                new Vector3f(0f, 1.2f, -0.2f), // Décalage de la place en coordonnées
+                null,                   // Bloquer la rotation du passager (null pour l'autoriser)
+                null,                   // Tourner le passager de tant de degrés (null par défaut)
+                3.0f,                   // Multiplicateur de distance de la caméra à la troisième personne
+                null                    // Lissage de la caméra
             )
         );
 
-        // Build the rideable component
+        // Construire le composant de monture
         RideableComponent rideable = new RideableComponent(
-            0,                          // Controlling seat index
-            true,                       // Crouching players skip mounting interaction
+            0,                          // Index de la place qui contrôle
+            true,                       // Un joueur accroupi ne monte pas
             RideableComponent.DismountMode.DEFAULT,
-            Set.of("player"),           // Entity families allowed to ride
-            "action.interact.ride",     // Localization text string shown to Bedrock players
-            0f,                         // Passenger max width boundary (0 for unlimited)
-            false,                      // Pull in nearby entities automatically
-            true,                       // Riders can interact with chests/world while riding
-            1,                          // Seat count
-            seats                       // Seat configurations
+            Set.of("player"),           // Familles d'entités autorisées à monter
+            "action.interact.ride",     // Texte localisé affiché aux joueurs Bedrock
+            0f,                         // Largeur maximale d'un passager (0 pour illimité)
+            false,                      // Faire monter automatiquement les entités proches
+            true,                       // Les passagers peuvent utiliser les coffres et le monde en selle
+            1,                          // Nombre de places
+            seats                       // Configuration des places
         );
 
         return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
@@ -147,7 +147,7 @@ public class RideableBoar extends Entity implements CustomEntity {
                 .originalName("Rideable Boar")
                 .health(30)
                 .collisionBox(0.9f, 0.9f)
-                .rideable(rideable) // Bind the rideable component
+                .rideable(rideable) // Attacher le composant de monture
                 .build();
     }
 }
@@ -171,13 +171,13 @@ import org.powernukkitx.nbt.tag.CompoundTag;
 @Override
 public boolean execute(CommandSender sender, String label, String[] args) {
     if (sender instanceof Player player) {
-        // Construct default NBT tags for coordinates
+        // Construire les tags NBT par défaut pour les coordonnées
         CompoundTag nbt = Entity.getDefaultNBT(player.getPosition());
         
-        // Create the entity
+        // Créer l'entité
         RideableBoar boar = new RideableBoar(player.getChunk(), nbt);
         
-        // Spawn for everyone
+        // Faire apparaître pour tout le monde
         boar.spawnToAll();
         
         player.sendMessage("Spawned a rideable boar!");

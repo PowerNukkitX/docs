@@ -34,12 +34,12 @@ Ce qui suit fonctionne de la même façon pour tous les types de formulaire.
 Définissez-le dans le constructeur ou avec une méthode :
 
 ```java
-// Using the constructor
+// Avec le constructeur
 CustomForm custom = new CustomForm("title");
 ModalForm modal = new ModalForm("title");
 SimpleForm simple = new SimpleForm("title");
 
-// Using the method
+// Avec la méthode
 custom.title("other title");
 modal.title("other title");
 simple.title("other title");
@@ -79,7 +79,7 @@ form.send(player, 123);
 Attachez n'importe quoi à un formulaire, par exemple pour le reconnaître plus tard ou le mettre à jour :
 
 ```java
-// Example: Saving an entity
+// Exemple : enregistrer une entité
 Entity entity = ...;
 
 form.putMeta("form-type", "manage-entity")
