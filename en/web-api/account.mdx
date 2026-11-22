@@ -1,0 +1,41 @@
+---
+title: "Your account"
+description: "Your profile, your API tokens and your personal feed of followed plugins."
+icon: UserRound
+authors:
+  - AzaleeX
+---
+
+These endpoints are about the signed-in user. They work with the **session cookie** of powernukkitx.org, in the browser, not with an API token: a token can only read what is already public.
+
+## Your profile
+
+```text
+GET /api/v1/me
+```
+
+Your settings as the dashboard edits them: bio, links, location, pinned plugins, profile visibility and notification preferences. Without a session it answers `401 unauthorized`.
+
+## Your tokens
+
+```text
+GET    /api/v1/me/tokens
+POST   /api/v1/me/tokens
+DELETE /api/v1/me/tokens/{keyId}
+```
+
+| Call | What it does |
+| :-- | :-- |
+| `GET` | Lists your tokens: name, key id, creation date, last use. Never the secret. |
+| `POST` | Creates one from `{ "name": "..." }`. The response is the only time the full token appears. |
+| `DELETE` | Revokes the token with that key id. |
+
+Creating and revoking only work from the website itself (same origin), which is why the dashboard is the place to do it: **Dashboard > Settings > Feed and API**.
+
+## Your feed
+
+```text
+GET /api/v1/feed/{key}
+```
+
+An Atom feed of what happens to the plugins you follow: new releases, approvals and more. Each account has its own secret `key`; copy the feed URL from **Dashboard > Settings > Feed and API** and paste it in any feed reader. A rotated or wrong key answers `404`, so a reader stops polling a dead URL.

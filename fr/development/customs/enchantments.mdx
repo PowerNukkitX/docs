@@ -1,0 +1,70 @@
+---
+title: "Enchantements"
+description: "Créer de nouveaux enchantements avec leur rareté, leurs items cibles et leurs niveaux."
+icon: Sparkles
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Un enchantement custom est une classe Java que vous enregistrez dans `onLoad()`, avant le chargement des mondes, comme tout autre contenu custom.
+
+## L'enregistrer dans `onLoad()`
+
+```java
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onLoad() {
+    try {
+        Enchantment.register(new MyEnchantment());
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## Le définir
+
+Étendez `Enchantment` et passez au constructeur un identifiant, un nom affiché, une rareté et le type d'item visé. Fixez ensuite le niveau maximal et la plage d'enchantabilité.
+
+```java filename="MyEnchantment.java"
+import org.powernukkitx.item.enchantment.Enchantment;
+import org.powernukkitx.item.enchantment.EnchantmentType;
+import org.powernukkitx.utils.Identifier;
+
+public class MyEnchantment extends Enchantment {
+    public MyEnchantment() {
+        super(
+            new Identifier("powernukkitx:lucky_strike"), // Unique identifier namespace:name
+            "Lucky Strike",                              // Display name
+            Rarity.RARE,                                 // Rarity (COMMON, UNCOMMON, RARE, VERY_RARE)
+            EnchantmentType.WEAPON                       // Applicable items (ARMOR, WEAPON, DIGGER, ALL, etc.)
+        );
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3; // Niveau maximal de l'enchantement
+    }
+
+    @Override
+    public int getMinEnchantability(int level) {
+        return 1 + level * 10;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level) {
+        return this.getMinEnchantability(level) + 15;
+    }
+
+    // You can override additional handlers such as:
+    // - getDamageBonus(int level, Entity target) pour modifier les dégâts d'une arme.
+    // - getDamageProtection(int level, DamageSource source) pour modifier la protection.
+}
+```
+
+<Callout type="info" title="L'effet, c'est à vous de l'écrire">
+  Enregistrer un enchantement le fait exister ; ce qu'il fait dépend de vous. Vérifiez sa présence dans vos listeners, par exemple dans `EntityDamageByEntityEvent` ou `BlockBreakEvent`, et appliquez-y l'effet.
+</Callout>

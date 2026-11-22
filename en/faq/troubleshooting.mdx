@@ -1,0 +1,71 @@
+---
+title: Troubleshooting
+description: "Fixes for the problems people hit most when installing and starting PowerNukkitX."
+icon: Wrench
+authors:
+  - PowerNukkitX
+---
+
+Start with the first check, then open the problem that matches what you see.
+
+<Callout type="info" title="First, check Java">
+  Run `java -version`. It must show **25 or higher**: PowerNukkitX needs Java 25+ (see [Requirements](/docs/requirements)).
+</Callout>
+
+## Java
+
+<Accordions>
+  <Accordion title="UnsupportedClassVersionError">
+    ```text
+    java.lang.UnsupportedClassVersionError: org.powernukkitx/Nukkit has been compiled by a more
+    recent version of the Java Runtime (class file version 69.0), this version of the Java
+    Runtime only recognizes class file versions up to ...
+    ```
+
+    Your Java is too old: class file version `69.0` is Java 25. Install Java 25 or newer and check with `java -version`.
+  </Accordion>
+  <Accordion title="Several Java versions are installed">
+    The wrong one is probably first. Either:
+
+    - set `JAVA_HOME` to your Java 25+ installation and put its `bin` folder first on your `PATH`;
+    - or start the server with the full path to the right Java:
+
+    ```bash
+    /path/to/jdk-25/bin/java -jar powernukkitx.jar
+    ```
+
+    On Linux, switch the default with `sudo update-alternatives --config java`. On Windows, check that `JAVA_HOME` in the system environment variables points to a JDK 25+ folder.
+  </Accordion>
+  <Accordion title="32-bit Java">
+    PowerNukkitX needs **64-bit** Java: a 32-bit JVM cannot use enough memory and crashes under load. If `java -version` mentions `Client VM` or `32-Bit`, install the 64-bit OpenJDK.
+  </Accordion>
+</Accordions>
+
+## Startup
+
+<Accordions>
+  <Accordion title="BindException: Address already in use">
+    Another program already uses the server port (`19132/UDP` by default). Stop any other Bedrock server, or change `port` under `baseSettings` in `pnx.yml`.
+  </Accordion>
+  <Accordion title="OutOfMemoryError, or the server exits at once">
+    The server may not have enough memory. Start it with explicit limits, leaving room for the system:
+
+    ```bash
+    java -Xms1G -Xmx2G -jar powernukkitx.jar
+    ```
+  </Accordion>
+  <Accordion title="Missing files or permission errors on first start">
+    On first start PowerNukkitX creates worlds and configuration in its folder. Run it from a dedicated, writable folder, not a system or read-only one. On Linux and macOS, make sure your user owns the jar and the folder (`chown`, `chmod`).
+  </Accordion>
+  <Accordion title="The server started, but nobody can connect">
+    - Check that the client and server versions match.
+    - Open or forward UDP port `19132` on your firewall and router.
+    - From the same machine, connect to `127.0.0.1` or `localhost`.
+  </Accordion>
+</Accordions>
+
+## Still stuck?
+
+- Re-read [Requirements](/docs/requirements) and [Installation](/docs/installation).
+- Search the [GitHub issues](https://github.com/PowerNukkitX/PowerNukkitX/issues).
+- Ask on [Discord](https://discord.gg/powernukkitx) with your full startup log and the output of `java -version`.

@@ -1,0 +1,33 @@
+---
+title: "Before you go public"
+description: "A checklist to run through before opening your server to everyone."
+icon: ListChecks
+---
+
+Tick each line as you go. Your ticks are kept in this browser, so you can come back later.
+
+<Checklist
+  name="go-live"
+  items={[
+    { label: "Java 25 or newer, 64-bit", detail: "Check with java -version. See Requirements." },
+    { label: "Xbox authentication is on", detail: "xboxAuth: true in pnx.yml, so nobody can join under another name." },
+    { label: "Only trusted people are operators", detail: "Everyone else gets permissions through a permission plugin." },
+    { label: "The allow-list is on, if the server is private", detail: "allowList: true, then whitelist add <player>." },
+    { label: "UDP port 19132 is open", detail: "On the firewall and forwarded on the router." },
+    { label: "Backups run on a schedule", detail: "To another disk or machine, with several copies kept." },
+    { label: "View distance suits your machine", detail: "Lower gameplaySettings.viewDistance if a busy server struggles." },
+    { label: "Plugins match your PowerNukkitX version", detail: "Check each plugin's Details card on the hub." },
+    { label: "Resource packs are in resource_packs/", detail: "Needed if a plugin adds custom blocks, items or entities." },
+  ]}
+/>
+
+## Where each point is explained
+
+<Cards>
+  <Card title="Requirements" href="/docs/requirements">Java and hardware.</Card>
+  <Card title="Permissions & Security" href="/docs/permissions">Operators, nodes, permission plugins.</Card>
+  <Card title="Players" href="/docs/administration/players">Allow-list, kicks and bans.</Card>
+  <Card title="Backups" href="/docs/administration/backups">What to save and how to automate it.</Card>
+  <Card title="Performance" href="/docs/administration/performance">Memory, threads and view distance.</Card>
+  <Card title="Resource packs" href="/docs/development/customs/resource-packs">Shipping textures for custom content.</Card>
+</Cards>

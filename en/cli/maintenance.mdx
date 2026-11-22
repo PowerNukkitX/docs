@@ -1,0 +1,115 @@
+---
+title: "Maintenance"
+description: "Update PowerNukkitX, back up and restore the server, check the machine and set up tab completion with pnx."
+icon: Wrench
+authors:
+  - AzaleeX
+---
+
+## update [#update]
+
+Updates PowerNukkitX itself to the latest release. Alias: `upgrade`.
+
+```bash
+pnx update
+pnx update --force
+```
+
+The current jar is kept beside the new one as `powernukkitx.jar.old`, so you can go back. Delete it once the new version runs as you want. `--force` ignores the release cache and asks GitHub again.
+
+## backup [#backup]
+
+Copies the server into `backups/pnx-backup-<date>/`, inside the server folder.
+
+```bash
+pnx backup
+pnx backup --keep 7
+```
+
+Everything is copied except `logs/`, `cache/`, `crash-reports/`, earlier `backups/` and hidden folders. `--keep <n>` then deletes all but the `n` newest backups, which makes it a one-line nightly job:
+
+```bash
+# cron: every night at 4:00, keep a week
+0 4 * * * cd /srv/minecraft && (pnx cmd save-all; pnx backup --keep 7)
+```
+
+For a clean copy of the worlds, run `save-all` first (as above), or stop the server. To keep backups safe from a dead disk, copy them to another machine: see [Backups](/docs/administration/backups).
+
+### backup list [#backup-list]
+
+Every backup, newest first, with its date, age and size. Alias: `backups`.
+
+```bash
+pnx backup list
+pnx --json backup list
+```
+
+### backup restore [#backup-restore]
+
+Puts a backup back in place. Before anything is replaced, the current state is saved as a new backup, so a restore can itself be undone.
+
+```bash
+pnx backup restore
+pnx backup restore latest
+pnx backup restore 3 --yes
+```
+
+Name the backup with `latest`, its number in `pnx backup list`, or its folder name; without one, you pick it from a list. It asks for confirmation unless you pass `-y`, `--yes` (required in scripts). It refuses to run while the server is running: stop it first.
+
+### backup prune [#backup-prune]
+
+Deletes old backups, keeping the newest ones.
+
+```bash
+pnx backup prune
+pnx backup prune --keep 10
+```
+
+`--keep` is `5` by default.
+
+## doctor [#doctor]
+
+Checks what a server needs and says what blocks it. Alias: `check`.
+
+```bash
+pnx doctor
+pnx --json doctor
+```
+
+| Check | Looks at |
+| :-- | :-- |
+| Java | That Java 25 or newer is installed, and its vendor. |
+| Install | That the server folder holds a `powernukkitx.jar`, and its version (read from the jar, without starting it). |
+| Disk | The free space where the server lives. |
+| Port | Whether something already holds the server's UDP port, read from `pnx.yml` (`19132` by default). |
+| Memory | Free and total memory. |
+
+`pnx --json doctor` exits with code `1` when something blocks the start, so a script or a CI job can stop there.
+
+## info [#info]
+
+Shows what is installed here: the server folder, the plugins, the worlds and this machine. For what is *running*, see [`pnx status`](/docs/cli/server#status).
+
+```bash
+pnx info
+pnx --json info
+```
+
+## completion [#completion]
+
+Turns on **Tab** completion for `bash`, `zsh`, `fish` and PowerShell. It completes commands, aliases and options, and values that only exist on your machine: configuration keys after `pnx config get`, backup names after `pnx backup restore`, plugin names after `pnx plugin remove`.
+
+```bash
+pnx completion
+```
+
+Run alone, it prints the one line that turns completion on for your shell. Add it once:
+
+| Shell | Command |
+| :-- | :-- |
+| bash | `echo 'eval "$(pnx completion bash)"' >> ~/.bashrc` |
+| zsh | `echo 'eval "$(pnx completion zsh)"' >> ~/.zshrc` |
+| fish | `pnx completion fish > ~/.config/fish/completions/pnx.fish` |
+| PowerShell | `Add-Content $PROFILE 'pnx completion powershell \| Out-String \| Invoke-Expression'` |
+
+Then open a new terminal and type `pnx st` followed by **Tab**. Completion asks `pnx` itself what may come next, so it never falls behind a new version.

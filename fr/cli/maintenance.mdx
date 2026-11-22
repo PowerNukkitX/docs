@@ -1,0 +1,115 @@
+---
+title: "Maintenance"
+description: "Mettre à jour PowerNukkitX, sauvegarder et restaurer le serveur, vérifier la machine et activer la complétion avec pnx."
+icon: Wrench
+authors:
+  - AzaleeX
+---
+
+## update [#update]
+
+Met PowerNukkitX lui-même à jour vers la dernière version. Alias : `upgrade`.
+
+```bash
+pnx update
+pnx update --force
+```
+
+Le jar actuel est gardé à côté du nouveau sous le nom `powernukkitx.jar.old`, pour pouvoir revenir en arrière. Supprimez-le une fois la nouvelle version validée. `--force` ignore le cache des versions et interroge GitHub à nouveau.
+
+## backup [#backup]
+
+Copie le serveur dans `backups/pnx-backup-<date>/`, à l'intérieur du dossier du serveur.
+
+```bash
+pnx backup
+pnx backup --keep 7
+```
+
+Tout est copié sauf `logs/`, `cache/`, `crash-reports/`, les `backups/` précédents et les dossiers cachés. `--keep <n>` supprime ensuite toutes les sauvegardes sauf les `n` plus récentes, ce qui en fait une tâche nocturne d'une ligne :
+
+```bash
+# cron : chaque nuit à 4h00, garder une semaine
+0 4 * * * cd /srv/minecraft && (pnx cmd save-all; pnx backup --keep 7)
+```
+
+Pour une copie propre des mondes, lancez d'abord `save-all` (comme ci-dessus), ou arrêtez le serveur. Pour que vos sauvegardes survivent à un disque mort, copiez-les sur une autre machine : voir [Sauvegardes](/docs/fr/administration/backups).
+
+### backup list [#backup-list]
+
+Toutes les sauvegardes, la plus récente d'abord, avec leur date, leur âge et leur taille. Alias : `backups`.
+
+```bash
+pnx backup list
+pnx --json backup list
+```
+
+### backup restore [#backup-restore]
+
+Remet une sauvegarde en place. Avant de remplacer quoi que ce soit, l'état actuel est enregistré comme nouvelle sauvegarde : une restauration peut donc elle-même être annulée.
+
+```bash
+pnx backup restore
+pnx backup restore latest
+pnx backup restore 3 --yes
+```
+
+Désignez la sauvegarde par `latest`, son numéro dans `pnx backup list` ou son nom de dossier ; sans rien, vous la choisissez dans une liste. Elle demande confirmation sauf avec `-y`, `--yes` (obligatoire dans un script). Elle refuse de tourner tant que le serveur est en marche : arrêtez-le d'abord.
+
+### backup prune [#backup-prune]
+
+Supprime les anciennes sauvegardes en gardant les plus récentes.
+
+```bash
+pnx backup prune
+pnx backup prune --keep 10
+```
+
+`--keep` vaut `5` par défaut.
+
+## doctor [#doctor]
+
+Vérifie ce dont un serveur a besoin et dit ce qui bloque. Alias : `check`.
+
+```bash
+pnx doctor
+pnx --json doctor
+```
+
+| Vérification | Regarde |
+| :-- | :-- |
+| Java | Que Java 25 ou plus récent est installé, et son éditeur. |
+| Installation | Que le dossier du serveur contient un `powernukkitx.jar`, et sa version (lue dans le jar, sans le démarrer). |
+| Disque | L'espace libre là où vit le serveur. |
+| Port | Si quelque chose occupe déjà le port UDP du serveur, lu dans `pnx.yml` (`19132` par défaut). |
+| Mémoire | La mémoire libre et totale. |
+
+`pnx --json doctor` sort avec le code `1` quand quelque chose bloque le démarrage, pour qu'un script ou un job de CI s'arrête là.
+
+## info [#info]
+
+Affiche ce qui est installé ici : le dossier du serveur, les plugins, les mondes et cette machine. Pour ce qui *tourne*, voir [`pnx status`](/docs/fr/cli/server#status).
+
+```bash
+pnx info
+pnx --json info
+```
+
+## completion [#completion]
+
+Active la complétion par **Tab** pour `bash`, `zsh`, `fish` et PowerShell. Elle complète les commandes, alias et options, et les valeurs qui n'existent que sur votre machine : clés de configuration après `pnx config get`, noms de sauvegardes après `pnx backup restore`, noms de plugins après `pnx plugin remove`.
+
+```bash
+pnx completion
+```
+
+Lancée seule, elle affiche la ligne qui active la complétion pour votre shell. À ajouter une fois :
+
+| Shell | Commande |
+| :-- | :-- |
+| bash | `echo 'eval "$(pnx completion bash)"' >> ~/.bashrc` |
+| zsh | `echo 'eval "$(pnx completion zsh)"' >> ~/.zshrc` |
+| fish | `pnx completion fish > ~/.config/fish/completions/pnx.fish` |
+| PowerShell | `Add-Content $PROFILE 'pnx completion powershell \| Out-String \| Invoke-Expression'` |
+
+Ouvrez ensuite un nouveau terminal et tapez `pnx st` puis **Tab**. La complétion demande à `pnx` lui-même ce qui peut suivre : elle ne prend jamais de retard sur une nouvelle version.

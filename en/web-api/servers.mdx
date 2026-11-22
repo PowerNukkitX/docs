@@ -1,0 +1,41 @@
+---
+title: "Servers"
+description: "Read the public directory of servers running PowerNukkitX."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+The [server directory](/servers) lists approved Bedrock servers that run PowerNukkitX. Its API is read-only for everyone; listing a server is done from the website.
+
+## List servers
+
+```text
+GET /api/v1/servers
+```
+
+Featured servers come first, then the others. The response is `{ data, total }`.
+
+| Parameter | What it does |
+| :-- | :-- |
+| `q` | Search by name. |
+| `category` | One category, such as survival or minigames. |
+| `region` | Where the server is hosted. |
+| `language` | A language the server speaks. |
+| `page` | Page number, from 1. |
+
+<Callout type="info">
+  This list has its own budget: 60 requests a minute per address.
+</Callout>
+
+<ApiTry path="/servers" />
+
+## One server
+
+```text
+GET /api/v1/servers/{slug}
+```
+
+The public view of an approved server: its address, description, tags and badges. A server that is not approved answers `404`.
+
+<ApiTry path="/servers/{slug}" params={{ slug: "" }} />

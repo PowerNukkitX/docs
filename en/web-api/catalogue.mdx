@@ -1,0 +1,49 @@
+---
+title: "Catalogue"
+description: "Categories, collections, badges and the spotlight: the data that organises the hub."
+icon: Tags
+authors:
+  - AzaleeX
+---
+
+These endpoints change rarely and are cached generously. They have no parameters.
+
+## Categories
+
+```text
+GET /api/v1/categories
+```
+
+Every visible plugin category, as `{ id, label }`. Use an `id` in the `category` parameter of [`/plugins`](/docs/web-api/plugins).
+
+<ApiTry path="/categories" />
+
+## Collections
+
+```text
+GET /api/v1/collections
+```
+
+Published collections: hand-picked lists of plugins, each with the plugins it groups.
+
+<ApiTry path="/collections" />
+
+## Badges
+
+```text
+GET /api/v1/badges
+```
+
+Every badge the hub can award to a plugin, with its tier and icon.
+
+<ApiTry path="/badges" />
+
+## Spotlight
+
+```text
+GET /api/v1/spotlight
+```
+
+The plugin the team currently highlights on the home page, with its note. `data` is `null` when nothing is highlighted.
+
+<ApiTry path="/spotlight" />

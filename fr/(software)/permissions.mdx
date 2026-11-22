@@ -1,0 +1,50 @@
+---
+title: "Permissions et sécurité"
+description: "Contrôler qui peut faire quoi sur votre serveur : opérateurs, nœuds de permission et plugins de permissions."
+icon: Shield
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Les permissions décident des commandes et actions que chaque joueur peut utiliser. Il existe trois niveaux, du plus simple au plus souple.
+
+## 1. Les opérateurs
+
+Un **opérateur** (OP) passe toutes les vérifications de permission et peut lancer toutes les commandes. Réservez-le à quelques administrateurs de confiance.
+
+```bash title="Console"
+op <joueur>
+deop <joueur>
+```
+
+Les opérateurs sont listés dans `ops.txt` à la racine du serveur, un nom par ligne. Vous pouvez le modifier quand le serveur est **arrêté**.
+
+## 2. Les nœuds de permission
+
+Les commandes et les plugins vérifient des **nœuds de permission** : des noms à points comme :
+
+- `nukkit.command.help` pour `/help`
+- `nukkit.command.gamemode` pour `/gamemode`
+
+Par défaut, les joueurs normaux ont accès aux commandes de base (`/tell`, `/list`, `/help`) et les opérateurs à toutes.
+
+## 3. Un plugin de permissions
+
+Pour un serveur public ou plusieurs groupes, l'OP ne suffit pas. Installez un plugin de permissions comme **LuckPerms**, porté sur Nukkit et PowerNukkitX. Il permet de :
+
+- créer des groupes comme `admin`, `moderator` et `player` ;
+- donner des nœuds de permission à un groupe ou à un joueur ;
+- définir préfixes, suffixes et héritage entre groupes.
+
+<Callout type="info">
+  Trouvez des plugins de permissions dans le [hub de plugins](/plugins).
+</Callout>
+
+## Liste de sécurité
+
+<Steps>
+  <Step>Gardez l'**authentification Xbox** activée (`xboxAuth: true` dans `pnx.yml`) pour que personne ne rejoigne sous le nom d'un autre.</Step>
+  <Step>Donnez l'OP au **moins de monde** possible, et utilisez des groupes pour les autres.</Step>
+  <Step>Activez la **liste blanche** pour un serveur privé. Voir [Gestion des joueurs](/docs/fr/administration/players).</Step>
+</Steps>

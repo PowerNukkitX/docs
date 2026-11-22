@@ -1,0 +1,64 @@
+---
+title: "Sauvegardes"
+description: "Sauvegarder et restaurer un serveur PowerNukkitX sans risque."
+icon: Archive
+authors:
+  - PowerNukkitX
+---
+
+Une sauvegarde transforme un plantage en simple contretemps plutôt qu'en semaines de travail perdues. Tout ce dont le serveur a besoin tient dans son dossier : sauvegarder revient à copier les bons fichiers au bon moment.
+
+## Quoi sauvegarder
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="worlds" />
+    <Folder name="players" />
+    <Folder name="plugins" />
+    <File name="pnx.yml" />
+    <File name="ops.txt" />
+    <File name="white-list.txt" />
+    <File name="banned-players.txt" />
+    <File name="banned-ips.txt" />
+  </Folder>
+</Files>
+
+| Chemin | Contient |
+| :-- | :-- |
+| `worlds/` | Terrain, blocs et entités. |
+| `players/` | Inventaires, positions et statistiques (si `savePlayerData` est activé). |
+| `plugins/` | Les jars des plugins, et le dossier de données de chacun. |
+| `pnx.yml` | Tous les réglages du serveur. |
+| `ops.txt`, `white-list.txt`, `banned-*.txt` | Opérateurs, liste blanche et bannissements. |
+
+## Faire une sauvegarde propre
+
+Un monde copié pendant qu'il est écrit peut être corrompu.
+
+<Steps>
+  <Step>Lancez `save-all` pour écrire les mondes sur le disque.</Step>
+  <Step>Pour une copie garantie propre, arrêtez le serveur avec `stop`.</Step>
+  <Step>Copiez les fichiers ci-dessus ailleurs, puis redémarrez le serveur.</Step>
+</Steps>
+
+```bash title="Linux / macOS"
+tar -czf backups/pnx-$(date +%F).tar.gz worlds/ players/ pnx.yml plugins/ ops.txt white-list.txt
+```
+
+<Callout type="info">
+  Gardez les sauvegardes sur **un autre disque ou une autre machine**. Une sauvegarde qui disparaît avec le serveur n'a rien sauvé.
+</Callout>
+
+## Automatiser
+
+- Planifiez la commande avec `cron` (Linux, macOS) ou le Planificateur de tâches (Windows), aux heures creuses.
+- Gardez plusieurs copies, par exemple les 7 derniers jours, pour pouvoir revenir plus loin que la dernière.
+- Des plugins de sauvegarde du [hub de plugins](/plugins) peuvent capturer les mondes à intervalles réguliers sans arrêter le serveur.
+
+## Restaurer
+
+<Steps>
+  <Step>Arrêtez le serveur.</Step>
+  <Step>Remplacez les mondes et réglages actuels par les copies de la sauvegarde.</Step>
+  <Step>Démarrez le serveur, puis vérifiez avec `status` et en vous connectant.</Step>
+</Steps>

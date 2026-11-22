@@ -1,0 +1,13 @@
+{
+  "title": "Application PowerNukkitX",
+  "description": "L'application de bureau qui crée et fait tourner un serveur PowerNukkitX, sans terminal.",
+  "icon": "AppWindow",
+  "root": true,
+  "pages": [
+    "index",
+    "---Utilisation---",
+    "servers",
+    "plugins",
+    "settings"
+  ]
+}

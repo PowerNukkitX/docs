@@ -1,0 +1,52 @@
+---
+title: "Vue d'ensemble"
+description: "Ajouter vos propres blocs, items, entités, enchantements, recettes et génération de monde."
+icon: Shapes
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Hammer, Sword, Skull, Sparkles, BookOpen, Cpu, Globe, Home, Shirt } from "lucide-react";
+
+PowerNukkitX dispose de **registres** pour le contenu custom. Vous enregistrez un bloc, un item ou une entité depuis votre plugin, et le serveur le fournit aux clients Bedrock, les textures et modèles venant d'un pack de ressources.
+
+## Enregistrer dans `onLoad()`, pas `onEnable()`
+
+<PluginLifecycle highlight="onLoad" />
+
+<Callout type="error" title="L'erreur la plus fréquente">
+  Le serveur lit les mondes, avec leurs blocs, items et entités, **après** le chargement des plugins mais **avant** leur activation. Enregistrez blocs, items, entités et enchantements custom dans `onLoad()` : enregistrés dans `onEnable()`, ils sont inconnus pendant le chargement du monde, ce qui provoque des erreurs ou des pertes de données.
+</Callout>
+
+## Guides
+
+<Cards>
+  <Card icon={<Hammer />} title="Blocs" href="/docs/fr/development/customs/blocks">
+    Propriétés, géométrie, états et permutations.
+  </Card>
+  <Card icon={<Cpu />} title="Entités de bloc" href="/docs/fr/development/customs/block-entities">
+    Données en plus et mises à jour par tick pour les blocs posés.
+  </Card>
+  <Card icon={<Sword />} title="Items" href="/docs/fr/development/customs/items">
+    Items simples, outils, armes et armures.
+  </Card>
+  <Card icon={<Skull />} title="Entités" href="/docs/fr/development/customs/entities">
+    Des mobs, et des montures que les joueurs peuvent chevaucher.
+  </Card>
+  <Card icon={<Sparkles />} title="Enchantements" href="/docs/fr/development/customs/enchantments">
+    De nouveaux enchantements avec leurs niveaux et leur rareté.
+  </Card>
+  <Card icon={<Shirt />} title="Garnitures d'armure" href="/docs/fr/development/customs/trims">
+    Motifs et matériaux de garniture pour la table de forgeron.
+  </Card>
+  <Card icon={<BookOpen />} title="Recettes" href="/docs/fr/development/customs/recipes">
+    Recettes avec forme, sans forme, et de four.
+  </Card>
+  <Card icon={<Globe />} title="Générateurs" href="/docs/fr/development/customs/generators">
+    Votre propre génération de monde, et des structures dans les mondes vanilla.
+  </Card>
+  <Card icon={<Home />} title="Structures" href="/docs/fr/development/customs/structures">
+    Charger, pivoter et placer des structures Bedrock et Java.
+  </Card>
+</Cards>

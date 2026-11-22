@@ -1,0 +1,96 @@
+---
+title: "Windows"
+description: "Installer et lancer PowerNukkitX sur Windows 10 ou 11, étape par étape."
+icon: Monitor
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Sous Windows 10 ou 11, vous installez Java 25, placez le jar du serveur dans un dossier, puis le lancez avec un script `start.bat`.
+
+## Installation
+
+<Steps>
+  <Step>
+    ### Installer Java 25
+
+    Téléchargez l'installeur **MSI** Windows d'**Eclipse Temurin JDK 25** sur [Adoptium](https://adoptium.net/temurin/releases/?version=25&os=windows) et lancez-le. Pendant l'installation, cochez **Set JAVA_HOME variable** et **Associate .jar files**.
+
+    Ouvrez ensuite une nouvelle invite de commandes et vérifiez :
+
+    ```bat
+    java -version
+    ```
+
+    Vous devez voir la version `25`, par exemple `openjdk version "25.x.x"`.
+  </Step>
+  <Step>
+    ### Créer un dossier pour le serveur
+
+    Créez un dossier pour le serveur, par exemple `C:\PNX-Server`.
+
+    <Callout type="warn">
+      Ne le mettez pas dans `C:\Program Files` ni `C:\Windows` : Windows peut empêcher PowerNukkitX d'y créer ses mondes, sa configuration et ses logs.
+    </Callout>
+  </Step>
+  <Step>
+    ### Télécharger le serveur
+
+    Téléchargez la dernière version de `powernukkitx.jar` depuis les [releases GitHub](https://github.com/PowerNukkitX/PowerNukkitX/releases) et placez-la dans votre dossier.
+  </Step>
+  <Step>
+    ### Créer le script de lancement
+
+    PowerNukkitX a besoin d'options de réflexion Java (`--add-opens`) pour charger son registre et ses plugins : lancez-le donc depuis un script plutôt qu'en double-cliquant sur le jar. Créez `start.bat` dans le dossier :
+
+    ```bat title="start.bat"
+    @echo off
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    pause
+    ```
+
+    <Callout type="info">
+      Créez-le comme fichier texte, puis renommez-le. Activez **Affichage > Afficher > Extensions de noms de fichiers** dans l'Explorateur pour que le fichier finisse bien par `.bat` et non `.bat.txt`.
+    </Callout>
+  </Step>
+  <Step>
+    ### Lancer le serveur
+
+    Double-cliquez sur `start.bat`. La première fois, un assistant vous demande de :
+
+    - accepter la licence en tapant `y` ;
+    - choisir une langue, par exemple `eng` ;
+    - saisir le nom du serveur (MOTD) et le port (par défaut `19132`).
+
+    Le serveur crée alors `pnx.yml` et le monde par défaut. Tapez `stop` pour l'arrêter proprement.
+  </Step>
+</Steps>
+
+Votre dossier ressemble maintenant à ceci :
+
+<Files>
+  <Folder name="PNX-Server" defaultOpen>
+    <File name="powernukkitx.jar" />
+    <File name="start.bat" />
+    <File name="pnx.yml" />
+    <Folder name="worlds" />
+    <Folder name="plugins" />
+  </Folder>
+</Files>
+
+## Dépannage
+
+<Accordions>
+  <Accordion title="« java » n'est pas reconnu">
+    Windows ne trouve pas Java. Si Java 25 est installé :
+
+    1. Cherchez **Modifier les variables d'environnement système** dans le menu Démarrer, puis cliquez sur **Variables d'environnement...**.
+    2. Dans *Variables système*, vérifiez que `JAVA_HOME` pointe vers votre dossier JDK 25, par exemple `C:\Program Files\Eclipse Adoptium\jdk-25.x.x\`.
+    3. Modifiez `Path` et vérifiez qu'il contient `%JAVA_HOME%\bin`.
+    4. Ouvrez une nouvelle invite de commandes, ou redémarrez le PC.
+  </Accordion>
+  <Accordion title="BindException: Address already in use">
+    Un autre programme, ou une autre copie du serveur, utilise déjà le port `19132`. Fermez l'autre fenêtre du serveur, ou changez `port` dans `pnx.yml` (par exemple `19133`).
+  </Accordion>
+</Accordions>

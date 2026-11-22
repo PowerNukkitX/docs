@@ -1,0 +1,124 @@
+---
+title: Tâches
+icon: Timer
+description: "Lancer du code plus tard, ou encore et encore, sans bloquer le serveur."
+authors:
+  - tunikakeks
+---
+
+Le planificateur lance votre code plus tard ou à intervalles, sans bloquer le thread principal du serveur. Le temps se compte en **ticks** : le serveur en fait 20 par seconde.
+
+<TickTimeline />
+
+## Tâches rapides
+
+Planifiez une lambda directement depuis votre plugin :
+
+<Tabs items={["Répétée", "Différée"]}>
+  <Tab value="Répétée">
+    ```java
+    @Override
+    public void onEnable() {
+        // toutes les 20 ticks = chaque seconde
+        this.getServer().getScheduler().scheduleRepeatingTask(this, () -> {
+            this.getLogger().info("Repeating task executed!");
+        }, 20);
+    }
+    ```
+  </Tab>
+  <Tab value="Différée">
+    ```java
+    // une fois, après 100 ticks = 5 secondes
+    this.getServer().getScheduler().scheduleDelayedTask(this, () -> {
+        this.getLogger().info("Delayed task executed after 5 seconds!");
+    }, 100);
+    ```
+  </Tab>
+</Tabs>
+
+## Une classe de tâche
+
+Pour une logique plus fournie, étendez `Task`. `onRun` reçoit le tick en cours :
+
+```java title="ExampleTask.java"
+package com.example.task;
+
+import org.powernukkitx.plugin.Plugin;
+import org.powernukkitx.scheduler.Task;
+
+public class ExampleTask extends Task {
+    private final Plugin plugin;
+
+    public ExampleTask(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void onRun(int currentTick) {
+        plugin.getLogger().info("Task executed at tick: " + currentTick);
+    }
+}
+```
+
+Planifiez-la dans `onEnable()` :
+
+```java
+@Override
+public void onEnable() {
+    this.getServer().getScheduler().scheduleRepeatingTask(this, new ExampleTask(this), 20);
+}
+```
+
+## Arrêter une tâche
+
+Chaque appel `schedule…` renvoie un `TaskHandler`. Gardez-le pour arrêter la tâche plus tard ; une `Task` peut aussi s'arrêter elle-même avec `cancel()` :
+
+```java
+private TaskHandler countdown;
+
+@Override
+public void onEnable() {
+    countdown = this.getServer().getScheduler().scheduleRepeatingTask(this, new ExampleTask(this), 20);
+}
+
+public void stopCountdown() {
+    countdown.cancel();
+}
+```
+
+`getScheduler().cancelTask(this)` arrête d'un coup toutes les tâches de votre plugin. Le serveur le fait pour vous quand votre plugin est désactivé.
+
+## Travail lent : hors du thread principal
+
+Une tâche tourne sur le thread principal, entre deux ticks : tant qu'elle s'exécute, tout le serveur attend. Lire un fichier, appeler une API web ou interroger une base de données relève d'une `AsyncTask`, qui tourne sur un thread de travail :
+
+```java title="FetchTask.java"
+import org.powernukkitx.Server;
+import org.powernukkitx.scheduler.AsyncTask;
+
+public class FetchTask extends AsyncTask {
+    @Override
+    public void onRun() {
+        // sur un thread de travail : uniquement le travail lent, sans toucher aux joueurs ni aux mondes
+        setResult(loadSomethingSlow()); // votre propre méthode lente
+    }
+
+    @Override
+    public void onCompletion(Server server) {
+        // de retour sur le thread principal : le résultat peut servir dans le jeu
+        server.broadcastMessage("Chargé : " + getResult());
+    }
+}
+```
+
+```java
+this.getServer().getScheduler().scheduleAsyncTask(this, new FetchTask());
+```
+
+<Callout type="warn">
+  Ne touchez jamais aux joueurs, entités ou mondes depuis `onRun()` : le jeu n'est pas thread-safe. Passez le résultat à `onCompletion()`, qui s'exécute sur le thread principal.
+</Callout>
+
+<Callout type="info">
+  Vous préférez les annotations ? `@ScheduleTask` planifie une classe ou une méthode statique pour vous : voir [Processeur d'annotations](/docs/fr/development/basics/annotations).
+</Callout>

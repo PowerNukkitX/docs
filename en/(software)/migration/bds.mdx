@@ -1,0 +1,70 @@
+---
+title: "From Bedrock Dedicated Server"
+description: "Move from Mojang's official Bedrock Dedicated Server (BDS) to PowerNukkitX."
+icon: Server
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+You keep your worlds and resource packs. Settings are copied by hand, and behaviour packs must be replaced by plugins.
+
+<CarryOver
+  items={[
+    { label: "Worlds", note: "LevelDB worlds copy straight over", status: "yes" },
+    { label: "Resource packs", note: "Copied to resource_packs/ and offered to players", status: "yes" },
+    { label: "server.properties", note: "Copied into pnx.yml by hand", status: "manual" },
+    { label: "Behaviour packs", note: "Not supported: game logic is written in Java plugins", status: "no" },
+  ]}
+/>
+
+## Steps
+
+<Steps>
+  <Step>
+    ### Install PowerNukkitX
+
+    Follow the [installation guide](/docs/installation) for your system, start the server once to create its files, then stop it.
+  </Step>
+  <Step>
+    ### Copy your world
+
+    Copy your world folder from BDS's `worlds/` (for example `worlds/MyBedrockWorld`) into PowerNukkitX's `worlds/`, then make it the default world in `pnx.yml`:
+
+    ```yaml title="pnx.yml"
+    baseSettings:
+      defaultLevelName: "MyBedrockWorld"
+    ```
+  </Step>
+  <Step>
+    ### Copy your settings
+
+    Copy the values from BDS's `server.properties` into `pnx.yml`:
+
+    | BDS setting | `pnx.yml` section | `pnx.yml` key |
+    | :-- | :-- | :-- |
+    | `server-port` | `baseSettings` | `port` |
+    | `max-players` | `baseSettings` | `maxPlayers` |
+    | `online-mode` | `baseSettings` | `xboxAuth` |
+    | `allow-list` | `baseSettings` | `allowList` |
+    | `gamemode` | `gameplaySettings` | `gamemode` |
+    | `difficulty` | `gameplaySettings` | `difficulty` |
+    | `view-distance` | `gameplaySettings` | `viewDistance` |
+  </Step>
+  <Step>
+    ### Copy your resource packs
+
+    Copy the `.mcpack` or `.zip` files from BDS's `resource_packs/` into PowerNukkitX's `resource_packs/`. They are offered to players when they connect.
+  </Step>
+</Steps>
+
+## Good to know
+
+<Accordions>
+  <Accordion title="Behaviour packs">
+    BDS runs behaviour packs with custom entity logic, scripts and animations. PowerNukkitX does not: blocks, items, entities and gameplay are written server-side in Java, with the [plugin API](/docs/development).
+  </Accordion>
+  <Accordion title="Player data and inventories">
+    BDS keeps inventories and positions inside the world's LevelDB database, and PowerNukkitX can read standard vanilla player profiles from it. To be safe, back up `worlds/` before the first players join, and keep `savePlayerData: true` in `playerSettings`.
+  </Accordion>
+</Accordions>

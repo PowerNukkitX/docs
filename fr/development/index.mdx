@@ -1,0 +1,40 @@
+---
+title: "Guide du développeur"
+description: "Créer des plugins, du contenu custom et des interfaces joueur avec l'API PowerNukkitX."
+icon: Code
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Book, Blocks, LayoutTemplate, FileCode } from "lucide-react";
+
+L'API PowerNukkitX est écrite en **Java 25**. Un plugin est un jar dans le dossier `plugins/` du serveur : le serveur l'appelle au chargement, au démarrage, et chaque fois qu'il se passe quelque chose en jeu.
+
+<PluginLifecycle highlight="onEnable" />
+
+## Guides
+
+<Cards>
+  <Card icon={<Book />} title="Les bases" href="/docs/fr/development/basics">
+    Configurer Maven ou Gradle, puis ajouter commandes, listeners d'événements et tâches planifiées.
+  </Card>
+  <Card icon={<Blocks />} title="Contenu custom" href="/docs/fr/development/customs">
+    Blocs, entités de bloc, items, entités, enchantements, recettes et générateurs de monde.
+  </Card>
+  <Card icon={<LayoutTemplate />} title="Formulaires" href="/docs/fr/development/forms">
+    Les interfaces joueur : formulaires Simple, Modal et Custom, et l'interface Data-Driven expérimentale.
+  </Card>
+</Cards>
+
+## Référence
+
+<Cards>
+  <Card icon={<FileCode />} title="Javadoc" href="https://powernukkitx.github.io/PowerNukkitX/">
+    Chaque classe, méthode et événement de l'API serveur. Elle est en anglais.
+  </Card>
+</Cards>
+
+## Un exemple complet
+
+Le dépôt [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven) est un plugin fonctionnel qui utilise tout ce qui précède : commandes, listeners, tâches, blocs custom, dalles, items, armures, entités, enchantements et recettes.

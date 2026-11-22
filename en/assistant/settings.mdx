@@ -1,0 +1,41 @@
+---
+title: "Settings"
+description: "Edit the server's pnx.yml visually, and set up the app: language, theme, updates."
+icon: SlidersHorizontal
+authors:
+  - AzaleeX
+---
+
+## Server settings
+
+The server's **Settings** view is an editor for the active server's `pnx.yml`. It appears after the server's first start, which is when `pnx.yml` is created.
+
+- The **essentials** come first: MOTD, port, max players, world name, allow-list, view distance, Xbox authentication and more.
+- **All keys** lists every other setting, grouped by section, with a filter to find one by name.
+- Each setting gets the right control: a switch for yes or no, a number field for counts and ports, a list for the server language. The file's own comments show as tooltips.
+
+**Save** rewrites only the lines you changed, so the file's comments and layout survive, and keeps a one-time copy as `pnx.yml.assistant-bak`. Lists and nested blocks stay read-only here: **Open the file** to change them by hand.
+
+<Callout type="warn">
+  Settings apply at the next start. Save while the server is stopped: a running server writes `pnx.yml` back when it shuts down.
+</Callout>
+
+## App preferences
+
+The app's own **Settings**, for the app itself. Every change applies at once.
+
+| Setting | Choices |
+| :-- | :-- |
+| Language | English, Français, Español, Deutsch, Português (Brasil). |
+| Theme | Light, dark, or follow the system. |
+| Density | Comfortable, or compact for small screens. |
+| Reduce motion | Turns off transitions and 3D movement. |
+| Confirm on close | Offers to stop the server gracefully before quitting. |
+
+## Updates
+
+The app updates itself. By default it looks for a new release every three hours and can download it in the background; installing stays your decision. **Check now** looks straight away.
+
+## Your data
+
+The app keeps its preferences and its list of servers in `~/.pnx-cli`, shared with the CLI. **Open** shows that folder. **Reset preferences** puts theme, density, motion and memory back to their defaults; your servers are not touched.

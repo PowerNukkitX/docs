@@ -1,0 +1,25 @@
+---
+title: "Plugins"
+description: "Search the PowerNukkitX plugin hub and install plugins into your server from the app."
+icon: Package
+authors:
+  - AzaleeX
+---
+
+The **Plugins** view searches the [plugin hub](/plugins) and installs straight into the active server's `plugins/` folder.
+
+## Marketplace
+
+Type in the search field to find a plugin. **Install** downloads the hub's newest **approved** release from GitHub and checks it against the SHA-256 the hub recorded before writing it to `plugins/`. Restart the server to load it.
+
+## Installed
+
+The **Installed** tab lists what the app installed:
+
+- **Update** appears when a newer approved release exists;
+- **Remove** deletes the plugin from `plugins/`;
+- **up to date** means there is nothing newer.
+
+<Callout type="info">
+  The app uses the same hub endpoints as `pnx plugin`. To point both at another hub, set `PNX_API_URL`: see [the CLI](/docs/cli#state).
+</Callout>

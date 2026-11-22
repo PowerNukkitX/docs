@@ -1,0 +1,41 @@
+---
+title: "Serveurs"
+description: "Lire l'annuaire public des serveurs qui tournent sous PowerNukkitX."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+L'[annuaire des serveurs](/servers) liste les serveurs Bedrock approuvés qui tournent sous PowerNukkitX. Son API est en lecture seule pour tout le monde ; on inscrit un serveur depuis le site.
+
+## Lister les serveurs
+
+```text
+GET /api/v1/servers
+```
+
+Les serveurs mis en avant d'abord, puis les autres. La réponse est `{ data, total }`.
+
+| Paramètre | Rôle |
+| :-- | :-- |
+| `q` | Recherche par nom. |
+| `category` | Une catégorie, comme survie ou mini-jeux. |
+| `region` | Où le serveur est hébergé. |
+| `language` | Une langue parlée sur le serveur. |
+| `page` | Numéro de page, à partir de 1. |
+
+<Callout type="info">
+  Cette liste a son propre budget : 60 requêtes par minute et par adresse.
+</Callout>
+
+<ApiTry path="/servers" />
+
+## Un serveur
+
+```text
+GET /api/v1/servers/{slug}
+```
+
+La vue publique d'un serveur approuvé : son adresse, sa description, ses tags et ses badges. Un serveur non approuvé répond `404`.
+
+<ApiTry path="/servers/{slug}" params={{ slug: "" }} />

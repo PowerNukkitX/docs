@@ -1,0 +1,90 @@
+---
+title: "Vue d'ensemble"
+description: "Installer l'outil en ligne de commande pnx et connaître les options communes à toutes les commandes."
+icon: SquareTerminal
+authors:
+  - AzaleeX
+---
+
+import { Package, PlugZap, Rocket, Wrench } from "lucide-react";
+
+`pnx` crée, démarre et entretient un serveur PowerNukkitX depuis le terminal : il télécharge le bon jar, écrit les scripts de lancement, choisit les options Java, installe des plugins vérifiés et contrôle la machine. Il est open source, dans le dépôt [pnx-cli](https://github.com/PowerNukkitX/pnx-cli).
+
+<CliSession />
+
+## Installer
+
+Il faut **Node.js 20.12** ou plus récent, et Java 25 pour le serveur lui-même.
+
+```bash
+npm install -g @powernukkitx/cli
+pnx --version
+```
+
+Pas d'installation globale ? Chaque commande marche aussi via `npx @powernukkitx/cli <commande>`.
+
+Le paquet installe deux commandes :
+
+| Commande | Pour |
+| :-- | :-- |
+| `pnx` | Tout : les sous-commandes de ces pages. Lancée seule, elle ouvre un menu interactif. |
+| `pnxcli` | Le [lanceur guidé](/docs/fr/cli/launcher) : une seule tâche, créer un serveur, avec des questions plutôt que des options. |
+
+## Sur quel serveur agit une commande
+
+La plupart des commandes travaillent sur **un dossier de serveur**. `pnx` le choisit dans cet ordre :
+
+<Steps>
+  <Step>Le dossier donné avec `--dir`, pour les commandes qui l'acceptent.</Step>
+  <Step>Le serveur par défaut, défini par `pnx init` ou par `pnx use <dossier>`.</Step>
+  <Step>Sinon, un serveur trouvé à proximité. S'il y en a plusieurs, on vous demande de choisir.</Step>
+</Steps>
+
+## Options communes à toutes les commandes
+
+| Option | Effet |
+| :-- | :-- |
+| `-h`, `--help` | L'aide de `pnx`, ou d'une commande : `pnx start --help`. |
+| `-v`, `--version` | Affiche la version de la CLI. |
+| `--json` | Affiche un seul document JSON et rien d'autre : ni animation ni barre de progression. Fait pour les scripts. |
+| `--no-color` | Texte brut sans couleurs, pour les logs et les pipes. Une sortie redirigée est déjà en texte brut. |
+| `--color` | Garde les couleurs même dans un pipe ou un log de CI. |
+| `--debug` | Affiche la trace complète sous une erreur, au lieu d'une ligne d'indice. |
+
+```bash
+pnx --json status
+pnx --json doctor
+```
+
+Chaque commande sort avec un code non nul quand elle échoue : un script peut se fier à `$?`. Une commande ou une option mal tapée reçoit un *vouliez-vous dire*, et **Tab** complète commandes, options et même vos clés de configuration une fois la [complétion](/docs/fr/cli/maintenance#completion) activée.
+
+## Où elle garde son état [#state]
+
+La CLI écrit ses propres fichiers dans `~/.pnx-cli` : `config.json` (le serveur par défaut, le token du hub), le cache des versions et les préférences de l'[application de bureau](/docs/fr/assistant). Les fichiers de votre serveur restent dans le dossier du serveur.
+
+| Variable | Effet |
+| :-- | :-- |
+| `PNX_HOME` | Déplace le dossier d'état ailleurs que dans `~/.pnx-cli`. |
+| `PNX_API_URL` | Fait pointer les commandes de plugins vers un autre hub que `https://powernukkitx.org`. |
+| `JAVA_HOME` | Le Java utilisé pour démarrer le serveur, avant celui de votre `PATH`. |
+| `PNX_DEBUG` | Équivaut à `--debug`. |
+| `NO_COLOR` | Équivaut à `--no-color` ([no-color.org](https://no-color.org)). |
+| `FORCE_COLOR` | Équivaut à `--color`. |
+| `PNX_NO_UPDATE_CHECK` | Fait taire la ligne quotidienne « mise à jour disponible ». Elle n'apparaît de toute façon jamais dans un script, en CI, dans un pipe ou avec `--json`. |
+
+## Ensuite
+
+<Cards>
+  <Card icon={<Rocket />} title="Commandes du serveur" href="/docs/fr/cli/server">
+    init, start, stop, cmd, status, logs, config, open, use.
+  </Card>
+  <Card icon={<Package />} title="Plugins" href="/docs/fr/cli/plugins">
+    Chercher dans le hub, installer, mettre à jour et retirer des plugins.
+  </Card>
+  <Card icon={<Wrench />} title="Maintenance" href="/docs/fr/cli/maintenance">
+    Mettre à jour PowerNukkitX, sauvegarder et restaurer, diagnostiquer, complétion.
+  </Card>
+  <Card icon={<PlugZap />} title="Appairage avec un hub" href="/docs/fr/cli/link">
+    Superviser un serveur depuis un tableau de bord.
+  </Card>
+</Cards>

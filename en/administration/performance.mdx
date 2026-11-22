@@ -1,0 +1,47 @@
+---
+title: "Performance"
+description: "Tune memory, threads and view distance on a PowerNukkitX server."
+icon: Gauge
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX is fast out of the box: levels tick on their own threads and hot data is cached. A few settings still matter once real players are online.
+
+<Callout type="info" title="Measure first">
+  When something is slow, profile it with [Spark](/docs/integrations/spark) before changing settings. It shows which plugins, entities or tasks use the tick time.
+</Callout>
+
+## The four levers
+
+<Accordions>
+  <Accordion title="Memory">
+    Give the server enough heap, but not all of the machine's RAM: leave room for the system and off-heap memory. With the `pnx` command-line tool:
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    2 GB is a reasonable minimum, 4 GB or more for a busy server. PowerNukkitX uses the generational ZGC garbage collector, which keeps pauses short even with a large heap.
+  </Accordion>
+  <Accordion title="View distance">
+    `gameplaySettings.viewDistance` (default `20` chunks) is the biggest lever on CPU and bandwidth: every extra chunk multiplies the work per player. Lower it if a busy server struggles:
+
+    ```yaml title="pnx.yml"
+    gameplaySettings:
+      viewDistance: 12
+    ```
+  </Accordion>
+  <Accordion title="Async workers">
+    `performanceSettings.asyncWorkers` (default `4`) is the number of background threads for work such as chunk generation. On a machine with more cores, raising it smooths out lag when players explore. Keep it at or below your core count.
+
+    ```yaml title="pnx.yml"
+    performanceSettings:
+      asyncWorkers: 6
+      registryCacheEnabled: true
+    ```
+  </Accordion>
+  <Accordion title="Autosave">
+    `baseSettings.autosaveDelay` (default `6000` ticks) sets how often worlds save. Saving less often reduces disk activity but loses more on a crash: balance it with your [backups](/docs/administration/backups).
+  </Accordion>
+</Accordions>

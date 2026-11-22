@@ -1,0 +1,43 @@
+---
+title: "Vue d'ensemble"
+description: "Entretenir un serveur PowerNukkitX au quotidien : commandes, joueurs, mondes, performances et sauvegardes."
+icon: LayoutDashboard
+authors:
+  - PowerNukkitX
+---
+
+import { Archive, CheckCheck, Gauge, Map, SquareTerminal, Users } from "lucide-react";
+
+Une fois le serveur installé et [configuré](/docs/fr/configuration), le travail consiste à le faire tourner : l'entretenir au quotidien, puis l'ouvrir au public.
+
+## Au quotidien
+
+<Cards>
+  <Card icon={<SquareTerminal />} title="Console et commandes" href="/docs/fr/administration/commands">
+    Les commandes que vous utiliserez le plus, depuis la console et en jeu.
+  </Card>
+  <Card icon={<Users />} title="Joueurs" href="/docs/fr/administration/players">
+    Opérateurs, liste blanche, expulsions et bannissements.
+  </Card>
+  <Card icon={<Map />} title="Mondes" href="/docs/fr/administration/worlds">
+    Charger, importer et configurer des mondes.
+  </Card>
+  <Card icon={<Gauge />} title="Performances" href="/docs/fr/administration/performance">
+    Mémoire, threads et distance de vue.
+  </Card>
+  <Card icon={<Archive />} title="Sauvegardes" href="/docs/fr/administration/backups">
+    Protéger vos mondes et vos réglages, et les restaurer.
+  </Card>
+</Cards>
+
+## Mise en ligne
+
+<Cards>
+  <Card icon={<CheckCheck />} title="Avant d'ouvrir au public" href="/docs/fr/administration/go-live">
+    Une liste à cocher avant de partager l'adresse.
+  </Card>
+</Cards>
+
+<Callout type="info">
+  La plupart des réglages sont dans `pnx.yml`. Arrêtez le serveur avant de le modifier à la main : un serveur en marche le réécrit à l'arrêt, ce qui écrase vos changements.
+</Callout>

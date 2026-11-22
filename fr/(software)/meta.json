@@ -1,0 +1,19 @@
+{
+  "title": "Logiciel",
+  "description": "Documentation PowerNukkitX : présentation du logiciel, fonctionnalités, comparaisons, installation et configuration.",
+  "icon": "Server",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "quick-start",
+    "comparisons",
+    "requirements",
+    "installation",
+    "migration",
+    "permissions",
+    "configuration",
+    "plugin-hub",
+    "integrations"
+  ]
+}

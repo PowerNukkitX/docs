@@ -1,0 +1,184 @@
+---
+title: CustomForm
+icon: SlidersHorizontal
+description: "Un formulaire de champs, interrupteurs, curseurs et listes qui renvoie chaque valeur. Le formulaire des réglages."
+authors:
+  - PleaseInsertNameHere
+---
+
+<FormPreview type="custom" />
+
+Le titre fonctionne comme pour tous les formulaires : voir [Formulaires](/docs/fr/development/forms#titre). Le reste, ce sont des **éléments**, ajoutés dans l'ordre :
+
+```java
+CustomForm form = ...;
+
+form.addElement(element); // Ajoutez votre élément
+```
+
+## Éléments
+
+<Tabs items={["Liste", "Champ", "Texte", "Curseur", "Curseur à crans", "Interrupteur"]}>
+  <Tab value="Liste">
+Choisir un élément dans une liste.
+
+```java
+List<String> options = ...;
+
+ElementDropdown dropdown = new ElementDropdown("Choose an option", options);
+```
+
+Avec un choix par défaut :
+
+```java
+// Le deuxième élément sera sélectionné à l'ouverture du formulaire
+ElementDropdown dropdown = new ElementDropdown("Choose an option", options, 1);
+```
+
+Chaque paramètre a aussi une méthode :
+
+```java
+// Changer le texte de l'élément
+dropdown.text("Choose your favorite option");
+```
+  </Tab>
+  <Tab value="Champ">
+Du texte libre, avec un texte indicatif et une valeur par défaut facultatifs :
+
+```java
+ElementInput input = new ElementInput("Change the status");
+ElementInput input = new ElementInput("Change the status", "PNX is great!"); // Facultatif : ajouter un texte indicatif
+ElementInput input = new ElementInput("Change the status", "PNX is great!", "I love PNX!"); // Facultatif : ajouter une valeur par défaut
+```
+
+```java
+// Changer le texte indicatif de l'élément
+input.placeholder("I love PNX!");
+```
+  </Tab>
+  <Tab value="Texte">
+Du texte simple, par exemple pour expliquer un autre élément :
+
+```java
+ElementLabel label = new ElementLabel("The status will be shown when you join the server.");
+```
+  </Tab>
+  <Tab value="Curseur">
+Choisir un nombre entre un minimum et un maximum :
+
+```java
+float min = 0.0F;
+float max = 10.0F;
+int step = 1;
+float defaultValue = 2.0F;
+
+ElementSlider slider = new ElementSlider("Speed", min, max, step, defaultValue);
+```
+
+```java
+// Changer la valeur par défaut de l'élément
+slider.defaultValue(1.0F);
+```
+  </Tab>
+  <Tab value="Curseur à crans">
+Comme une liste, mais on choisit en faisant glisser horizontalement :
+
+```java
+List<String> steps = ...;
+
+ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps);
+```
+
+Avec un cran par défaut :
+
+```java
+// Le deuxième élément sera sélectionné à l'ouverture du formulaire
+ElementStepSlider stepSlider = new ElementStepSlider("Choose a step", steps, 1);
+```
+
+```java
+// Ajouter un élément (et, si besoin, le choisir par défaut)
+stepSlider.addStep("Step 5", true);
+```
+  </Tab>
+  <Tab value="Interrupteur">
+Un interrupteur, pour un réglage vrai ou faux :
+
+```java
+ElementToggle toggle = new ElementToggle("Enable Double Jump?");
+```
+
+Avec une valeur par défaut :
+
+```java
+ElementToggle toggle = new ElementToggle("Enable Double Jump?", true);
+```
+  </Tab>
+</Tabs>
+
+## Lire les réponses
+
+<Tabs items={["Tout le formulaire", "Événement"]}>
+  <Tab value="Tout le formulaire">
+Lisez chaque valeur par la position de l'élément dans le formulaire :
+
+```java
+form.onSubmit((player, response) -> {
+    ElementResponse dropdown = response.getDropdownResponse(0);
+    String input = response.getInputResponse(1);
+    String label = response.getLabelResponse(2);
+    float slider = response.getSliderResponse(3);
+    ElementResponse stepSlider = response.getStepSliderResponse(4);
+    boolean toggle = response.getToggleResponse(5);
+
+    // Handle response here
+});
+
+form.onClose(player -> player.sendMessage("You have closed the form!"));
+```
+  </Tab>
+  <Tab value="Événement">
+```java
+@EventHandler
+public void on(PlayerFormRespondedEvent event) {
+    Player player = event.getPlayer(); // Le joueur qui a envoyé le formulaire
+    Form<?> form = event.getWindow(); // La fenêtre à laquelle il a répondu
+    Response response = event.getResponse(); // La réponse ; null si la fenêtre a été fermée
+
+    // Exemple : vérifier si un CustomForm nommé 'Settings' a été fermé
+    if (form instanceof CustomForm && form.title().equals("Settings")) {
+        boolean closed = response == null;
+
+        player.sendMessage(closed ? "You closed the form." : "You submitted the settings.");
+    }
+}
+```
+  </Tab>
+</Tabs>
+
+L'envoi fonctionne comme pour tous les formulaires : voir [Formulaires](/docs/fr/development/forms#envoyer-un-formulaire).
+
+## Exemple complet
+
+Un écran de pseudo : un champ, une indication, et ce qui se passe à la validation et à la fermeture.
+
+```java
+String displayName = player.getDisplayName(); // Utilisé comme exemple
+
+CustomForm form = new CustomForm("Settings")
+            .addElement(new ElementInput("Change nickname", "Herobrine", displayName.isEmpty() ? "" : displayName))
+            .addElement(new ElementLabel("Leave empty to apply your real name again."))
+            .onSubmit((pl, response) -> {
+                String input = response.getInputResponse(0);
+                if (input.isEmpty()) {
+                    pl.setDisplayName(pl.getName());
+                    return;
+                }
+
+                // Input validation...
+
+                pl.setDisplayName(input);
+            })
+            .onClose(pl -> pl.sendMessage("Oh no, you've closed the form!"))
+            .send(player);
+```

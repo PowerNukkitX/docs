@@ -1,0 +1,59 @@
+---
+title: "Requirements"
+description: "The hardware, Java version and system PowerNukkitX needs."
+icon: Shapes
+authors:
+  - AzaleeX
+---
+
+Before you install, check that your machine has the hardware, the Java version and the system below.
+
+## Hardware
+
+<Tabs items={["Minimum", "Recommended"]}>
+  <Tab value="Minimum">
+    Enough for a small server with a few players. Performance depends on world size and plugins.
+
+    | Component | Minimum |
+    | :-- | :-- |
+    | CPU | 2 cores, 2.5 GHz |
+    | RAM | 2 GB |
+    | Storage | 1 GB free |
+    | Java | OpenJDK 25 or newer |
+    | System | Windows 10 / 11, Linux (Ubuntu 20.04+), macOS |
+    | Network | 1 Mbps upload |
+  </Tab>
+  <Tab value="Recommended">
+    For a server with real traffic. Above 20 players or with several worlds, add CPU, RAM and bandwidth.
+
+    | Component | Recommended |
+    | :-- | :-- |
+    | CPU | 4+ cores, 3.0 GHz+ |
+    | RAM | 4 GB or more |
+    | Storage | SSD with 5 GB free |
+    | Java | OpenJDK 25 or newer |
+    | System | Windows 10 / 11, Linux (Ubuntu 22.04+), macOS |
+    | Network | 10 Mbps+ upload |
+  </Tab>
+</Tabs>
+
+## Java
+
+PowerNukkitX needs **Java 25 or newer**, 64-bit.
+
+<Steps>
+  <Step>Install a **64-bit** Java 25 runtime. OpenJDK is recommended.</Step>
+  <Step>Set the `JAVA_HOME` environment variable to that installation.</Step>
+  <Step>Put Java's `bin` folder on your `PATH`, then check with `java -version`.</Step>
+</Steps>
+
+<Callout type="warn">
+  Older Java versions (20 and below) cause crashes or plugin errors. See [Troubleshooting](/docs/faq/troubleshooting) if `java -version` shows the wrong one.
+</Callout>
+
+## Good habits
+
+- **Back up** your `worlds/` folder and `pnx.yml` regularly. See [Backups](/docs/administration/backups).
+- **Keep 20% of the disk free** for logs and growing worlds.
+- **Only install plugins** built for your PowerNukkitX version.
+- **Watch CPU and memory** with `htop` on Linux or the Task Manager on Windows.

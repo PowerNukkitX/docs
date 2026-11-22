@@ -1,0 +1,84 @@
+---
+title: "Garnitures d'armure"
+description: "Ajouter des motifs et matériaux de garniture que les joueurs appliquent à la table de forgeron."
+icon: Shirt
+authors:
+  - PowerNukkitX
+---
+
+Une garniture a deux parties : un **motif**, issu du modèle de forge placé dans la case modèle, et un **matériau**, issu de l'ingrédient placé dans la case matériau. Enregistrez les vôtres et les joueurs les appliquent à la table de forgeron comme les garnitures vanilla. Elles vivent dans `TrimRegistry`, accessible via `Registries.TRIM`.
+
+<Steps>
+  <Step>
+    ### Enregistrer motifs et matériaux
+
+    Les deux appels lèvent `RegisterException` si l'identifiant d'item est déjà pris :
+
+```java filename="MyPlugin.java"
+import org.powernukkitx.registry.Registries;
+import org.powernukkitx.registry.RegisterException;
+
+@Override
+public void onEnable() {
+    try {
+        // Un modèle de forge -> l'id de motif écrit dans le NBT de la garniture
+        Registries.TRIM.registerPattern("myplugin:cool_smithing_template", "cool");
+
+        // Un ingrédient -> l'id de matériau + la teinte hexadécimale du nom de l'objet
+        Registries.TRIM.registerMaterial("minecraft:emerald", "emerald_special", "#17DD62");
+    } catch (RegisterException e) {
+        getLogger().error("Trim is already registered", e);
+    }
+}
+```
+
+    - `registerPattern(templateItemId, patternId)` : l'item modèle, et l'identifiant de motif écrit dans le NBT de la garniture.
+    - `registerMaterial(ingredientItemId, materialId, color)` : l'item ingrédient, l'identifiant de matériau, et la couleur hexadécimale (avec un `#`) qui teinte le nom de la garniture.
+  </Step>
+  <Step>
+    ### Étiqueter les items
+
+    La table de forgeron n'accepte que les items portant le bon tag :
+
+```java
+import org.powernukkitx.item.ItemTags;
+import java.util.List;
+
+ItemTags.register("myplugin:cool_smithing_template", List.of("minecraft:trim_templates"));
+ItemTags.register("minecraft:emerald", List.of("minecraft:trim_materials"));
+```
+
+    <Callout type="info">
+      Les identifiants d'items doivent exister. Utilisez des identifiants vanilla, ou enregistrez d'abord vos [items custom](/docs/fr/development/customs/items).
+    </Callout>
+  </Step>
+  <Step>
+    ### Synchroniser les joueurs déjà connectés
+
+    Les joueurs reçoivent la liste des garnitures à la connexion. Vous enregistrez après leur arrivée ? Envoyez-leur la nouvelle liste :
+
+```java
+Registries.TRIM.resyncOnlinePlayers();
+```
+  </Step>
+</Steps>
+
+## Retirer et consulter des garnitures
+
+```java
+// Retirer un motif ou un matériau enregistré
+Registries.TRIM.unregisterPattern("myplugin:cool_smithing_template");
+Registries.TRIM.unregisterMaterial("minecraft:emerald");
+
+// En chercher un (renvoie un Optional)
+Registries.TRIM.getPattern("myplugin:cool_smithing_template");
+Registries.TRIM.getMaterial("minecraft:emerald");
+
+// Vues en lecture seule de tout ce qui est enregistré
+Registries.TRIM.getPatterns();
+Registries.TRIM.getMaterials();
+```
+
+<Callout type="warn">
+  N'enregistrez chaque identifiant de modèle et d'ingrédient qu'une fois : un second `registerPattern` ou `registerMaterial` pour le même identifiant lève `RegisterException`.
+</Callout>

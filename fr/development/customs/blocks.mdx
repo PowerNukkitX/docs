@@ -1,0 +1,233 @@
+---
+title: "Blocs"
+description: "Créer des blocs custom, du simple cube texturé à la dalle à plusieurs états."
+icon: Hammer
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Un bloc custom, c'est une classe Java plus une texture dans un pack de ressources, dont les joueurs ont besoin pour le voir.
+
+<Steps>
+  <Step>
+    ### L'enregistrer dans `onLoad()`
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.BLOCK.registerCustomBlock(this, MyBlock.class);
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+  </Step>
+  <Step>
+    ### Le définir
+
+    La classe étend `Block`, implémente `CustomBlock`, déclare ses `BlockProperties` avec un identifiant unique `namespace:nom`, et se décrit dans `getDefinition()`.
+  </Step>
+  <Step>
+    ### Ajouter la texture
+
+    Le nom passé à `.texture(...)` doit correspondre à une entrée du `terrain_texture.json` de votre pack de ressources.
+  </Step>
+</Steps>
+
+## Un bloc simple
+
+```java filename="MyBlock.java"
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockProperties;
+import org.powernukkitx.block.BlockState;
+import org.powernukkitx.block.customblock.CustomBlock;
+import org.powernukkitx.block.customblock.CustomBlockDefinition;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class MyBlock extends Block implements CustomBlock {
+    // Définissez un identifiant unique (namespace:nom)
+    public static final BlockProperties PROPERTIES = new BlockProperties("powernukkitx:redstoneluckyblock");
+
+    public MyBlock() {
+        super(PROPERTIES.getDefaultState());
+    }
+
+    public MyBlock(@Nullable BlockState blockState) {
+        super(blockState);
+    }
+
+    @Override
+    public @NotNull BlockProperties getProperties() {
+        return PROPERTIES;
+    }
+
+    @Override
+    public CustomBlockDefinition getDefinition() {
+        return CustomBlockDefinition
+                .builder(this)
+                .texture("redstoneluckyblock") // Doit correspondre à l'entrée de terrain_texture.json
+                .breakTime(3) // Temps de minage / de casse
+                .build();
+    }
+
+    // Vous pouvez redéfinir ici la physique et le comportement :
+    @Override
+    public double getFrictionFactor() { return 0.6; }
+
+    @Override
+    public double getHardness() { return 5.0; }
+
+    @Override
+    public int getLightLevel() { return 15; }
+}
+```
+
+Surchargez des méthodes de comportement comme `getFrictionFactor()`, `getHardness()` ou `getLightLevel()` pour changer la façon dont le bloc se comporte.
+
+## Un bloc à états : une dalle
+
+Les dalles, escaliers ou piliers changent de forme selon leur **état**. Déclarez l'état sous forme de propriétés, puis donnez une **permutation** par état : chacune choisit sa géométrie et ses boîtes de collision et de sélection avec une condition Molang sur l'état du bloc.
+
+<SlabStates />
+
+```java filename="MySlab.java"
+import org.powernukkitx.Player;
+import org.powernukkitx.block.Block;
+import org.powernukkitx.block.BlockProperties;
+import org.powernukkitx.block.BlockState;
+import org.powernukkitx.block.BlockTransparent;
+import org.powernukkitx.block.customblock.CustomBlock;
+import org.powernukkitx.block.customblock.CustomBlockDefinition;
+import org.powernukkitx.block.customblock.data.*;
+import org.powernukkitx.block.property.type.BooleanPropertyType;
+import org.powernukkitx.item.Item;
+import org.powernukkitx.math.BlockFace;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class MySlab extends BlockTransparent implements CustomBlock {
+    // Définissez des propriétés de bloc booléennes personnalisées
+    public static final BooleanPropertyType BRIDGE_TOP_SLOT_BIT = BooleanPropertyType.of("bridge:top_slot_bit", false);
+    public static final BooleanPropertyType BRIDGE_IS_FULL_BIT = BooleanPropertyType.of("bridge:is_full_bit", false);
+    
+    // Enregistrez les propriétés dans BlockProperties
+    public static final BlockProperties PROPERTIES = new BlockProperties(
+            "powernukkitx:blue_mahoe_slab", 
+            BRIDGE_TOP_SLOT_BIT, 
+            BRIDGE_IS_FULL_BIT
+    );
+
+    public MySlab() {
+        super(PROPERTIES.getDefaultState());
+    }
+
+    public MySlab(@Nullable BlockState blockState) {
+        super(blockState);
+    }
+
+    @NotNull
+    @Override
+    public BlockProperties getProperties() {
+        return PROPERTIES;
+    }
+
+    @Override
+    public CustomBlockDefinition getDefinition() {
+        return CustomBlockDefinition
+                .builder(this)
+                .texture("blue_mahoe_planks")
+                // Géométrie de base par défaut
+                .geometry(new Geometry("geometry.custom_slab")
+                        .boneVisibility("lower", true)
+                        .boneVisibility("upper", false))
+                // Permutations définies par des requêtes Molang sur les états du bloc
+                .permutations(
+                        // 1. Permutation de la dalle basse
+                        new Permutation(Component.builder()
+                                .collisionBox(new CollisionBox(-8, 0, -8, 16, 8, 16))
+                                .selectionBox(new SelectionBox(-8, 0, -8, 16, 8, 16))
+                                .geometry(new Geometry("geometry.custom_slab")
+                                        .boneVisibility("lower", true)
+                                        .boneVisibility("upper", false))
+                                .build(),
+                                "q.block_state('bridge:top_slot_bit') == false && q.block_state('bridge:is_full_bit') == false"),
+                        
+                        // 2. Permutation de la dalle haute
+                        new Permutation(Component.builder()
+                                .collisionBox(new CollisionBox(-8, 8, -8, 16, 16, 16))
+                                .selectionBox(new SelectionBox(-8, 8, -8, 16, 16, 16))
+                                .geometry(new Geometry("geometry.custom_slab")
+                                        .boneVisibility("lower", false)
+                                        .boneVisibility("upper", true))
+                                .build(),
+                                "q.block_state('bridge:top_slot_bit') == true && q.block_state('bridge:is_full_bit') == false"),
+                        
+                        // 3. Permutation du bloc de dalle complet
+                        new Permutation(Component.builder()
+                                .collisionBox(new CollisionBox(-8, 0, -8, 16, 16, 16))
+                                .selectionBox(new SelectionBox(-8, 0, -8, 16, 16, 16))
+                                .geometry(new Geometry("geometry.custom_slab")
+                                        .boneVisibility("lower", true)
+                                        .boneVisibility("upper", true))
+                                .build(),
+                                "q.block_state('bridge:is_full_bit') == true")
+                )
+                .build();
+    }
+
+    // Redéfinir place() permet de changer l'état du bloc quand on pose ou empile des dalles :
+    @Override
+    public boolean place(@NotNull Item item, @NotNull Block block, @NotNull Block target, @NotNull BlockFace face, double fx, double fy, double fz, @Nullable Player player) {
+        setPropertyValue(BRIDGE_IS_FULL_BIT, false);
+        if (face == BlockFace.DOWN) {
+            if (target instanceof MySlab) {
+                if (target.getPropertyValue(BRIDGE_TOP_SLOT_BIT) && !target.getPropertyValue(BRIDGE_IS_FULL_BIT)) {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                    setPropertyValue(BRIDGE_IS_FULL_BIT, true);
+                    this.getLevel().setBlock(target, this, true);
+                    return false;
+                } else {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, true);
+                    this.getLevel().setBlock(this, this, true);
+                    return true;
+                }
+            } else {
+                setPropertyValue(BRIDGE_TOP_SLOT_BIT, true);
+                this.getLevel().setBlock(this, this, true);
+                return true;
+            }
+        } else if (face == BlockFace.UP) {
+            if (target instanceof MySlab) {
+                if (!target.getPropertyValue(BRIDGE_TOP_SLOT_BIT) && !target.getPropertyValue(BRIDGE_IS_FULL_BIT)) {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                    setPropertyValue(BRIDGE_IS_FULL_BIT, true);
+                    this.getLevel().setBlock(target, this, true);
+                    return false;
+                } else {
+                    setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                    this.getLevel().setBlock(this, this, true);
+                    return true;
+                }
+            } else {
+                setPropertyValue(BRIDGE_TOP_SLOT_BIT, false);
+                this.getLevel().setBlock(this, this, true);
+            }
+        } else {
+            setPropertyValue(BRIDGE_TOP_SLOT_BIT, fy > 0.5);
+            this.getLevel().setBlock(this, this, true);
+            return true;
+        }
+        return true;
+    }
+}
+```
+
+<Callout type="info">
+  `place()` est l'endroit où la dalle décide de son état : posée sur la moitié haute ou basse, ou fusionnée en bloc plein quand on l'empile sur une autre dalle.
+</Callout>

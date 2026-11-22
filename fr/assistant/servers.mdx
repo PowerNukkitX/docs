@@ -1,0 +1,61 @@
+---
+title: "Serveurs, console et sauvegardes"
+description: "Créer et changer de serveur, le démarrer et l'arrêter, lire la console et garder des sauvegardes."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## Créer un serveur
+
+**Créer un serveur** est un assistant en quatre étapes :
+
+<Steps>
+  <Step>**Dossier** : où vit le serveur. Un dossier vide, créé s'il n'existe pas.</Step>
+  <Step>**Version** : la version de PowerNukkitX. La dernière stable est présélectionnée.</Step>
+  <Step>**Mémoire** : la RAM donnée au démarrage. 2 Go couvrent confortablement une dizaine de joueurs.</Step>
+  <Step>**Construction** : le jar officiel se télécharge avec une barre de progression en direct, les scripts de lancement sont écrits, et le serveur est enregistré.</Step>
+</Steps>
+
+Une fois terminé, **Lancer maintenant** le démarre et **Ouvrir le dossier** montre les fichiers.
+
+## Plusieurs serveurs
+
+L'application garde une liste de serveurs, affichés comme des pastilles en haut de **Mon serveur** :
+
+- cliquez sur une pastille pour en faire le serveur **actif** : démarrage, arrêt, plugins et réglages agissent tous sur lui ;
+- le crayon le renomme, la corbeille le retire de la liste. Ses fichiers restent sur le disque ;
+- **Ajouter un serveur** connecte un dossier que vous avez déjà. Il doit contenir un `powernukkitx.jar`.
+
+Le serveur par défaut de la CLI rejoint la liste de lui-même la première fois.
+
+## Démarrer, arrêter et la console
+
+**Mon serveur** démarre et arrête le serveur actif et affiche sa console en direct, avec les couleurs du serveur.
+
+| Dans la console | Fait |
+| :-- | :-- |
+| Le champ de commande | Envoie une commande au serveur, comme vous la taperiez dans son terminal. **Entrée** l'exécute. |
+| Tout / Avertissements / Erreurs | Filtre les lignes. |
+| Effacer, Copier, Exporter | Vide l'affichage, le copie, ou enregistre les logs dans un fichier. |
+| Défilement auto | Garde la dernière ligne visible. |
+
+**Arrêter** envoie au serveur un `stop` propre, pour qu'il sauvegarde avant de quitter. Avec **Confirmer à la fermeture** activé, fermer l'application pendant que le serveur tourne propose de l'arrêter d'abord.
+
+## Signes vitaux
+
+À côté de la console, des chiffres en direct pour le serveur en marche : durée de fonctionnement, joueurs en ligne, port, et nombre d'erreurs et d'avertissements journalisés.
+
+## Sauvegardes
+
+**Sauvegardes**, dans **Mon serveur**, prend un instantané du serveur (mondes et configuration) dans son dossier `backups/`.
+
+| Action | Remarque |
+| :-- | :-- |
+| Nouvelle sauvegarde | Enregistre une copie maintenant. |
+| Restaurer | Remplace les fichiers du serveur par cette copie, après confirmation. Le serveur doit être arrêté. Les changements faits depuis sont perdus. |
+| Supprimer | Supprime la copie définitivement. |
+
+<Callout type="info">
+  Les sauvegardes restent à côté du serveur. Pour survivre à un disque mort, copiez-les aussi sur une autre machine : voir [Sauvegardes](/docs/fr/administration/backups).
+</Callout>

@@ -1,0 +1,90 @@
+---
+title: "Overview"
+description: "Install the pnx command-line tool and learn the options every command shares."
+icon: SquareTerminal
+authors:
+  - AzaleeX
+---
+
+import { Package, PlugZap, Rocket, Wrench } from "lucide-react";
+
+`pnx` creates, starts and maintains a PowerNukkitX server from the terminal: it downloads the right jar, writes the start scripts, picks the Java flags, installs reviewed plugins and checks the machine. It is open source, in the [pnx-cli](https://github.com/PowerNukkitX/pnx-cli) repository.
+
+<CliSession />
+
+## Install
+
+You need **Node.js 20.12** or newer, and Java 25 for the server itself.
+
+```bash
+npm install -g @powernukkitx/cli
+pnx --version
+```
+
+No global install? Every command also works through `npx @powernukkitx/cli <command>`.
+
+The package installs two commands:
+
+| Command | For |
+| :-- | :-- |
+| `pnx` | Everything: the subcommands on these pages. Run it alone for an interactive menu. |
+| `pnxcli` | The [guided launcher](/docs/cli/launcher): one job, creating a server, with questions instead of flags. |
+
+## Which server a command acts on
+
+Most commands work on **one server folder**. `pnx` picks it in this order:
+
+<Steps>
+  <Step>The folder given with `--dir`, for the commands that take it.</Step>
+  <Step>The default server, set by `pnx init` or by `pnx use <dir>`.</Step>
+  <Step>Otherwise, a server found nearby. When there are several, you are asked to pick one.</Step>
+</Steps>
+
+## Options every command understands
+
+| Option | Effect |
+| :-- | :-- |
+| `-h`, `--help` | Help for `pnx`, or for one command: `pnx start --help`. |
+| `-v`, `--version` | Prints the CLI version. |
+| `--json` | Prints one JSON document and nothing else: no spinner, no progress bar. Made for scripts. |
+| `--no-color` | Plain text without colours, for logs and pipes. Piped output is plain already. |
+| `--color` | Keeps colours even in a pipe or a CI log. |
+| `--debug` | Shows the full stack trace under an error, instead of one hint line. |
+
+```bash
+pnx --json status
+pnx --json doctor
+```
+
+Every command exits non-zero when it fails, so scripts can rely on `$?`. A mistyped command or option gets a *did you mean*, and **Tab** completes commands, options and even your config keys once [completion](/docs/cli/maintenance#completion) is on.
+
+## Where it keeps its state [#state]
+
+The CLI writes its own files in `~/.pnx-cli`: `config.json` (the default server, the hub token), the release cache and the [desktop app](/docs/assistant)'s preferences. Your server's files stay in the server folder.
+
+| Variable | Effect |
+| :-- | :-- |
+| `PNX_HOME` | Moves the state folder somewhere other than `~/.pnx-cli`. |
+| `PNX_API_URL` | Points plugin commands at another hub than `https://powernukkitx.org`. |
+| `JAVA_HOME` | The Java used to start the server, before the one on your `PATH`. |
+| `PNX_DEBUG` | Same as `--debug`. |
+| `NO_COLOR` | Same as `--no-color` ([no-color.org](https://no-color.org)). |
+| `FORCE_COLOR` | Same as `--color`. |
+| `PNX_NO_UPDATE_CHECK` | Silences the once-a-day "update available" line. It never shows in scripts, CI, pipes or `--json` runs anyway. |
+
+## Next
+
+<Cards>
+  <Card icon={<Rocket />} title="Server commands" href="/docs/cli/server">
+    init, start, stop, cmd, status, logs, config, open, use.
+  </Card>
+  <Card icon={<Package />} title="Plugins" href="/docs/cli/plugins">
+    Search the hub, install, update and remove plugins.
+  </Card>
+  <Card icon={<Wrench />} title="Maintenance" href="/docs/cli/maintenance">
+    Update PowerNukkitX, back up and restore, diagnose, tab completion.
+  </Card>
+  <Card icon={<PlugZap />} title="Hub pairing" href="/docs/cli/link">
+    Supervise a server from a dashboard.
+  </Card>
+</Cards>

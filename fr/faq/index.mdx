@@ -1,0 +1,47 @@
+---
+title: FAQ
+description: "Des réponses courtes aux questions les plus fréquentes sur PowerNukkitX."
+icon: MessageCircleQuestion
+---
+
+Des réponses courtes aux questions les plus fréquentes. Pour les erreurs et les plantages, voyez [Dépannage](/docs/fr/faq/troubleshooting).
+
+<Accordions type="single">
+  <Accordion title="Qu'est-ce que PowerNukkitX ?">
+    Un logiciel serveur open source pour Minecraft : Bedrock Edition. Les joueurs sur mobile, console et Windows le rejoignent avec le client classique, sans mod.
+  </Accordion>
+  <Accordion title="Les joueurs Java Edition peuvent-ils se connecter ?">
+    Non. PowerNukkitX parle le protocole Bedrock, que les clients Java Edition ne savent pas utiliser. Pour des joueurs Java, utilisez Paper, Purpur ou équivalent.
+  </Accordion>
+  <Accordion title="Puis-je utiliser des plugins Spigot, Paper ou Purpur ?">
+    Non. Ils sont écrits pour des serveurs Java Edition ; leurs API et leur protocole sont totalement différents.
+  </Accordion>
+  <Accordion title="Les packs de ressources et de comportement sont-ils pris en charge ?">
+    Les packs de ressources, oui : placez le pack zippé dans `resource_packs/`. Les packs de comportement, non : PowerNukkitX implémente mobs, blocs et items côté serveur en Java.
+  </Accordion>
+  <Accordion title="Quelle version de Java faut-il ?">
+    **Java 25 ou plus récent**, en 64 bits. Java 8, 11, 17 et 21 provoquent des erreurs de version de classe. Voir [Configuration requise](/docs/fr/requirements).
+  </Accordion>
+  <Accordion title="Pourquoi un avertissement de réflexion au démarrage ?">
+    Depuis Java 9, la réflexion est restreinte par défaut, et PowerNukkitX s'en sert pour enregistrer les items et blocs custom et charger les plugins. Lancez-le avec ces options, ou avec les scripts de lancement fournis :
+
+    ```bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+  </Accordion>
+  <Accordion title="Quelle différence avec Nukkit et PowerNukkit ?">
+    PowerNukkitX est le fork moderne et actif. Il ajoute les blocs, items et entités custom, une IA des mobs proche du vanilla, le générateur Terra, et un seul `pnx.yml` à la place de `server.properties` et `nukkit.yml`.
+  </Accordion>
+  <Accordion title="Où trouver des plugins ?">
+    Dans le [hub de plugins](/plugins). Chaque plugin renvoie vers la release GitHub de son auteur : déposez le jar dans `plugins/` et redémarrez.
+  </Accordion>
+  <Accordion title="Comment publier mon propre plugin ?">
+    Écrivez-le avec l'API PowerNukkitX, publiez une release GitHub contenant le jar, puis connectez-vous au hub et soumettez le dépôt. L'équipe le relit avant sa mise en ligne. Commencez par les [guides de développement](/docs/fr/development).
+  </Accordion>
+  <Accordion title="Puis-je l'utiliser commercialement ?">
+    Oui. PowerNukkitX est sous LGPL-3.0 : vous pouvez l'exploiter et le modifier commercialement, et licencier vos plugins comme vous le voulez. Les modifications de PowerNukkitX lui-même restent sous LGPL.
+  </Accordion>
+  <Accordion title="Où trouver de l'aide ?">
+    De l'aide rapide sur [Discord](https://discord.gg/powernukkitx), les bugs sur [GitHub Issues](https://github.com/PowerNukkitX/PowerNukkitX/issues).
+  </Accordion>
+</Accordions>

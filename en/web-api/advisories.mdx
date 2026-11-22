@@ -1,0 +1,21 @@
+---
+title: "Security advisories"
+description: "Published security advisories for hub plugins, in the OSV format."
+icon: ShieldAlert
+authors:
+  - AzaleeX
+---
+
+When a plugin release has a known vulnerability, the team publishes an advisory and the plugin page shows it. The same advisories are available in the [OSV](https://ossf.github.io/osv-schema/) format, which security scanners already read.
+
+```text
+GET /api/v1/advisories/osv
+```
+
+The response is `{ advisories }`: one OSV record per published advisory. Draft or withdrawn advisories are never included.
+
+<ApiTry path="/advisories/osv" />
+
+<Callout type="info">
+  Run a scanner against this feed in your CI to be warned when a plugin you ship gets an advisory.
+</Callout>

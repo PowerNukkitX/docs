@@ -1,0 +1,91 @@
+---
+title: "Générateur Terra"
+description: "Générer des mondes custom avec le générateur de terrain Terra et les packs de la communauté."
+icon: Globe
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+[Terra](https://terra.polydev.org/) est un générateur de terrain piloté par des **packs de configuration** : chaque pack décrit ses propres biomes et paysages. PowerNukkitX le prend en charge d'origine.
+
+<Steps>
+  <Step>
+    ### Activer Terra
+
+    Serveur **arrêté**, réglez :
+
+    ```yaml title="pnx.yml"
+    miscSettings:
+      enableTerra: true
+    ```
+
+    Démarrez le serveur : il crée un dossier `terra/` à la racine.
+  </Step>
+  <Step>
+    ### Ajouter un pack
+
+    1. Choisissez un pack, par exemple parmi les [packs de la communauté](https://terra.polydev.org/config/community-packs.html).
+    2. Placez son dossier ou son ZIP dans `terra/packs/`.
+    3. Ouvrez le `pack.yml` du pack et notez son `id`, par exemple `REIMAGEND`.
+  </Step>
+  <Step>
+    ### Créer un monde qui l'utilise
+
+    Créez un dossier pour le nouveau monde dans `worlds/`, par exemple `worlds/end`, avec un `config.json` :
+
+    ```json title="worlds/end/config.json"
+    {
+      "format": "leveldb",
+      "enable": true,
+      "generators": {
+        "2": {
+          "name": "terra",
+          "seed": 0,
+          "enableAntiXray": false,
+          "antiXrayMode": "LOW",
+          "preDeobfuscate": true,
+          "dimensionData": {
+            "dimensionName": "minecraft:end",
+            "dimensionId": 2,
+            "minHeight": 0,
+            "maxHeight": 255,
+            "height": 256,
+            "chunkSectionCount": 16
+          },
+          "preset": {
+            "pack": "REIMAGEND"
+          }
+        }
+      }
+    }
+    ```
+
+    Remplacez `REIMAGEND` dans `preset.pack` par l'id de votre pack.
+  </Step>
+  <Step>
+    ### Le visiter
+
+    Démarrez le serveur et téléportez-vous dans le nouveau monde :
+
+    ```bash
+    /world tp end Dim2
+    ```
+  </Step>
+</Steps>
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <File name="pnx.yml" />
+    <Folder name="terra" defaultOpen>
+      <Folder name="packs" defaultOpen>
+        <Folder name="REIMAGEND" />
+      </Folder>
+    </Folder>
+    <Folder name="worlds" defaultOpen>
+      <Folder name="end" defaultOpen>
+        <File name="config.json" />
+      </Folder>
+    </Folder>
+  </Folder>
+</Files>

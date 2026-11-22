@@ -1,0 +1,33 @@
+---
+title: "Avant d'ouvrir au public"
+description: "Une liste à parcourir avant d'ouvrir votre serveur à tout le monde."
+icon: ListChecks
+---
+
+Cochez chaque ligne au fur et à mesure. Vos coches sont gardées dans ce navigateur : vous pouvez revenir plus tard.
+
+<Checklist
+  name="go-live"
+  items={[
+    { label: "Java 25 ou plus récent, en 64 bits", detail: "Vérifiez avec java -version. Voir Configuration requise." },
+    { label: "L'authentification Xbox est activée", detail: "xboxAuth: true dans pnx.yml, pour que personne ne rejoigne sous un autre nom." },
+    { label: "Seules des personnes de confiance sont opérateurs", detail: "Les autres reçoivent leurs permissions via un plugin de permissions." },
+    { label: "La liste blanche est activée, si le serveur est privé", detail: "allowList: true, puis whitelist add <joueur>." },
+    { label: "Le port UDP 19132 est ouvert", detail: "Sur le pare-feu et redirigé sur la box." },
+    { label: "Les sauvegardes sont planifiées", detail: "Vers un autre disque ou une autre machine, en gardant plusieurs copies." },
+    { label: "La distance de vue convient à votre machine", detail: "Baissez gameplaySettings.viewDistance si un serveur chargé peine." },
+    { label: "Les plugins correspondent à votre version de PowerNukkitX", detail: "Vérifiez la carte Details de chaque plugin sur le hub." },
+    { label: "Les packs de ressources sont dans resource_packs/", detail: "Nécessaires si un plugin ajoute des blocs, items ou entités custom." },
+  ]}
+/>
+
+## Où chaque point est expliqué
+
+<Cards>
+  <Card title="Configuration requise" href="/docs/fr/requirements">Java et matériel.</Card>
+  <Card title="Permissions et sécurité" href="/docs/fr/permissions">Opérateurs, nœuds, plugins de permissions.</Card>
+  <Card title="Joueurs" href="/docs/fr/administration/players">Liste blanche, expulsions et bannissements.</Card>
+  <Card title="Sauvegardes" href="/docs/fr/administration/backups">Quoi sauvegarder et comment l'automatiser.</Card>
+  <Card title="Performances" href="/docs/fr/administration/performance">Mémoire, threads et distance de vue.</Card>
+  <Card title="Packs de ressources" href="/docs/fr/development/customs/resource-packs">Fournir les textures du contenu custom.</Card>
+</Cards>

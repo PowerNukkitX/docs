@@ -1,0 +1,188 @@
+---
+title: "Entités"
+description: "Créer des mobs et des montures custom, et les faire apparaître."
+icon: Skull
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Une entité custom, c'est une classe Java plus, dans un pack de ressources, ses textures, son modèle et sa définition côté client.
+
+## L'enregistrer dans `onLoad()`
+
+Après l'enregistrement, reconstruisez le registre des tags d'entités pour que le serveur connaisse le nouveau type :
+
+```java
+import org.powernukkitx.registry.RegisterException;
+import org.powernukkitx.registry.Registries;
+
+@Override
+public void onLoad() {
+    try {
+        Registries.ENTITY.registerCustomEntity(this, MyPig.class);
+        // Reconstruire les tags NBT pour que le serveur enregistre le type d'entité personnalisé
+        Registries.ENTITY.rebuildTag();
+    } catch (RegisterException e) {
+        throw new RuntimeException(e);
+    }
+}
+```
+
+## La définir
+
+Étendez `Entity`, implémentez `CustomEntity`, et renvoyez une `CustomEntityDefinition` depuis une méthode statique `definition()` : santé, attaque, vitesse, boîte de collision, œuf d'apparition, et si `/summon` peut la créer.
+
+```java filename="MyPig.java"
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.entity.custom.CustomEntity;
+import org.powernukkitx.entity.custom.CustomEntityDefinition;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+
+public class MyPig extends Entity implements CustomEntity {
+    public static final String IDENTIFIER = "powernukkitx:boar";
+
+    public MyPig(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return "boar";
+    }
+
+    // Cette méthode renvoie les propriétés de définition de l'entité envoyées au client
+    public static CustomEntityDefinition definition() {
+        return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
+                .eid(IDENTIFIER)
+                .hasSpawnEgg(true) // Génère un oeuf d'apparition dans l'inventaire créatif
+                .isSummonable(true) // Permet l'apparition avec la commande /summon
+                .originalName("Feral Boar")
+                .health(20) // Points de vie maximum
+                .attack(3) // Dégâts d'attaque au corps à corps
+                .movement(0.2f) // Modificateur de vitesse
+                .typeFamily("mob", "pig") // Famille de classement de l'entité
+                .collisionBox(0.9f, 0.9f) // Largeur et hauteur de la zone de collision
+                .knockbackResistance(0.2f)
+                .isPersistent(true) // Garde le mob chargé à distance
+                .build();
+    }
+}
+```
+
+## Une monture que les joueurs chevauchent
+
+Ajoutez à la définition un `RideableComponent`, le `minecraft:rideable` de Bedrock, avec une ou plusieurs places. Chaque place fixe sa position sur l'entité, le nombre de cavaliers, et la distance de la caméra.
+
+```java filename="RideableBoar.java"
+package org.example.entity;
+
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.entity.custom.CustomEntity;
+import org.powernukkitx.entity.custom.CustomEntityDefinition;
+import org.powernukkitx.entity.components.RideableComponent;
+import org.powernukkitx.level.format.IChunk;
+import org.powernukkitx.math.Vector3f;
+import org.powernukkitx.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+import java.util.List;
+import java.util.Set;
+
+public class RideableBoar extends Entity implements CustomEntity {
+    public static final String IDENTIFIER = "powernukkitx:rideable_boar";
+
+    public RideableBoar(IChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return "rideable_boar";
+    }
+
+    public static CustomEntityDefinition definition() {
+        // Positions des places par rapport au pivot de l'entité (coordonnées X, Y, Z)
+        List<RideableComponent.Seat> seats = List.of(
+            new RideableComponent.Seat(
+                1,                      // Nombre minimum de passagers
+                1,                      // Nombre maximum de passagers
+                new Vector3f(0f, 1.2f, -0.2f), // Décalage de la place en coordonnées
+                null,                   // Bloquer la rotation du passager (null pour l'autoriser)
+                null,                   // Tourner le passager de tant de degrés (null par défaut)
+                3.0f,                   // Multiplicateur de distance de la caméra à la troisième personne
+                null                    // Lissage de la caméra
+            )
+        );
+
+        // Construire le composant de monture
+        RideableComponent rideable = new RideableComponent(
+            0,                          // Index de la place qui contrôle
+            true,                       // Un joueur accroupi ne monte pas
+            RideableComponent.DismountMode.DEFAULT,
+            Set.of("player"),           // Familles d'entités autorisées à monter
+            "action.interact.ride",     // Texte localisé affiché aux joueurs Bedrock
+            0f,                         // Largeur maximale d'un passager (0 pour illimité)
+            false,                      // Faire monter automatiquement les entités proches
+            true,                       // Les passagers peuvent utiliser les coffres et le monde en selle
+            1,                          // Nombre de places
+            seats                       // Configuration des places
+        );
+
+        return CustomEntityDefinition.simpleBuilder(IDENTIFIER)
+                .eid(IDENTIFIER)
+                .hasSpawnEgg(true)
+                .isSummonable(true)
+                .originalName("Rideable Boar")
+                .health(30)
+                .collisionBox(0.9f, 0.9f)
+                .rideable(rideable) // Attacher le composant de monture
+                .build();
+    }
+}
+```
+
+## La faire apparaître
+
+Une fois enregistrée, une entité peut apparaître :
+
+- avec `/summon`, si `.isSummonable(true)` ;
+- depuis son œuf d'apparition dans l'inventaire créatif, si `.hasSpawnEgg(true)` ;
+- depuis le code, comme dans cette commande qui en fait apparaître une à la position du joueur :
+
+```java
+import org.powernukkitx.Player;
+import org.powernukkitx.command.Command;
+import org.powernukkitx.command.CommandSender;
+import org.powernukkitx.entity.Entity;
+import org.powernukkitx.nbt.tag.CompoundTag;
+
+@Override
+public boolean execute(CommandSender sender, String label, String[] args) {
+    if (sender instanceof Player player) {
+        // Construire les tags NBT par défaut pour les coordonnées
+        CompoundTag nbt = Entity.getDefaultNBT(player.getPosition());
+        
+        // Créer l'entité
+        RideableBoar boar = new RideableBoar(player.getChunk(), nbt);
+        
+        // Faire apparaître pour tout le monde
+        boar.spawnToAll();
+        
+        player.sendMessage("Spawned a rideable boar!");
+        return true;
+    }
+    return false;
+}
+```

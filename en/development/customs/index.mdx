@@ -1,0 +1,52 @@
+---
+title: "Overview"
+description: "Add your own blocks, items, entities, enchantments, recipes and world generation."
+icon: Shapes
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+import { Hammer, Sword, Skull, Sparkles, BookOpen, Cpu, Globe, Home, Shirt } from "lucide-react";
+
+PowerNukkitX has **registries** for custom content. You register a block, an item or an entity from your plugin, and the server serves it to Bedrock clients, with the textures and models coming from a resource pack.
+
+## Register in `onLoad()`, not `onEnable()`
+
+<PluginLifecycle highlight="onLoad" />
+
+<Callout type="error" title="The most common mistake">
+  The server reads the worlds, with their blocks, items and entities, **after** loading plugins but **before** enabling them. Register custom blocks, items, entities and enchantments in `onLoad()`: registered in `onEnable()`, they are unknown while the world loads, which causes loading errors or data loss.
+</Callout>
+
+## Guides
+
+<Cards>
+  <Card icon={<Hammer />} title="Blocks" href="/docs/development/customs/blocks">
+    Properties, geometry, states and permutations.
+  </Card>
+  <Card icon={<Cpu />} title="Block entities" href="/docs/development/customs/block-entities">
+    Extra data and tick updates for placed blocks.
+  </Card>
+  <Card icon={<Sword />} title="Items" href="/docs/development/customs/items">
+    Simple items, tools, weapons and armour.
+  </Card>
+  <Card icon={<Skull />} title="Entities" href="/docs/development/customs/entities">
+    Mobs, and mounts players can ride.
+  </Card>
+  <Card icon={<Sparkles />} title="Enchantments" href="/docs/development/customs/enchantments">
+    New enchantments with their own levels and rarity.
+  </Card>
+  <Card icon={<Shirt />} title="Armour trims" href="/docs/development/customs/trims">
+    Trim patterns and materials for the smithing table.
+  </Card>
+  <Card icon={<BookOpen />} title="Recipes" href="/docs/development/customs/recipes">
+    Shaped, shapeless and furnace recipes.
+  </Card>
+  <Card icon={<Globe />} title="Generators" href="/docs/development/customs/generators">
+    Your own world generation, and structures in vanilla worlds.
+  </Card>
+  <Card icon={<Home />} title="Structures" href="/docs/development/customs/structures">
+    Load, rotate and place Bedrock and Java structures.
+  </Card>
+</Cards>

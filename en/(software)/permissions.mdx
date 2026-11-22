@@ -1,0 +1,50 @@
+---
+title: "Permissions & Security"
+description: "Control who can do what on your server: operators, permission nodes and permission plugins."
+icon: Shield
+authors:
+  - tunikakeks
+  - PowerNukkitX
+---
+
+Permissions decide which commands and actions each player can use. There are three levels, from the simplest to the most flexible.
+
+## 1. Operators
+
+An **operator** (OP) skips every permission check and can run every command. Keep it for a few trusted admins.
+
+```bash title="Console"
+op <player>
+deop <player>
+```
+
+Operators are listed in `ops.txt` at the root of the server, one name per line. You can edit it while the server is **stopped**.
+
+## 2. Permission nodes
+
+Commands and plugins check **permission nodes**: dotted names such as:
+
+- `nukkit.command.help` for `/help`
+- `nukkit.command.gamemode` for `/gamemode`
+
+By default, regular players can use basic commands (`/tell`, `/list`, `/help`) and operators can use all of them.
+
+## 3. A permission plugin
+
+For a public server or several groups, OP alone is not enough. Install a permission plugin such as **LuckPerms**, which has been ported to Nukkit and PowerNukkitX. It lets you:
+
+- create groups such as `admin`, `moderator` and `player`;
+- give permission nodes to a group or to one player;
+- set prefixes, suffixes and inheritance between groups.
+
+<Callout type="info">
+  Find permission plugins in the [plugin hub](/plugins).
+</Callout>
+
+## Security checklist
+
+<Steps>
+  <Step>Keep **Xbox authentication** on (`xboxAuth: true` in `pnx.yml`) so nobody can join under another player's name.</Step>
+  <Step>Give OP to as **few people** as possible, and use groups for everyone else.</Step>
+  <Step>Turn on the **allow-list** for a private server. See [Player management](/docs/administration/players).</Step>
+</Steps>

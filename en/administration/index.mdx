@@ -1,0 +1,43 @@
+---
+title: "Overview"
+description: "Look after a PowerNukkitX server day to day: commands, players, worlds, performance and backups."
+icon: LayoutDashboard
+authors:
+  - PowerNukkitX
+---
+
+import { Archive, CheckCheck, Gauge, Map, SquareTerminal, Users } from "lucide-react";
+
+Once the server is installed and [configured](/docs/configuration), the work is running it: look after it day to day, then open it to the public.
+
+## Day to day
+
+<Cards>
+  <Card icon={<SquareTerminal />} title="Console & commands" href="/docs/administration/commands">
+    The commands you use most, from the console and in game.
+  </Card>
+  <Card icon={<Users />} title="Players" href="/docs/administration/players">
+    Operators, the allow-list, kicks and bans.
+  </Card>
+  <Card icon={<Map />} title="Worlds" href="/docs/administration/worlds">
+    Load, import and configure worlds.
+  </Card>
+  <Card icon={<Gauge />} title="Performance" href="/docs/administration/performance">
+    Memory, threads and view distance.
+  </Card>
+  <Card icon={<Archive />} title="Backups" href="/docs/administration/backups">
+    Keep your worlds and settings safe, and restore them.
+  </Card>
+</Cards>
+
+## Go live
+
+<Cards>
+  <Card icon={<CheckCheck />} title="Before you go public" href="/docs/administration/go-live">
+    A checklist to tick before you share the address.
+  </Card>
+</Cards>
+
+<Callout type="info">
+  Most settings live in `pnx.yml`. Stop the server before editing it by hand: a running server writes it back when it shuts down, which overwrites your changes.
+</Callout>

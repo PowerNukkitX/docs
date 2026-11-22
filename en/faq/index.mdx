@@ -1,0 +1,47 @@
+---
+title: FAQ
+description: "Short answers to the questions people ask most about PowerNukkitX."
+icon: MessageCircleQuestion
+---
+
+Short answers to the questions people ask most. For errors and crashes, go to [Troubleshooting](/docs/faq/troubleshooting).
+
+<Accordions type="single">
+  <Accordion title="What is PowerNukkitX?">
+    Open-source server software for Minecraft: Bedrock Edition. Players on phones, consoles and Windows join it with the regular client, no mods needed.
+  </Accordion>
+  <Accordion title="Can Java Edition players join?">
+    No. PowerNukkitX speaks the Bedrock protocol, which Java Edition clients cannot use. For Java players, run Paper, Purpur or similar.
+  </Accordion>
+  <Accordion title="Can I use Spigot, Paper or Purpur plugins?">
+    No. Those are written for Java Edition servers; their APIs and protocol are entirely different.
+  </Accordion>
+  <Accordion title="Are resource packs and behaviour packs supported?">
+    Resource packs, yes: put the zipped pack in `resource_packs/`. Behaviour packs, no: PowerNukkitX implements mobs, blocks and items server-side in Java.
+  </Accordion>
+  <Accordion title="Which Java version do I need?">
+    **Java 25 or newer**, 64-bit. Java 8, 11, 17 and 21 cause class version errors. See [Requirements](/docs/requirements).
+  </Accordion>
+  <Accordion title="Why the reflection warning at startup?">
+    Since Java 9, reflection is restricted by default, and PowerNukkitX uses it to register custom items and blocks and to load plugins. Start it with these flags, or with the provided start scripts:
+
+    ```bash
+    java -jar --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED powernukkitx.jar
+    ```
+  </Accordion>
+  <Accordion title="How is it different from Nukkit and PowerNukkit?">
+    PowerNukkitX is the modern, active fork. It adds custom blocks, items and entities, vanilla-like mob AI, the Terra generator, and one `pnx.yml` instead of `server.properties` and `nukkit.yml`.
+  </Accordion>
+  <Accordion title="Where do I get plugins?">
+    In the [plugin hub](/plugins). Each plugin links to its author's GitHub release: drop the jar in `plugins/` and restart.
+  </Accordion>
+  <Accordion title="How do I publish my own plugin?">
+    Write it against the PowerNukkitX API, publish a GitHub release with the jar, then sign in to the hub and submit the repository. The team reviews it before it goes live. Start with the [development guides](/docs/development).
+  </Accordion>
+  <Accordion title="Can I use it commercially?">
+    Yes. PowerNukkitX is LGPL-3.0: you can run and modify it commercially and license your plugins as you like. Changes to PowerNukkitX itself stay LGPL.
+  </Accordion>
+  <Accordion title="Where do I get help?">
+    Quick help on [Discord](https://discord.gg/powernukkitx), bugs on [GitHub Issues](https://github.com/PowerNukkitX/PowerNukkitX/issues).
+  </Accordion>
+</Accordions>

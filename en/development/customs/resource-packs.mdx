@@ -1,0 +1,42 @@
+---
+title: "Resource packs"
+description: "Custom content is invisible without its textures. How to ship them with your server."
+icon: Palette
+---
+
+The server decides what a custom block, item or entity **does**. What it **looks like** comes from a **resource pack** that players download when they join. Without it, players see missing textures.
+
+## Where each kind gets its look
+
+| Custom content | What the pack provides | Matches in your code |
+| :-- | :-- | :-- |
+| [Block](/docs/development/customs/blocks) | The texture, listed in `terrain_texture.json`, and its geometry for shaped blocks | `.texture("name")`, `Geometry("geometry.name")` |
+| [Item](/docs/development/customs/items) | The texture, listed in `item_texture.json` | `.texture("name")` |
+| [Entity](/docs/development/customs/entities) | Textures, the model and the client-side entity definition | the entity's identifier |
+
+<Callout type="warn" title="Names must match exactly">
+  The name you pass to `.texture(...)` must be the key in the pack's `terrain_texture.json` or `item_texture.json`. A typo shows as a missing texture, with no error on the server.
+</Callout>
+
+## Ship the pack with your server
+
+<Steps>
+  <Step>Package your pack as a `.mcpack` or `.zip`.</Step>
+  <Step>Put it in the server's `resource_packs/` folder.</Step>
+  <Step>Restart the server. It offers the pack to every player when they connect.</Step>
+</Steps>
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="plugins" defaultOpen>
+      <File name="my-plugin.jar" />
+    </Folder>
+    <Folder name="resource_packs" defaultOpen>
+      <File name="my-plugin-pack.mcpack" />
+    </Folder>
+  </Folder>
+</Files>
+
+<Callout type="info">
+  The [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven) repository is a working plugin with custom blocks, items and entities.
+</Callout>

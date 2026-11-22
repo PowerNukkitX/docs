@@ -1,0 +1,29 @@
+---
+title: Glossary
+description: "The words these docs use, in one place."
+icon: BookA
+---
+
+The words these docs use, and what they mean on a PowerNukkitX server.
+
+| Term | Meaning |
+| :-- | :-- |
+| **Bedrock Edition** | The version of Minecraft on phones, consoles and Windows. PowerNukkitX serves it. |
+| **BDS** | Bedrock Dedicated Server, Mojang's official server software. |
+| **Tick** | One step of the server's game loop. There are 20 a second, so 100 ticks are 5 seconds. |
+| **TPS** | Ticks per second. 20 is healthy; lower means the server is lagging. |
+| **Level** | A world. Each one is a folder in `worlds/`. |
+| **Chunk** | A 16 by 16 column of the world, generated and loaded as one piece. |
+| **View distance** | How many chunks around them each player receives. The biggest lever on performance. |
+| **Operator (OP)** | A player who can run every command. |
+| **Permission node** | A dotted name such as `nukkit.command.help` that a command or plugin checks before acting. |
+| **Allow-list** | The list of players allowed to join when it is on (`white-list.txt`). Also called whitelist. |
+| **Xbox authentication** | Checking each player's Xbox account. Turning it off is offline mode. |
+| **Plugin** | A Java jar in `plugins/` that adds commands, events, content or gameplay. |
+| **Listener** | A plugin class whose `@EventHandler` methods run when an event happens. |
+| **Registry** | Where custom blocks, items, entities and recipes are registered. Register in `onLoad()`. |
+| **Resource pack** | Textures and models players download when they join, needed to see custom content. |
+| **Behaviour pack** | Client-side game logic. Not supported: PowerNukkitX does this in Java plugins. |
+| **Form** | A window shown to a player: SimpleForm, ModalForm, CustomForm, or DDUI. |
+| **Proxy** | A server, such as WaterdogPE, that moves players between several servers. |
+| **`pnx.yml`** | The single file that holds every server setting. |

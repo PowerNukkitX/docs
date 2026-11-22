@@ -1,0 +1,47 @@
+---
+title: "Performances"
+description: "Régler mémoire, threads et distance de vue sur un serveur PowerNukkitX."
+icon: Gauge
+authors:
+  - PowerNukkitX
+---
+
+PowerNukkitX est rapide d'origine : les mondes tournent sur leurs propres threads et les données chaudes sont en cache. Quelques réglages comptent tout de même une fois de vrais joueurs connectés.
+
+<Callout type="info" title="Mesurez d'abord">
+  Quand quelque chose rame, profilez-le avec [Spark](/docs/fr/integrations/spark) avant de toucher aux réglages. Il montre quels plugins, entités ou tâches consomment le temps de tick.
+</Callout>
+
+## Les quatre leviers
+
+<Accordions>
+  <Accordion title="Mémoire">
+    Donnez assez de mémoire au serveur, mais pas toute la RAM de la machine : laissez de la place au système et à la mémoire hors tas. Avec l'outil en ligne de commande `pnx` :
+
+    ```bash
+    pnx start --memory 4G
+    ```
+
+    2 Go est un minimum raisonnable, 4 Go ou plus pour un serveur fréquenté. PowerNukkitX utilise le ramasse-miettes ZGC générationnel, qui garde des pauses courtes même avec beaucoup de mémoire.
+  </Accordion>
+  <Accordion title="Distance de vue">
+    `gameplaySettings.viewDistance` (par défaut `20` chunks) est le plus gros levier sur le processeur et la bande passante : chaque chunk en plus multiplie le travail par joueur. Baissez-la si un serveur chargé peine :
+
+    ```yaml title="pnx.yml"
+    gameplaySettings:
+      viewDistance: 12
+    ```
+  </Accordion>
+  <Accordion title="Workers asynchrones">
+    `performanceSettings.asyncWorkers` (par défaut `4`) est le nombre de threads en arrière-plan pour des travaux comme la génération de chunks. Sur une machine avec plus de cœurs, l'augmenter lisse les lags quand les joueurs explorent. Restez au plus au nombre de cœurs.
+
+    ```yaml title="pnx.yml"
+    performanceSettings:
+      asyncWorkers: 6
+      registryCacheEnabled: true
+    ```
+  </Accordion>
+  <Accordion title="Sauvegarde automatique">
+    `baseSettings.autosaveDelay` (par défaut `6000` ticks) fixe la fréquence de sauvegarde des mondes. Sauvegarder moins souvent réduit l'activité disque mais fait perdre plus en cas de plantage : équilibrez avec vos [sauvegardes](/docs/fr/administration/backups).
+  </Accordion>
+</Accordions>

@@ -1,0 +1,173 @@
+---
+title: "Server commands"
+description: "Create, start, stop, inspect and configure a server with pnx."
+icon: Server
+authors:
+  - AzaleeX
+---
+
+## init [#init]
+
+Creates a server: a folder, the PowerNukkitX jar and the start scripts. Aliases: `new`, `create`.
+
+```bash
+pnx init
+pnx init my-server
+pnx init -y
+pnx init survival --version v3.0.6
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `[dir]`, `--dir <path>` | The folder to create the server in. |
+| `--version <tag>` | A PowerNukkitX release tag, which skips the version picker. |
+| `-y`, `--yes` | Takes every default without asking: `./pnx-server` and the latest stable release. |
+
+In a terminal it asks for what is missing; in a script (or with `--json`) it runs without questions. It ends the way `create-next-app` does: the commands worth knowing, then the exact two lines to type next (`cd my-server`, `pnx start`). The jar comes from the PowerNukkitX GitHub releases and the scripts from [PowerNukkitX/scripts](https://github.com/PowerNukkitX/scripts). The new server becomes the default one.
+
+## start [#start]
+
+Starts the server in the foreground, with the Java flags PowerNukkitX needs. Aliases: `run`, `up`.
+
+```bash
+pnx start
+pnx start -m 4G --restart
+pnx start ./my-server
+pnx start --dry-run
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `[dir]`, `--dir <path>` | The server folder, instead of the default one. |
+| `-m`, `--memory <size>` | The most memory the server may use (`2G`, `4G`, `3072M`...), `2G` by default. |
+| `-r`, `--restart` | Starts the server again after a crash, 3 times in 10 minutes at most. |
+| `-V`, `--verbose` | Shows the whole boot log instead of the spinner. |
+| `--dry-run` | Prints the `java` command instead of running it. |
+
+The start reads like `next dev`: a header with the PowerNukkitX version and the addresses to join, one spinner during the boot, then the moment players can connect.
+
+```
+  ◆ PowerNukkitX 3.0.6
+  - Local:    127.0.0.1:19132
+  - Network:  192.168.1.15:19132
+  - Java:     25 (Temurin) · up to 2G
+  - Folder:   /srv/minecraft
+
+✓ Ready in 3.1s · 3 warnings (pnx logs)
+  Type a server command here · Ctrl+C or `pnx stop` saves and stops
+```
+
+Errors during the boot still print as they happen, and a boot that fails shows the last lines of the log. In a pipe or under a service manager (systemd, Docker), the log is streamed as is.
+
+`--memory` is the heap ceiling (`-Xmx`); the heap starts at a quarter of it, so a small machine is not drained at boot. Java runs with UTF-8 everywhere, the ZGC garbage collector and the `--add-opens` flags PowerNukkitX needs, from `JAVA_HOME` when it is set.
+
+Typing in that terminal reaches the server console. **Ctrl+C** types `stop` for you, so the world is saved; a second Ctrl+C forces it.
+
+## stop [#stop]
+
+Saves the world and stops the server that `pnx start` launched, from any terminal. Alias: `down`.
+
+```bash
+pnx stop
+pnx stop --force
+```
+
+`pnx stop` types `stop` on the server console, so players see it and nothing is lost. `-f`, `--force` kills the process instead: whatever was not saved yet is lost.
+
+## cmd [#cmd]
+
+Types one command on the running server's console, from any terminal. No RCON needed. Aliases: `send`, `exec`.
+
+```bash
+pnx cmd say Server restarts in 5 minutes
+pnx cmd op Steve
+pnx cmd save-all
+```
+
+The answer shows in the server's own window and in its log (`pnx logs`).
+
+## status [#status]
+
+One glance at what is happening: whether the server runs, since when, and the addresses players join. Alias: `ps`.
+
+```bash
+pnx status
+pnx --json status
+```
+
+It shows the state (PID and uptime when it runs), the UDP port read from `pnx.yml`, the number of plugins and worlds, the age of the last backup, and every address to join from: `127.0.0.1` on this machine, and each LAN address for players on the same network.
+
+<Callout type="info">
+  For players outside your network, forward that UDP port on your router and give them your public address. See [Go live](/docs/administration/go-live).
+</Callout>
+
+## console [#console]
+
+Opens a console to a running server, over **RCON**. For a server started with `pnx start`, [`pnx cmd`](#cmd) needs no RCON.
+
+```bash
+pnx console
+```
+
+It reads `enable-rcon`, `rcon.port` (`25575` by default) and `rcon.password` from the server's `server.properties`. RCON is off by default; when it is, `pnx console` tells you what to turn on. Type `exit` to leave.
+
+## logs [#logs]
+
+Prints the server log, and keeps following it. Alias: `log`.
+
+```bash
+pnx logs
+pnx logs --lines 200
+pnx logs --no-follow
+```
+
+| Option | Effect |
+| :-- | :-- |
+| `-n`, `--lines <n>` | How many lines to show first. |
+| `--follow` | Keeps printing new lines as they are written. `--no-follow` prints and exits. |
+
+## config [#config]
+
+Shows the configuration the server reads (`pnx.yml`, or the older `server.properties`), so you can check a value without opening the file.
+
+```bash
+pnx config
+pnx --json config
+```
+
+### config get / config set [#config-get]
+
+Read or change **one** value by its dotted key. `set` rewrites only the value on that line: every comment and the layout of the file stay as they were.
+
+```bash
+pnx config get settings.port
+pnx config set settings.maxPlayers 50
+pnx config set settings.motd "Survival"
+pnx config set allowList true
+```
+
+A unique last segment is enough (`motd` for `settings.motd`), and a misspelled key gets a suggestion. `get` prints the bare value, so it fits in a script: `PORT=$(pnx config get port)`. Restart the server for a change to take effect. Lists and nested blocks are left to an editor: `pnx open config`.
+
+## open [#open]
+
+Opens the server folder, or a part of it, in your system's file manager or editor.
+
+```bash
+pnx open
+pnx open config
+pnx open plugins
+```
+
+Accepts `folder` (the default), `config`, `logs`, `plugins`, `backups` and `worlds`. With `--json`, it prints the path instead of opening it.
+
+## use [#use]
+
+Chooses the server every command works on.
+
+```bash
+pnx use
+pnx use ./my-server
+pnx use --clear
+```
+
+Without a folder, it lists the servers it can find and lets you pick one. `--clear` forgets the default again.

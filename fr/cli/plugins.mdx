@@ -1,0 +1,57 @@
+---
+title: "Plugins"
+description: "Chercher dans le hub de plugins, installer des versions vérifiées et les tenir à jour avec pnx."
+icon: Package
+authors:
+  - AzaleeX
+---
+
+Les commandes `plugin` parlent au [hub de plugins](/plugins), via la même [API web](/docs/fr/web-api/plugins) que le site. Elles n'installent que des **versions approuvées par le hub**, et vérifient chaque jar avec le SHA-256 enregistré par le hub avant de le placer dans `plugins/`.
+
+| Commande | Rôle |
+| :-- | :-- |
+| `pnx plugin list` | Parcourt le hub, les plus étoilés d'abord. |
+| `pnx plugin search [terme]` | Cherche par nom. Demande un terme si vous n'en donnez pas. |
+| `pnx plugin info [slug]` | Affiche un plugin en entier. |
+| `pnx plugin install [slugs]` | Installe un ou plusieurs plugins. |
+| `pnx plugin installed` | Liste ce qu'il y a dans `plugins/`. |
+| `pnx plugin update [slugs]` | Met les plugins à jour vers leur dernière version approuvée. |
+| `pnx plugin remove [noms]` | Retire des plugins du dossier. |
+| `pnx install <slug>` | Installe un plugin approuvé par son slug, le raccourci que donne le bouton d'installation du hub. |
+
+`pnx plugins` est un alias de `pnx plugin`.
+
+## Trouver un plugin
+
+```bash
+pnx plugin list --sort updated --limit 20
+pnx plugin list --query chat
+pnx plugin search worldedit
+pnx plugin info owner.name
+```
+
+`plugin list` accepte `--sort` (`newest`, `updated` ou `stars`), `--limit` pour le nombre de résultats par page, `--page` et `--query`.
+
+## Installer et mettre à jour
+
+```bash
+pnx plugin install owner.name
+pnx plugin install owner.one owner.two
+pnx plugin update
+```
+
+Donnez un slug ou plusieurs. Un plugin se désigne par son slug, `owner.name`, comme sur sa page. Sans slug, `install` vous laisse chercher et choisir ; `update` met à jour tous les plugins qu'elle a installés. Redémarrez le serveur pour les charger.
+
+<Callout type="warn">
+  `plugin install` accepte aussi l'URL directe d'un `.jar`. Ce jar n'a été vérifié par personne : n'installez que depuis des sources de confiance.
+</Callout>
+
+## Voir et retirer
+
+```bash
+pnx plugin installed
+pnx --json plugin installed
+pnx plugin remove owner.name
+```
+
+Sans nom, `remove` affiche une liste où choisir.

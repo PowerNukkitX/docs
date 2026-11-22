@@ -1,0 +1,42 @@
+---
+title: "Packs de ressources"
+description: "Le contenu custom est invisible sans ses textures. Comment les fournir avec votre serveur."
+icon: Palette
+---
+
+Le serveur décide de ce que **fait** un bloc, un item ou une entité custom. Son **apparence** vient d'un **pack de ressources** que les joueurs téléchargent à la connexion. Sans lui, ils voient des textures manquantes.
+
+## D'où vient l'apparence de chaque type
+
+| Contenu custom | Ce que fournit le pack | Correspond dans votre code à |
+| :-- | :-- | :-- |
+| [Bloc](/docs/fr/development/customs/blocks) | La texture, déclarée dans `terrain_texture.json`, et la géométrie pour les blocs à forme | `.texture("nom")`, `Geometry("geometry.nom")` |
+| [Item](/docs/fr/development/customs/items) | La texture, déclarée dans `item_texture.json` | `.texture("nom")` |
+| [Entité](/docs/fr/development/customs/entities) | Les textures, le modèle et la définition d'entité côté client | l'identifiant de l'entité |
+
+<Callout type="warn" title="Les noms doivent correspondre exactement">
+  Le nom passé à `.texture(...)` doit être la clé du `terrain_texture.json` ou du `item_texture.json` du pack. Une faute de frappe donne une texture manquante, sans erreur côté serveur.
+</Callout>
+
+## Fournir le pack avec votre serveur
+
+<Steps>
+  <Step>Empaquetez votre pack en `.mcpack` ou `.zip`.</Step>
+  <Step>Placez-le dans le dossier `resource_packs/` du serveur.</Step>
+  <Step>Redémarrez le serveur. Il propose le pack à chaque joueur à la connexion.</Step>
+</Steps>
+
+<Files>
+  <Folder name="server" defaultOpen>
+    <Folder name="plugins" defaultOpen>
+      <File name="my-plugin.jar" />
+    </Folder>
+    <Folder name="resource_packs" defaultOpen>
+      <File name="my-plugin-pack.mcpack" />
+    </Folder>
+  </Folder>
+</Files>
+
+<Callout type="info">
+  Le dépôt [ExamplePlugin-Maven](https://github.com/PowerNukkitX/ExamplePlugin-Maven) est un plugin fonctionnel avec des blocs, items et entités custom.
+</Callout>

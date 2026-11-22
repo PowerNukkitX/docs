@@ -1,0 +1,74 @@
+---
+title: "Appairage avec un hub"
+description: "Appairer un serveur avec un tableau de bord, et le laisser superviser le serveur selon les droits que vous accordez."
+icon: PlugZap
+authors:
+  - AzaleeX
+---
+
+`pnx link` appaire un serveur avec un **hub**, un tableau de bord web, puis fait tourner le serveur sous supervision : il démarre la JVM, lit la console et rend compte au tableau de bord, qui peut renvoyer des commandes.
+
+<LinkPairing />
+
+<Callout type="info" title="Il faut un hub qui gère l'appairage">
+  L'appairage demande un hub qui supervise des serveurs. Le site powernukkitx.org ne le propose pas encore ; pointez `--hub` vers un hub qui le fait.
+</Callout>
+
+## Comment il se connecte
+
+Toutes les connexions partent **de votre machine** vers le hub : le hub n'en ouvre jamais vers vous. Aucun port à ouvrir, aucune règle de pare-feu. Quand le hub est injoignable, le serveur continue de tourner.
+
+## Appairer
+
+<Steps>
+  <Step>Sur le tableau de bord, créez un code d'appairage.</Step>
+  <Step>Sur la machine du serveur, lancez `pnx link <code>`.</Step>
+  <Step>La CLI échange le code contre un token, le stocke et commence à superviser le serveur.</Step>
+</Steps>
+
+```bash
+pnx link ABCD-1234 --hub https://hub.example.org --name "Survival"
+```
+
+| Option | Effet |
+| :-- | :-- |
+| `<code>` | Le code d'appairage du tableau de bord. |
+| `--hub <url>` | L'adresse du hub. |
+| `--allow <liste>` | Les droits à accorder, séparés par des virgules. |
+| `--dir <chemin>` | Le dossier du serveur. |
+| `--memory <taille>` | La mémoire du serveur. |
+| `--name <nom>` | Le nom affiché sur le tableau de bord. |
+| `--start` / `--no-start` | Démarre le serveur, ou s'y attache seulement. |
+| `--status` | Montre avec quoi cette machine est appairée. |
+| `--forget` | Supprime le token stocké. |
+
+## Droits
+
+Le tableau de bord ne peut faire que ce que vous autorisez. Un nouvel appairage autorise `console` et `control` ; ajoutez les autres par leur nom avec `--allow`.
+
+| Droit | Permet au tableau de bord de |
+| :-- | :-- |
+| `console` | Lire la console et envoyer des commandes. |
+| `control` | Démarrer, arrêter et redémarrer le serveur. |
+| `players` | Gérer les joueurs, comme la liste blanche. |
+| `worlds` | Travailler sur les mondes. |
+| `config` | Lire et modifier la configuration. |
+| `files` | Lire et écrire des fichiers dans le dossier du serveur. |
+| `plugins` | Installer et retirer des plugins. |
+| `backups` | Faire des sauvegardes. |
+| `schedules` | Lancer des tâches planifiées. |
+
+```bash
+pnx link ABCD-1234 --allow console,control,backups
+```
+
+<Callout type="warn" title="Ce qu'une commande à distance ne peut jamais faire">
+  L'accès aux fichiers est limité au dossier du serveur, vérifié sur votre machine après avoir suivi les liens. Les exécutables et scripts (`.jar`, `.exe`, `.sh`, `.bat`, `.js` et autres) peuvent être lus mais jamais écrits à distance.
+</Callout>
+
+## Vérifier et oublier
+
+```bash
+pnx link --status
+pnx link --forget
+```

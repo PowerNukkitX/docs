@@ -1,0 +1,105 @@
+---
+title: "Overview"
+description: "Base URL, tokens, rate limits, errors and caching for the PowerNukkitX hub API."
+icon: Webhook
+authors:
+  - AzaleeX
+---
+
+import { Boxes, Server, ShieldAlert, Tags, UserRound } from "lucide-react";
+
+The hub at [powernukkitx.org](https://powernukkitx.org) has a JSON API under `/api/v1`. It is the same API the website, the [CLI](/docs/cli) and the [desktop app](/docs/assistant) use to search plugins and download approved releases. Everything on these pages is **read-only** and works without an account.
+
+<ApiFlow />
+
+## Base URL
+
+```text
+https://powernukkitx.org/api/v1
+```
+
+Every endpoint answers `GET` with a JSON document, except the plugin badge, which is an SVG image, and the personal feed, which is Atom XML.
+
+```bash
+curl "https://powernukkitx.org/api/v1/plugins?q=economy&sort=downloads"
+```
+
+## Try it here
+
+Every endpoint page has a **Try it** panel: change the parameters, send the request from your browser, and read the real response.
+
+<ApiTry path="/categories" />
+
+## Tokens
+
+A token is optional. It identifies your calls so they get a budget of their own, larger than the anonymous one. It grants **no extra data**: anything a token can read, an anonymous request can read too.
+
+<Steps>
+  <Step>Sign in on powernukkitx.org with GitHub.</Step>
+  <Step>Open **Dashboard > Settings > Feed and API** and create one. You can keep up to 10.</Step>
+  <Step>Copy it straight away: it is shown once, and only a hash is stored.</Step>
+  <Step>Send it in the `Authorization` header.</Step>
+</Steps>
+
+```bash
+curl -H "Authorization: Bearer pnx_<keyId>_<secret>" \
+  "https://powernukkitx.org/api/v1/plugins"
+```
+
+A token looks like `pnx_` followed by a 12-character key id, an underscore and a 64-character secret. A token that is malformed, unknown or revoked gets a `401 invalid_token`: it is never silently downgraded to the anonymous budget.
+
+<Callout type="warn">
+  Keep tokens out of public repositories and client-side code. A leaked token cannot change anything, but someone else can spend its budget. Revoke it from the same settings page.
+</Callout>
+
+## Rate limits
+
+Budgets are counted per minute.
+
+| Caller | Budget | Counted against |
+| :-- | :-- | :-- |
+| Anonymous | 240 requests a minute | Your IP address |
+| With a token | 600 requests a minute | The token |
+| Server list, plugin downloads | 60 requests a minute | Your IP address |
+
+Over budget, the API answers `429` with a `Retry-After` header giving the seconds to wait.
+
+## Errors
+
+Errors are JSON with an `error` code:
+
+```json
+{ "error": "invalid_query", "issues": [] }
+```
+
+| Status | When |
+| :-- | :-- |
+| `400` | A query parameter failed validation. `issues` says which one. |
+| `401` | The token was not recognised, or has been revoked. |
+| `403` | The release exists but has not been approved (downloads). |
+| `404` | No such plugin or server, or it is not published. |
+| `429` | Budget exhausted. Wait for `Retry-After` seconds. |
+
+## Caching
+
+Lists are cached for a minute at the edge, slower-moving data (servers, collections, advisories) for ten minutes. Responses carry an `ETag`, so a client that sends `If-None-Match` gets a `304` with no body when nothing changed.
+
+## Endpoints
+
+<Cards>
+  <Card icon={<Boxes />} title="Plugins" href="/docs/web-api/plugins">
+    Search, details, reviews, download history, badges and downloads.
+  </Card>
+  <Card icon={<Server />} title="Servers" href="/docs/web-api/servers">
+    The public server directory.
+  </Card>
+  <Card icon={<Tags />} title="Catalogue" href="/docs/web-api/catalogue">
+    Categories, collections, badges and the spotlight.
+  </Card>
+  <Card icon={<ShieldAlert />} title="Security advisories" href="/docs/web-api/advisories">
+    Published advisories in the OSV format.
+  </Card>
+  <Card icon={<UserRound />} title="Your account" href="/docs/web-api/account">
+    Your profile, your tokens and your personal feed.
+  </Card>
+</Cards>
